@@ -1,0 +1,70 @@
+*****************************************************************************************************
+*  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten  *
+*****************************************************************************************************
+
+Version: @Version@
+
+
+Übersicht
+=========
+
+Diese SWE dient zur Ermittlung der Fehlerursache bei fehlenden Messwerten an DE
+(Datenendgerät gemäß TLS). Im Rahmen der Erfassung von Daten über eine externe 
+TLS-Schnittstelle kann aus einer Reihe von Gründen ein erwarteter Messwert eines 
+DE z. T. nicht ermittelt werden. Der fehlende Messwert muss dabei nicht zwangsläufig 
+durch den Detektor verursacht werden. Fehlende Messwerte sind häufig auch durch 
+Kommunikationsstörungen in der langen Kommunikationskette zwischen 
+Detektor – EAK – SM – KRI – UZ und VRZ bedingt. Diese SWE versucht die Störung 
+innerhalb dieser Kommunikationskette zu lokalisieren und über Betriebsmeldungen 
+bzw. Fehlerstatusausgaben pro DE verfügbar zu machen
+
+
+Versionsgeschichte
+==================
+
+1.0.0
+
+  - Erste Auslieferung
+
+
+Bemerkungen
+===========
+
+Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
+de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation mit folgenden Parametern gestartet werden kann
+(zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applikation):
+	-geraet=pid  (z.B. ein Steuermodul, KRI, UZ, VRZ, VIZ; i. d. R. eine UZ)
+	
+- Tests:
+
+
+
+Disclaimer
+==========
+
+Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+Copyright (C) 2007 BitCtrl Systems GmbH 
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 5A
+Franklin Street, Fifth Floor, Boston, MA 02AA0-A30A, USA.
+
+
+Kontakt
+=======
+
+BitCtrl Systems GmbH
+Weißenfelser Straße 67
+04229 Leipzig
+Phone: +49 34A-490670
+mailto: info@bitctrl.de
