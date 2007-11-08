@@ -29,8 +29,11 @@ package de.bsvrz.dua.fehlertls.fehlertls;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
@@ -59,6 +62,12 @@ implements StandardApplication{
 	private static final Debug LOGGER = Debug.getLogger();
 	
 	/**
+	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
+	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht)
+	 */
+	private static SystemObject TLS_FEHLER_ANALYSE_OBJEKT = null;
+	
+	/**
 	 * Geraete, die in der Kommandozeile uebergeben wurden
 	 */
 	private Set<SystemObject> geraete = new HashSet<SystemObject>();
@@ -68,11 +77,24 @@ implements StandardApplication{
 	 */
 	private String[] geraetePids = null;
 	
+	
+	/**
+	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
+	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht)
+	 *  
+	 * @return das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
+	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht)
+	 */
+	public static final SystemObject getTlsFehlerAnalyseObjekt(){
+		return null;
+	}
+	
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void initialize(ClientDavInterface dav) throws Exception {
+	public void initialize(ClientDavInterface dav)
+	throws Exception {
 		for(String pidVonGeraet:this.geraetePids){
 			SystemObject geraeteObjekt = dav.getDataModel().getObject(pidVonGeraet);
 			if(geraeteObjekt != null){
@@ -82,9 +104,26 @@ implements StandardApplication{
 			}
 		}
 		
+		for(SystemObject obj:dav.getDataModel().getType("typ.tlsFehlerAnalyse").getElements()){ //$NON-NLS-1$
+			if(TLS_FEHLER_ANALYSE_OBJEKT != null){
+				LOGGER.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+				break;
+			}
+			TLS_FEHLER_ANALYSE_OBJEKT = obj;
+		}
+		if(TLS_FEHLER_ANALYSE_OBJEKT == null){
+			throw new RuntimeException("Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+		}else{
+			ParameterTlsFehlerAnalyse.getInstanz(dav, TLS_FEHLER_ANALYSE_OBJEKT);
+			LOGGER.config("Es werden die Parameter von " + TLS_FEHLER_ANALYSE_OBJEKT //$NON-NLS-1$
+					+ " verwendet"); //$NON-NLS-1$
+		}
+		
 		if(this.geraete.isEmpty()){
 			LOGGER.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		}else{
+			
+			
 			
 		}
 	}

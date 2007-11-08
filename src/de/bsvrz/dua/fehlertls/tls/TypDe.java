@@ -26,7 +26,9 @@ public class TypDe
 implements ClientReceiverInterface, 
 		   ITlsGloDeFehlerListener,
 		   IZyklusSteuerungsParameterListener{
-
+	
+	//private long letztes
+	
 	/**
 	 * zeigt an, ob dieses DE erfasst ist
 	 */
@@ -61,7 +63,7 @@ implements ClientReceiverInterface,
 
 	
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc}Nfyjlp Mexik
 	 */
 	public void aktualisiereTlsGloDeFehler(boolean aktiv,
 										   TlsDeFehlerStatus deFehlerStatus) {
