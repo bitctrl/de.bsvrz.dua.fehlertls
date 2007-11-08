@@ -24,47 +24,27 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls.de.typen;
-
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+package de.bsvrz.dua.fehlertls.parameter;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung 
- * (PID: typ.deLve)
- * 
+ * Hoert auf Veraenderungen der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
+ * (Parameter für die TLS Fehleranalyse)
+ *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public interface IParameterTlsFehlerAnalyseListener {
 
 	/**
-	 * {@inheritDoc}
+	 * Informiert ueber neue Parameter der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
+	 * 
+	 * @param zeitverzugFehlerErkennung Der zusätzliche Zeitverzug, der nach dem erwarteten 
+	 * Empfangszeitpunkt noch bis zur Erkennung eines nicht gelieferten Messwertes abgewartet 
+	 * werden muss
+	 * @param zeitverzugFehlerErmittlung Der zusätzliche Zeitverzug, der nach der Fehlererkennung
+	 * bis zur Fehlerermittlung abgewartet werden muss
 	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DataIdentifikation[] getDataIdentifikations() {
-		return new DataIdentifikation[]{
-					new DataIdentifikation("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-				};
-	}
+	public void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung,
+													  long zeitverzugFehlerErmittlung);
 	
 }

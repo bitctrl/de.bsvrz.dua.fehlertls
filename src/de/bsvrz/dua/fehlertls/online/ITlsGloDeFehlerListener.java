@@ -24,27 +24,25 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls;
+package de.bsvrz.dua.fehlertls.online;
+
+import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
 
 /**
- * Hoert auf Veraenderungen der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
- * (Parameter für die TLS Fehleranalyse)
+ * Hoert auf Veraenderungen der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>
  *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public interface IParameterTlsFehlerAnalyseListener {
+public interface ITlsGloDeFehlerListener {
 
 	/**
-	 * Informiert ueber neue Parameter der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
+	 * Informiert ueber neue Daten der Attributgruppe <code>atg.tlsGloDeFehler</code>
 	 * 
-	 * @param zeitverzugFehlerErkennung Der zusätzliche Zeitverzug, der nach dem erwarteten 
-	 * Empfangszeitpunkt noch bis zur Erkennung eines nicht gelieferten Messwertes abgewartet 
-	 * werden muss
-	 * @param zeitverzugFehlerErmittlung Der zusätzliche Zeitverzug, der nach der Fehlererkennung
-	 * bis zur Fehlerermittlung abgewartet werden muss
+	 * @param aktiv indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
+	 * @param deFehlerStatus TLS-DE-Fehler-Status
 	 */
-	public void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung,
-													  long zeitverzugFehlerErmittlung);
+	public void aktualisiereTlsGloDeFehler(boolean aktiv,
+										   TlsDeFehlerStatus deFehlerStatus);
 	
 }

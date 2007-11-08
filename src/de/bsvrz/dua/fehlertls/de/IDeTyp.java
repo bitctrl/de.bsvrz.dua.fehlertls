@@ -26,11 +26,15 @@
 
 package de.bsvrz.dua.fehlertls.de;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+
 
 /**
  * Interface, dass von allen Klassen implementiert werden muss, 
  * die einen konkreten DE-Typ für die SWE "DE Fehleranalyse fehlende
- * Messdaten" beschreiben.
+ * Messdaten" beschreiben
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -38,21 +42,43 @@ package de.bsvrz.dua.fehlertls.de;
 public interface IDeTyp {
 	
 	/**
-	 * Aspekt <code>asp.tlsAntwort</code> für Antworten von TLS-Daten eines
-	 * DE-Blocks nach Abruf, nach Pufferabfrage oder spontan
+	 * Erfragt alle Datenidentifikationen, die bzgl. dieses DE-Typs Messwerte (Nutzdaten)
+	 * enthalten und auf die sich von der SWE "DE Fehleranalyse fehlende Messdaten" angemeldet
+	 * werden sollte
+	 *
+	 * @param dav Datenverteiler-Verbindung
+	 * @return die Datenidentifikationen, die bzgl. dieses DE-Typs zyklische Messwerte
+	 * enthalten
+	 * @throws DeFaException wird geworfen, wenn z.B. eine <code>DataDescription</code>
+	 * nicht erzeugt werden konnte, oder wenn es sonst Probleme gab
 	 */
-	public static final String ASP_TLS_ANTWORT = "asp.tlsAntwort"; //$NON-NLS-1$
+	public DataDescription[] getDeFaMesswertDataDescriptions(final ClientDavInterface dav)
+	throws DeFaException;
 	
 
 	/**
-	 * Erfragt alle Datenidentifikationen (mit allen Metainformationen), die bzgl. dieses
-	 * DE-Typs Messwerte enthalten und auf die sich von der SWE "DE Fehleranalyse fehlende
-	 * Messdaten" angemeldet werden sollte 
+	 * Erfragt die Datenidentifikation, in der sich die Parameter für die Ermittlung der
+	 * Erfassungsintervalldauer dieses DE-Typs befinden
 	 *
-	 * @return ein ggf. leeres Feld mit allen Datenidentifikationen mit allen Metainformationen,
-	 * die bzgl. dieses DE-Typs Messwerte enthalten und auf die sich von der SWE "DE Fehleranalyse
-	 * fehlende Messdaten" angemeldet werden sollte 
+	 * @param dav Datenverteiler-Verbindung
+	 * @return die Parameter-Datenidentifikation für die Erfassungsintervalldauer 
+	 * (ueblicherweise Betriebsparameter)
+	 * @throws DeFaException wird geworfen, wenn z.B. die <code>DataDescription</code>
+	 * nicht erzeugt werden konnte, oder wenn es sonst Probleme gab
 	 */
-	public AnalyseDatenBeschreibung[] getAnalyseDatenBeschreibung();
+	public DataDescription getDeFaIntervallParameterDataDescription(final ClientDavInterface dav)
+	throws DeFaException;
+	
+
+	/**
+	 * Liest aus einem Parameterdatensatz die aktuelle Erfassungsintervalldauer aus
+	 * 
+	 * @param parameter der Parameterdatensatz, welcher der Datenidentifikation entspricht,
+	 * die über die Methode <code>getDeFaIntervallParameterDataDescription()</code> erfragt
+	 * werden kann
+	 * @return die entsprechende Erassungsintervalldauer (in ms) wenn eine zyklische Erfassung
+	 * parametriert ist oder -1 sonst
+	 */
+	public long getErfassungsIntervall(final Data parameter);
 
 }

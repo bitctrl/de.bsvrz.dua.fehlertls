@@ -24,34 +24,21 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls.de;
-
-import de.bsvrz.dav.daf.main.Data;
+package de.bsvrz.dua.fehlertls.parameter;
 
 /**
- * Schnittstellen zu den Format-Informationen der Betriebsparameter eines DE-Typs
- * 
+ * Hoert auf Veraenderungen der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
+ *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public interface IBetriebsParameterInfo {
-	
-	/**
-	 * Erfragt die PID der Attributgruppe, in der die Betriebsparameter stehen
-	 * 
-	 * @return die PID der Attributgruppe, in der die Betriebsparameter stehen
-	 */
-	public String getBetriebsParameterAtgPid();
-	
-	
-	/**
-	 * Liest aus einem Betriebsparameterdatensatz die aktuelle Erfassungsintervalldauer aus.
-	 * 
-	 * @param parameter ein Parameterdatensatz, welcher Daten der Attributgruppe enthaelt,
-	 * die ueber die Methode <code>getBetriebsParameterAtgPid()</code> erfragt werden kann
-	 * @return die entsprechende Erassungsintervalldauer (in ms), wenn das DE auf zyklischen Abruf
-	 * parametriert ist und -1 sonst
-	 */
-	public long getErfassungsIntervall(final Data parameter);
+public interface ITlsGloKanalSteuerungsListener {
 
+	/**
+	 * Informiert ueber neue Parameter der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
+	 * 
+	 * @param aktiv indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
+	 */
+	public void aktualisiereTlsGloKanalSteuerung(boolean aktiv);
+	
 }

@@ -27,9 +27,8 @@
 package de.bsvrz.dua.fehlertls.de.typen;
 
 import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AnalyseDatenBeschreibung;
-import de.bsvrz.dua.fehlertls.de.IBetriebsParameterInfo;
-import de.bsvrz.dua.fehlertls.de.IDeTyp;
+import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * DeFa-Beschreibung eines DE-Typs zur Umfelddatenerfassung 
@@ -39,71 +38,66 @@ import de.bsvrz.dua.fehlertls.de.IDeTyp;
  *
  */
 public class TypDeUfd
-implements IDeTyp{
+extends AbstraktDeTyp{
 
-	/**
-	 * Informationen zu den Betriebsparametern von UFD-DE 
-	 */
-	private static IBetriebsParameterInfo PARAMETER_INFO = new IBetriebsParameterInfo(){
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String getBetriebsParameterAtgPid() {
-			return "atg.tlsUfdBetriebsParameter"; //$NON-NLS-1$
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public long getErfassungsIntervall(Data parameter){
-			long erfassungsIntervallDauer = -1;
-			
-			if(parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1){ //$NON-NLS-1$
-				erfassungsIntervallDauer = parameter.getUnscaledValue("Erfassungsperiodendauer").longValue() * 1000L; //$NON-NLS-1$
-			}			
-			
-			return erfassungsIntervallDauer;
-		}
-		
-	};
-	
-	
 	/**
 	 * {@inheritDoc}
 	 */
-	public AnalyseDatenBeschreibung[] getAnalyseDatenBeschreibung() {
-		return new AnalyseDatenBeschreibung[]{
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungLuftTemperaturLT", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungFahrbahnOberFlächenTemperaturFBT", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungFahrbahnFeuchteFBF", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungFahrbahnOberFläche", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungRestSalzRS", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
+	public long getErfassungsIntervall(Data parameter){
+		long erfassungsIntervallDauer = -1;
+		
+		if(parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1){ //$NON-NLS-1$
+			erfassungsIntervallDauer = parameter.getUnscaledValue("Erfassungsperiodendauer").longValue() * 1000L; //$NON-NLS-1$
+		}			
+		
+		return erfassungsIntervallDauer;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getBetriebsParameterAtgPid() {
+		return "atg.tlsUfdBetriebsParameter"; //$NON-NLS-1$
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DataIdentifikation[] getDataIdentifikations() {
+		return new DataIdentifikation[]{
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungLuftTemperaturLT", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungFahrbahnOberFlächenTemperaturFBT", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungFahrbahnFeuchteFBF", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungFahrbahnOberFläche", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungRestSalzRS", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
 			
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungNiederschlagsIntensitätNI", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungLuftDruckLD", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungRelativeLuftFeuchteRLF", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungWindRichtungWR", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungWindGeschwindigkeitMittelWertWGM", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungNiederschlagsIntensitätNI", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungLuftDruckLD", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungRelativeLuftFeuchteRLF", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungWindRichtungWR", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungWindGeschwindigkeitMittelWertWGM", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
 			
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungSchneeHöheSH", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungFahrbahnGlätteFBG", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungSichtWeiteSW", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungHelligkeitHK", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungNiederschlagsMengeNM", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungSchneeHöheSH", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungFahrbahnGlätteFBG", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungSichtWeiteSW", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungHelligkeitHK", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungNiederschlagsMengeNM", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
 			
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungNiederschlag", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungWindGeschwindigkeitSpitzenWertWGS", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungGefrierTemperaturGT", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungTaupunktTemperaturTPT", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungTemperaturInTiefe1TT1", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungNiederschlag", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungWindGeschwindigkeitSpitzenWertWGS", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungGefrierTemperaturGT", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungTaupunktTemperaturTPT", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungTemperaturInTiefe1TT1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
 			
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungTemperaturInTiefe2TT2", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungTemperaturInTiefe3TT3", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungZustandDerFahrbahnOberFlächeFBZ", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungNiederschlagsArtNS", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungWasserFilmDickeWFD", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ), //$NON-NLS-1$
-			new AnalyseDatenBeschreibung("atg.tlsUfdErgebnisMeldungZeitreserveGlätteZG", ASP_TLS_ANTWORT, (short)0, PARAMETER_INFO ) //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungTemperaturInTiefe2TT2", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungTemperaturInTiefe3TT3", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungZustandDerFahrbahnOberFlächeFBZ", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungNiederschlagsArtNS", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungWasserFilmDickeWFD", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+			new DataIdentifikation("atg.tlsUfdErgebnisMeldungZeitreserveGlätteZG", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
 		};
 	}
 	

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dav.daf.main.config.SystemObjectType;
 
 
 /**
@@ -70,7 +71,7 @@ public class DeTypLader {
 	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
 	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	public static final IDeTyp getDeTyp(final SystemObject deTypObj)
+	public static final IDeTyp getDeTyp(final SystemObjectType deTypObj)
 	throws DeFaException{
 		IDeTyp deTyp = null;
 		

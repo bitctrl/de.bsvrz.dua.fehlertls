@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls;
+package de.bsvrz.dua.fehlertls.parameter;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,58 +42,49 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
- * Korrespondiert mit der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
- * (Parameter für die TLS Fehleranalyse)
+ * Korrespondiert mit der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
+ * (Kanalsteuerung (FG alle / Typ 29))
  *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class ParameterTlsFehlerAnalyse
+public class TlsGloKanalSteuerung 
 implements ClientReceiverInterface{
 
 	/**
 	 * statische Instanzen dieser Klasse
 	 */
-	private static Map<SystemObject, ParameterTlsFehlerAnalyse> INSTANZEN =
-								Collections.synchronizedMap(new HashMap<SystemObject, ParameterTlsFehlerAnalyse>());
+	private static Map<SystemObject, TlsGloKanalSteuerung> INSTANZEN =
+								Collections.synchronizedMap(new HashMap<SystemObject, TlsGloKanalSteuerung>());
 	
 	/**
 	 * Menge aller Beobachterobjekte
 	 */
-	private Set<IParameterTlsFehlerAnalyseListener> listenerMenge = Collections.synchronizedSet(
-			new HashSet<IParameterTlsFehlerAnalyseListener>());
+	private Set<ITlsGloKanalSteuerungsListener> listenerMenge = Collections.synchronizedSet(
+			new HashSet<ITlsGloKanalSteuerungsListener>());
 	
 	/**
-	 * Der zusätzliche Zeitverzug, der nach dem erwarteten 
-	 * Empfangszeitpunkt noch bis zur Erkennung eines nicht gelieferten Messwertes abgewartet 
-	 * werden muss
+	 * Indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
 	 */
-	 private long zeitverzugFehlerErkennung = Long.MIN_VALUE;
-	 
-	 /**
-	  * Der zusätzliche Zeitverzug, der nach der Fehlererkennung
-	  * bis zur Fehlerermittlung abgewartet werden muss
-	  **/
-	 private long zeitverzugFehlerErmittlung = Long.MIN_VALUE;;
-
+	private Boolean aktiv = null;
 	
 	
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse
 	 * 
 	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.tlsFehlerAnalyse</code>
+	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static final ParameterTlsFehlerAnalyse getInstanz(ClientDavInterface dav,
-															 SystemObject objekt){
-		ParameterTlsFehlerAnalyse instanz = null;
+	public static final TlsGloKanalSteuerung getInstanz(ClientDavInterface dav,
+														SystemObject objekt){
+		TlsGloKanalSteuerung instanz = null;
 		synchronized (INSTANZEN) {
 			instanz= INSTANZEN.get(objekt);	
 		}		
 		
 		if(instanz == null){
-			instanz = new ParameterTlsFehlerAnalyse(dav, objekt);
+			instanz = new TlsGloKanalSteuerung(dav, objekt);
 			synchronized (INSTANZEN) {
 				INSTANZEN.put(objekt, instanz);	
 			}			
@@ -107,14 +98,14 @@ implements ClientReceiverInterface{
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.tlsFehlerAnalyse</code>
+	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private ParameterTlsFehlerAnalyse(ClientDavInterface dav,
-										SystemObject objekt){
+	private TlsGloKanalSteuerung(ClientDavInterface dav,
+								 SystemObject objekt){
 		dav.subscribeReceiver(this, 
 							  objekt,
 							  new DataDescription(
-									  dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"), //$NON-NLS-1$
+									  dav.getDataModel().getAttributeGroup("atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
 									  dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
 									  (short)0),
 							  ReceiveOptions.normal(),
@@ -127,9 +118,9 @@ implements ClientReceiverInterface{
 	 * 
 	 * @param listener eine neuer Listener
 	 */
-	public final synchronized void addListener(final IParameterTlsFehlerAnalyseListener listener){
-		if(listenerMenge.add(listener) && this.zeitverzugFehlerErkennung != Long.MIN_VALUE){
-			listener.aktualisiereParameterTlsFehlerAnalyse(zeitverzugFehlerErkennung, zeitverzugFehlerErmittlung);
+	public final synchronized void addListener(final ITlsGloKanalSteuerungsListener listener){
+		if(listenerMenge.add(listener) && this.aktiv != null){
+			listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 		}
 	}
 	
@@ -142,13 +133,9 @@ implements ClientReceiverInterface{
 			for(ResultData resultat:resultate){
 				if(resultat != null && resultat.getData() != null){
 					synchronized (this) {
-						this.zeitverzugFehlerErkennung = resultat.getData().
-									getTimeValue("ZeitverzugFehlerErkennung").getMillis(); //$NON-NLS-1$
-						this.zeitverzugFehlerErmittlung = resultat.getData().
-									getTimeValue("ZeitverzugFehlerErmittlung").getMillis(); //$NON-NLS-1$
-						for(IParameterTlsFehlerAnalyseListener listener:this.listenerMenge){
-							listener.aktualisiereParameterTlsFehlerAnalyse(this.zeitverzugFehlerErkennung,
-																		   this.zeitverzugFehlerErmittlung);
+						this.aktiv = resultat.getData().getUnscaledValue("DEKanalStatus").intValue() == 0; //$NON-NLS-1$
+						for(ITlsGloKanalSteuerungsListener listener:this.listenerMenge){
+							listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 						}
 					}					
 				}

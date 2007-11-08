@@ -24,47 +24,25 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls.de.typen;
+package de.bsvrz.dua.fehlertls.parameter;
 
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung 
- * (PID: typ.deLve)
- * 
+ * Hoert auf Veraenderungen der Betriebsparameter zur Zyklussteuerung
+ * eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>
+ *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public interface IZyklusSteuerungsParameterListener {
 
 	/**
-	 * {@inheritDoc}
+	 * Aktualisiert die Betriebsparameter zur Zyklussteuerung
+	 * eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>
+	 * 
+	 * @param erfassungsIntervallDauer die entsprechende Erassungsintervalldauer 
+	 * (in ms), wenn das DE auf zyklischen Abruf parametriert ist und -1 sonst
 	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DataIdentifikation[] getDataIdentifikations() {
-		return new DataIdentifikation[]{
-					new DataIdentifikation("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-				};
-	}
+	public void aktualisiereZyklusSteuerungsParameter(long erfassungsIntervallDauer);
 	
 }
