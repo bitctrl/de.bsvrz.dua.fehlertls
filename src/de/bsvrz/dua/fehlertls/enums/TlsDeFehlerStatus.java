@@ -50,20 +50,25 @@ extends AbstractDavZustand{
 	 * DE in Ordnung
 	 */
 	public static final TlsDeFehlerStatus OK = 
-		new TlsDeFehlerStatus("ok", 0); //$NON-NLS-1$
+		new TlsDeFehlerStatus("ok", 0, "DE in Ordnung"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * Störung vom E/A-Konzentrator erkannt
 	 */
 	public static final TlsDeFehlerStatus STOER_EAK = 
-		new TlsDeFehlerStatus("StörEAK", 1); //$NON-NLS-1$
+		new TlsDeFehlerStatus("StörEAK", 1, "Störung vom E/A-Konzentrator erkannt"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * Störung vom SM erkannt
 	 */
 	public static final TlsDeFehlerStatus STOER_SM = 
-		new TlsDeFehlerStatus("StörSM", 2); //$NON-NLS-1$
+		new TlsDeFehlerStatus("StörSM", 2, "Störung vom SM erkannt"); //$NON-NLS-1$ //$NON-NLS-2$
 
+	/**
+	 * der Text der die Natur des DE-Fehlers illustriert 
+	 */
+	private String text = null;
+	
 	
 	/**
 	 * Standardkonstruktor
@@ -72,10 +77,23 @@ extends AbstractDavZustand{
 	 *            der Kode
 	 * @param name
 	 *            die Bezeichnung
+	 * @param text
+	 *            der Text der die Natur des DE-Fehlers illustriert
 	 */
-	private TlsDeFehlerStatus(String name, int kode){
+	private TlsDeFehlerStatus(String name, int kode, String text){
 		super(kode, name);
+		this.text = text;
 		WERTE_BEREICH.put(kode, this);
+	}
+	
+	
+	/**
+	 * Erfragt den Text der die Natur des DE-Fehlers illustriert
+	 * 
+	 * @return der Text der die Natur des DE-Fehlers illustriert
+	 */
+	public final String getText(){
+		return this.text;
 	}
 	
 	

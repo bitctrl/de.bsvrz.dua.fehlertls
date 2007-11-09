@@ -79,6 +79,7 @@ implements ClientReceiverInterface{
 	public static final TlsGloKanalSteuerung getInstanz(ClientDavInterface dav,
 														SystemObject objekt){
 		TlsGloKanalSteuerung instanz = null;
+		
 		synchronized (INSTANZEN) {
 			instanz= INSTANZEN.get(objekt);	
 		}		

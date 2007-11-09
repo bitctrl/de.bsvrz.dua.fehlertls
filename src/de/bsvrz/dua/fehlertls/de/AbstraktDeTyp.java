@@ -52,7 +52,7 @@ implements IDeTyp{
 	 * 
 	 * @return ggf. leerer Array mit (ATG, ASP, SIMVAR)-Tripeln
 	 */
-	protected abstract DataIdentifikation[] getDataIdentifikations();
+	protected abstract DataDescriptionPid[] getDataIdentifikations();
 	
 	
 	/**
@@ -72,7 +72,7 @@ implements IDeTyp{
 	throws DeFaException{
 		List<DataDescription> dataDescriptions = new ArrayList<DataDescription>();
 		
-		for(DataIdentifikation dataIdentifikation:this.getDataIdentifikations()){
+		for(DataDescriptionPid dataIdentifikation:this.getDataIdentifikations()){
 			AttributeGroup atg = dav.getDataModel().getAttributeGroup(dataIdentifikation.getAtgPid());
 			if(atg == null){
 				throw new DeFaException("Attributgruppe " + dataIdentifikation.getAtgPid() + //$NON-NLS-1$
@@ -118,7 +118,7 @@ implements IDeTyp{
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 *
 	 */
-	protected class DataIdentifikation{
+	protected class DataDescriptionPid{
 		
 		/**
 		 * Pid einer ATG
@@ -142,7 +142,7 @@ implements IDeTyp{
 		 * @param atgPid Pid einer ATG
 		 * @param aspPid Pid eines ASP
 		 */
-		public DataIdentifikation(final String atgPid, final String aspPid){
+		public DataDescriptionPid(final String atgPid, final String aspPid){
 			this.atgPid = atgPid;
 			this.aspPid = aspPid;		
 		}
@@ -155,7 +155,7 @@ implements IDeTyp{
 		 * @param aspPid Pid eines ASP
 		 * @param simVar Simulationsvariante
 		 */
-		public DataIdentifikation(final String atgPid, final String aspPid, final short simVar){
+		public DataDescriptionPid(final String atgPid, final String aspPid, final short simVar){
 			this(atgPid, aspPid);
 			this.simVar = simVar;
 		}	

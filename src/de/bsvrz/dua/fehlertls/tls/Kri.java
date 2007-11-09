@@ -24,47 +24,37 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls.de.typen;
+package de.bsvrz.dua.fehlertls.tls;
 
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung 
- * (PID: typ.deLve)
+ * TODO
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public class Kri
+extends AbstraktGeraet{
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Datenverteiler-Verbindund
+	 * @param objekt ein Systemobjekt vom Typ <code>typ.gerät</code>
 	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
+	protected Kri(ClientDavInterface dav, SystemObject objekt) {
+		super(dav, objekt);
+		// TODO Auto-generated constructor stub
 	}
 
-
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc} 
 	 */
 	@Override
-	protected DataDescriptionPid[] getDataIdentifikations() {
-		return new DataDescriptionPid[]{
-					new DataDescriptionPid("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-				};
+	public Art getGeraeteArt() {
+		return Art.KRI;
 	}
-	
+
 }

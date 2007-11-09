@@ -81,7 +81,8 @@ implements ClientReceiverInterface{
 	 * @param dav Verbindung zum Datenverteiler
 	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
-	 * @throws DeFaException wird weitergereicht
+	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
+	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
 	public static final ZyklusSteuerungsParameter getInstanz(ClientDavInterface dav,
 															 SystemObject objekt)
@@ -108,7 +109,8 @@ implements ClientReceiverInterface{
 	 * 
 	 * @param dav Verbindung zum Datenverteiler
 	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
-	 * @throws DeFaException wird weitergereicht
+	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
+	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
 	private ZyklusSteuerungsParameter(ClientDavInterface dav,
 								 	  SystemObject objekt)

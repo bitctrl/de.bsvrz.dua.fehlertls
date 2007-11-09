@@ -29,8 +29,6 @@ package de.bsvrz.dua.fehlertls.fehlertls;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;

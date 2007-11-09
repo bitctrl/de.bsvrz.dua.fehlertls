@@ -32,6 +32,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.parameter.IParameterTlsFehlerAnalyseListener;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * TODO
@@ -41,6 +42,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
  */
 public class ErwarteteDeWerte
 implements IParameterTlsFehlerAnalyseListener{
+	
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
+	
+	/**
+	 * statische Instanz dieser Klasse
+	 */
+	private static ErwarteteDeWerte INSTANZ = null;
 
 	/**
 	 * Alarmiert die DE, wenn der erwartete Datenzeitpunkt ueberschritten wurde
@@ -55,25 +66,61 @@ implements IParameterTlsFehlerAnalyseListener{
 
 
 	/**
+	 * Erfragt die statische Instanz dieser Klasse 
+	 * 
+	 * @return statische Instanz dieser Klasse
+	 */
+	public static final ErwarteteDeWerte getInstanz(){
+		if(INSTANZ == null){
+			throw new RuntimeException("ErwarteteDeWerte wurde noch nicht instanziiert"); //$NON-NLS-1$
+		}
+		return INSTANZ;
+	}
+	
+	
+	/**
+	 * Initialisiert die statische Instanz dieser Klasse
+	 * 
+	 * @param dav Datenverteiler-Verbindung
+	 * @param tlsFehlerAnalyseObjekt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>,
+	 * mit dem diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht)
+	 */
+	public static final void initialisiere(ClientDavInterface dav,
+										   SystemObject tlsFehlerAnalyseObjekt){
+		if(INSTANZ == null){
+			INSTANZ = new ErwarteteDeWerte(dav, tlsFehlerAnalyseObjekt);
+		}else{
+			LOGGER.warning("ErwarteteDeWerte wurde bereits instanziiert"); //$NON-NLS-1$
+		}		 
+	}
+	
+	
+	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Datenverteiler-Verbindung
 	 * @param tlsFehlerAnalyseObjekt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>,
 	 * mit dem diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht)
 	 */
-	public ErwarteteDeWerte(ClientDavInterface dav,
+	private ErwarteteDeWerte(ClientDavInterface dav,
 							SystemObject tlsFehlerAnalyseObjekt){
-		ParameterTlsFehlerAnalyse.getInstanz(dav, tlsFehlerAnalyseObjekt).addListener(this);
-		
+		ParameterTlsFehlerAnalyse.getInstanz(dav, tlsFehlerAnalyseObjekt).addListener(this);	
 	}
 
 	
 	/**
 	 * 
-	 * @param resultat
+	 * @param resultat ein Resultat-Datensatz eines ueberwachten DE
+	 * @param intervallDauer
 	 */
-	public final void aktualisiere(ResultData resultat, long intervallDauer){
-		
+	public final void aktualisiere(ResultData resultat){
+		if(this.zeitVerzugFehlerErkennung >= 0){
+			
+			
+			
+		}else{
+			LOGGER.fine("Es wurden noch keine DeFa-Parameter empfangen"); //$NON-NLS-1$
+		}
 	}
 	
 

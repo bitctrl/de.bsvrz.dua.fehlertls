@@ -24,47 +24,30 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls.de.typen;
+package de.bsvrz.dua.fehlertls.tls;
 
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import java.util.Set;
+
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung 
- * (PID: typ.deLve)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public class TlsHierarchie {
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Datenverteiler-Verbindund
+	 * @param geraete Geraete, die in der Kommandozeile uebergeben wurden
 	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DataDescriptionPid[] getDataIdentifikations() {
-		return new DataDescriptionPid[]{
-					new DataDescriptionPid("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-				};
+	public static final initialisiere(ClientDavInterface dav, Set<SystemObject> geraete){
+		for(SystemObject geraet:geraete){
+			
+		}
 	}
 	
 }

@@ -27,6 +27,7 @@
 package de.bsvrz.dua.fehlertls.parameter;
 
 
+
 /**
  * Hoert auf Veraenderungen der Betriebsparameter zur Zyklussteuerung
  * eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>

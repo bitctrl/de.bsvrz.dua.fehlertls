@@ -24,47 +24,43 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.fehlertls.de.typen;
+package de.bsvrz.dua.fehlertls.tls;
 
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung 
- * (PID: typ.deLve)
+ * TODO
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public class Sm
+extends AbstraktGeraet{
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DataDescriptionPid[] getDataIdentifikations() {
-		return new DataDescriptionPid[]{
-					new DataDescriptionPid("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-				};
-	}
 	
+	/**
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Datenverteiler-Verbindund
+	 * @param objekt ein Systemobjekt vom Typ <code>typ.steuerModul</code>
+	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
+	 * Geraet 
+	 */
+	protected Sm(ClientDavInterface dav, SystemObject objekt, AbstraktGeraet vater) {
+		super(dav, objekt, vater);
+		for(SystemObject eak:this.objekt.getNonMutableSet("Eak").getElements()){ //$NON-NLS-1$
+			this.kinder.add(new Eak(dav, eak, this));
+		}
+	}
+
+	
+	/**
+	 * {@inheritDoc} 
+	 */
+	@Override
+	public Art getGeraeteArt() {
+		return Art.SM;
+	}
+
 }
