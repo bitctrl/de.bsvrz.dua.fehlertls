@@ -38,7 +38,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 public class Sm
 extends AbstraktGeraet{
 
-	
+		
 	/**
 	 * Standardkonstruktor
 	 * 

@@ -51,7 +51,7 @@ implements ClientReceiverInterface{
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.gerät</code>
+	 * @param objekt ein Systemobjekt vom Typ <code>typ.de</code>
 	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
 	 * Geraet 
 	 */

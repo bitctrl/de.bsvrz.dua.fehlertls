@@ -42,13 +42,23 @@ extends AbstraktGeraet{
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.gerät</code>
+	 * @param objekt ein Systemobjekt vom Typ <code>typ.kri</code>
+	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
+	 * Geraet  
 	 */
-	protected Kri(ClientDavInterface dav, SystemObject objekt) {
-		super(dav, objekt);
-		// TODO Auto-generated constructor stub
+	protected Kri(ClientDavInterface dav, SystemObject objekt, AbstraktGeraet vater) {
+		super(dav, objekt, vater);
+		
+		/**
+		 * Initialisiere Inselbusse
+		 */
+		for(SystemObject inselBus:
+				this.objekt.getNonMutableSet("AnschlussPunkteGerät").getElements()){ //$NON-NLS-1$
+			this.kinder.add(new Inselbus(dav, inselBus, this));
+		}
 	}
 
+	
 	/**
 	 * {@inheritDoc} 
 	 */

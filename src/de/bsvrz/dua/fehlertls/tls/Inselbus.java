@@ -27,7 +27,9 @@
 package de.bsvrz.dua.fehlertls.tls;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * TODO
@@ -37,16 +39,57 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  */
 public class Inselbus 
 extends AbstraktGeraet{
+	
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
+	
 
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.gerät</code>
+	 * @param objekt ein Systemobjekt vom Typ <code>typ.anschlussPunkt</code> 
+	 * (unterhalb eines Objektes vom Typ <code>typ.kri</code>)
+	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
+	 * Geraet 
 	 */
-	protected Inselbus(ClientDavInterface dav, SystemObject objekt) {
-		super(dav, objekt);
-		// TODO Auto-generated constructor stub
+	protected Inselbus(ClientDavInterface dav, SystemObject objekt, AbstraktGeraet vater) {
+		super(dav, objekt, vater);
+		
+		/**
+		 * Initialisiere Steuermodule
+		 */
+		for(SystemObject komPartner:
+				this.objekt.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
+			Data konfigDatum = komPartner.getConfigurationData(TlsHierarchie.KONFIG_ATG);
+			if(konfigDatum != null){
+				SystemObject steuerModul = konfigDatum.getReferenceValue
+							("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+				if(steuerModul != null){
+					if(steuerModul.isOfType("typ.steuerModul")){ //$NON-NLS-1$
+						this.kinder.add(new Sm(dav, steuerModul, this));						
+					}else{
+						LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
+								" (Inselbus: " + this.objekt +  //$NON-NLS-1$
+								") duerfen nur Steuermodule definiert sein. Aber: " + //$NON-NLS-1$
+								steuerModul + " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
+								")"); //$NON-NLS-1$				
+					}
+				}else{
+					LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
+							" (Inselbus: " + this.objekt +  //$NON-NLS-1$
+							") ist kein Steuermodul definiert"); //$NON-NLS-1$				
+				}
+			}else{
+				LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
+						" (Inselbus: " + this.objekt +  //$NON-NLS-1$
+						") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
+						"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
+			}
+		}
+
 	}
 
 	/**

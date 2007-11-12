@@ -26,28 +26,123 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.config.AttributeGroup;
+import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
+ * Initialisiert alle Objekte im Teilmodel TLS, die (inklusive und) unterhalb 
+ * der uebergebenen Objekte vom Typ <code>typ.gerät</code> konfiguriert sind
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class TlsHierarchie {
+	
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
 
+	/**
+	 * Datenverteiler-Verbindung
+	 */
+	private static ClientDavInterface DAV = null;
+	
+	/**
+	 * Konfigurierende Eigenschaften eines Kommunikationspartners an einem Anschlusspunkt
+	 */
+	public static AttributeGroup KONFIG_ATG = null;
+
+	
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Datenverteiler-Verbindund
 	 * @param geraete Geraete, die in der Kommandozeile uebergeben wurden
 	 */
-	public static final initialisiere(ClientDavInterface dav, Set<SystemObject> geraete){
+	public static final void initialisiere(ClientDavInterface dav, Set<SystemObject> geraete){
+		DAV = dav;
+		KONFIG_ATG = dav.getDataModel().
+			getAttributeGroup("atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
+		
 		for(SystemObject geraet:geraete){
-			
+			initialisiere((ConfigurationObject)geraet);
 		}
 	}
 	
+	
+	/**
+	 * Initialisiert ein einzelnes Objekt vom Typ <code>typ.gerät</code>
+	 * 
+	 * @param geraet ein Objekt vom Typ <code>typ.gerät</code>
+	 */
+	private static final void initialisiere(ConfigurationObject geraet){
+		if(geraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
+			new Sm(DAV, geraet, null);
+		}else
+		if(geraet.isOfType("typ.kri")){ //$NON-NLS-1$
+			new Kri(DAV, geraet, null);
+		}else
+		if(geraet.isOfType("typ.uz") || //$NON-NLS-1$
+			geraet.isOfType("typ.viz") || //$NON-NLS-1$
+			geraet.isOfType("typ.vrz")){ //$NON-NLS-1$
+			for(SystemObject anschlussPunktSysObj:
+				geraet.getNonMutableSet("AnschlussPunkteGerät").getElements()){ //$NON-NLS-1$
+				ConfigurationObject anschlussPunktKonObj = (ConfigurationObject)anschlussPunktSysObj;
+				
+				Set<SystemObject> unterGeraete = new HashSet<SystemObject>(); 
+				for(SystemObject komPartner:
+					anschlussPunktKonObj.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
+					
+					Data konfigDatum = komPartner.getConfigurationData(KONFIG_ATG);
+					if(konfigDatum != null){
+						SystemObject unterGeraet = konfigDatum.getReferenceValue
+									("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+						if(unterGeraet != null){
+							unterGeraete.add(unterGeraet);
+						}else{
+							LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
+									" (Geraet: " + geraet +  //$NON-NLS-1$
+									") ist kein Geraet definiert"); //$NON-NLS-1$				
+						}
+					}else{
+						LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
+								" (an Geraet: " + geraet +  //$NON-NLS-1$
+								") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
+								"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
+					}
+				}
+
+				/**
+				 * Iteriere ueber alle Untergeraete dieses Anschlusspunktes.
+				 * Wenn ALLE Anschlusspunkte Steuermodule sein sollten, dann
+				 * wird davon ausgegangen, dass es sich bei diesem Anschlusspunkt 
+				 * um einen Inselbus handelt
+				 */
+				int steuerModulZaehler = 0;
+				for(SystemObject unterGeraet:unterGeraete){
+					if(unterGeraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
+						steuerModulZaehler++;
+					}
+				}
+				
+				if(unterGeraete.size() > 0){
+					if(unterGeraete.size() == steuerModulZaehler){
+						new Inselbus(DAV, anschlussPunktSysObj, null);					
+					}else{
+						for(SystemObject unterGeraet:unterGeraete){
+							initialisiere((ConfigurationObject)unterGeraet);	
+						}
+					}
+				}
+			}
+		}
+	}	
 }

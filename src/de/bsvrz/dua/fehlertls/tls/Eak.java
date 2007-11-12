@@ -28,6 +28,8 @@ package de.bsvrz.dua.fehlertls.tls;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.fehlertls.de.DeFaException;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * TODO
@@ -37,6 +39,12 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  */
 public class Eak
 extends AbstraktGeraet{
+	
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
+	
 	
 	/**
 	 * Standardkonstruktor
@@ -49,8 +57,13 @@ extends AbstraktGeraet{
 	protected Eak(ClientDavInterface dav, SystemObject objekt,
 			AbstraktGeraet vater) {
 		super(dav, objekt, vater);
-		for(SystemObject de:this.objekt.getNonMutableSet("De").getElements()){ //$NON-NLS-1$
-			this.kinder.add(new Eak(dav, de, this));
+		for(SystemObject deObj:this.objekt.getNonMutableSet("De").getElements()){ //$NON-NLS-1$
+			try {
+				De de = new De(dav, deObj, this);
+				this.kinder.add(de);
+			} catch (DeFaException e) {
+				LOGGER.warning("De " + deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 	}
 	
