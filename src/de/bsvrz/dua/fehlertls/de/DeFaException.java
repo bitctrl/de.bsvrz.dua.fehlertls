@@ -35,7 +35,7 @@ package de.bsvrz.dua.fehlertls.de;
  *
  */
 public class DeFaException
-extends Throwable{
+extends Exception{
 
 	/**
 	 * Standardkonstruktor

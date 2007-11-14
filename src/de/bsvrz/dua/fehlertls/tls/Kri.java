@@ -28,6 +28,13 @@ package de.bsvrz.dua.fehlertls.tls;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
+import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
+import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * TODO
@@ -65,6 +72,26 @@ extends AbstraktGeraet{
 	@Override
 	public Art getGeraeteArt() {
 		return Art.KRI;
+	}
+
+	
+	/**
+	 * {@inheritDoc} 
+	 */
+	@Override
+	public void publiziereFehler(long zeitStempel) {
+		MessageSender.getInstance().sendMessage(
+				MessageType.APPLICATION_DOMAIN,
+				DeFaApplikation.getAppName(),
+				MessageGrade.ERROR,
+				this.objekt,
+				new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+				"Verbindung zum KRI " + this.objekt + " oder KRI selbst defekt." + //$NON-NLS-1$ //$NON-NLS-2$
+						" Verbindung zum KRI oder KRI instand setzen"); //$NON-NLS-1$
+		
+		for(De de:this.getDes()){
+			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.KRI_DEFEKT);
+		}
 	}
 
 }

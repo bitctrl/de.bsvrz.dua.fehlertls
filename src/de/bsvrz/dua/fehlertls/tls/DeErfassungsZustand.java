@@ -28,6 +28,7 @@ package de.bsvrz.dua.fehlertls.tls;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -83,12 +84,12 @@ implements ITlsGloDeFehlerListener,
 	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
 	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	public static final synchronized void initialisiere(ClientDavInterface dav, SystemObject[] deObjekte)
+	public static final synchronized void initialisiere(ClientDavInterface dav, Set<De> deObjekte)
 	throws DeFaException{
 		if(INSTANZEN == null){
 			INSTANZEN = new HashMap<SystemObject, DeErfassungsZustand>();
-			for(SystemObject deObjekt:deObjekte){
-				INSTANZEN.put(deObjekt, new DeErfassungsZustand(dav, deObjekt));
+			for(De deObjekt:deObjekte){
+				INSTANZEN.put(deObjekt.getObjekt(), new DeErfassungsZustand(dav, deObjekt.getObjekt()));
 			}
 		}else{
 			LOGGER.warning("DeErfassungsZustand wurde bereits initialisiert"); //$NON-NLS-1$
@@ -119,6 +120,7 @@ implements ITlsGloDeFehlerListener,
 	throws DeFaException{
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
+		LOGGER.info("DeFa-Zustand von " + objekt + " erfasst");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 
@@ -161,7 +163,7 @@ implements ITlsGloDeFehlerListener,
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 *
 	 */
-	private class Zustand{
+	public class Zustand{
 		
 		/**
 		 * indiziert, das die Parameter dieses DE initialisiert wurden
@@ -234,11 +236,23 @@ implements ITlsGloDeFehlerListener,
 		
 		/**
 		 * Erfragt, ob die Parameter dieses DE initialisiert bereits wurden
+		 * (der Zustand kann auch auf <code>nicht erfasst</code> stehen, wenn
+		 * noch keine Initialisierung stattgefunden hat)
 		 * 
 		 * @return ob die Parameter dieses DE initialisiert bereits wurden
 		 */
 		public final boolean isInitialisiert(){
 			return this.initialisiert;
+		}
+		
+		
+		/**
+		 * Erfragt die aktuelle Erfassungsintervalldauer
+		 * 
+		 * @return die aktuelle Erfassungsintervalldauer
+		 */
+		public final long getErfassungsIntervallDauer(){
+			return this.erfassungsIntervallDauer;
 		}
 		
 		

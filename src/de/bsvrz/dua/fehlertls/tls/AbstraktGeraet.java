@@ -32,6 +32,7 @@ import java.util.Set;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.gerät</code>
@@ -40,6 +41,11 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  *
  */
 public abstract class AbstraktGeraet {
+	
+	/**
+	 * ob die TLS-Hierarchie in einem Baum dargestellt werden soll
+	 */
+	private static final boolean TLS_BAUM = true;
 	
 	/**
 	 * moegliche Geraetearten
@@ -73,11 +79,12 @@ public abstract class AbstraktGeraet {
 	 * Geraet
 	 */
 	protected AbstraktGeraet vater = null;
-	
+		
 	/**
 	 * alle DEs, die sich unterhalb von diesem Element befinden
 	 */
 	private Set<De> des = null;
+	
 	
 	
 	/**
@@ -86,6 +93,46 @@ public abstract class AbstraktGeraet {
 	 * @return die Geraeteart dieses Geraetes
 	 */
 	public abstract Art getGeraeteArt();
+	
+	
+	/**
+	 * Diese Methode muss zurueckgeben, ob an diesem Knoten innerhalb der
+	 * TLS-Hierarchie eine Publikation eines Fehlers moeglich "waere".<br> 
+	 * Das heisst fuer ein EAK z.B., dass alle angeschlossenen DEs keine
+	 * Daten liefern und also theoretisch die Fehlermeldung "Kein DE am
+	 * EAK x des Steuermodul y liefert Daten" ausgegeben werden koennte.<br>
+	 * <b>Achtung:</b> Dies impliziert nicht, dass das Element eine TLS-Hierarchie-
+	 * Ebene hoeher (beiom EAK ein Steuermodul) keine Fehlermeldung publizieren
+	 * kann (das ist nicht bekannt). 
+	 * 
+	 * @param zeitStempel der Zeitstempel des Fehlers
+	 * @return ob an diesem Knoten innerhalb der TLS-Hierarchie eine
+	 * Publikation eines Fehlers moeglich "waere"
+	 */
+	public boolean kannFehlerHierPublizieren(long zeitStempel) {		
+		boolean kannHierPublizieren = false;
+		
+		if(this.getDes().size() > 1){
+			kannHierPublizieren = true;
+			
+			for(De de:this.getDes()){
+				if(de.isInTime()){
+					kannHierPublizieren = false;
+					break;
+				}
+			}			
+		}		
+		
+		return kannHierPublizieren;
+	}
+	
+	
+	/**
+	 * Publiziert einen Fehler
+	 * 
+	 * @param zeitStempel der Zeitstempel des Fehlers
+	 */
+	public abstract void publiziereFehler(final long zeitStempel);
 	
 	
 	/**
@@ -102,6 +149,24 @@ public abstract class AbstraktGeraet {
 		}
 		this.objekt = (ConfigurationObject)objekt;
 		this.vater = vater;
+	}
+	
+	
+	/**
+	 * Versucht eine Fehlerpublikation fuer diesen Geraet 
+	 * 
+	 * @param zeitStempel der Zeitstempel des Fehlers
+	 */
+	protected final void versucheFehlerPublikation(final long zeitStempel){
+		if(this.isTopElement()){
+			publiziereFehler(zeitStempel);
+		}else{
+			if(this.vater.kannFehlerHierPublizieren(zeitStempel)){
+				this.vater.versucheFehlerPublikation(zeitStempel);
+			}else{
+				publiziereFehler(zeitStempel);
+			}
+		}
 	}
 	
 	
@@ -131,12 +196,12 @@ public abstract class AbstraktGeraet {
 	
 	
 	/**
-	 * Erfragt (implizit) ob dieses Geraet einen Vater hat
+	 * Erfragt ob dieses Geraet an der Spitze einer TLS-Hierarchie steht
 	 *  
-	 * @return ob dieses Geraet einen Vater hat
+	 * @return ob dieses Geraet an der Spitze einer TLS-Hierarchie steht
 	 */
 	public final boolean isTopElement(){
-		return this.vater == null;
+		return this.vater == null || this.vater.getObjekt() == null;
 	}
 	
 	
@@ -161,7 +226,38 @@ public abstract class AbstraktGeraet {
 	 */
 	@Override
 	public String toString() {
-		return this.objekt.toString();
+		if(TLS_BAUM){
+			String baum = Konstante.LEERSTRING;
+			
+			AbstraktGeraet dummy = this;
+			while(dummy.getVater() != null){
+				baum += "   "; //$NON-NLS-1$
+				dummy = dummy.getVater();
+			}
+			baum += this.objekt == null?"WURZEL":this.objekt.getPid(); //$NON-NLS-1$
+			for(AbstraktGeraet kind:this.kinder){
+				baum += "\n" + kind.toString(); //$NON-NLS-1$
+			}
+			
+			return baum;
+		}else{
+			String v = "keiner"; //$NON-NLS-1$
+			String k = "keine"; //$NON-NLS-1$
+			
+			if(this.vater != null){
+				v = this.vater.getObjekt() == null?"WURZEL":this.vater.getObjekt().getPid();   //$NON-NLS-1$
+			}
+			if(!this.kinder.isEmpty()){
+				AbstraktGeraet[] dummy = this.kinder.toArray(new AbstraktGeraet[0]);
+				k = dummy[0].getObjekt().getPid();
+				for(int i = 1; i < dummy.length; i++){
+					k += ", " + dummy[i].getObjekt().getPid();   //$NON-NLS-1$
+				}			
+			}
+				
+			return this.objekt == null?"WURZEL":this.objekt.toString() + " (Vater: " + v +  //$NON-NLS-1$ //$NON-NLS-2$
+					", Kinder:[" + k + "])"; //$NON-NLS-1$ //$NON-NLS-2$			
+		}
 	}
 	
 	
@@ -181,6 +277,16 @@ public abstract class AbstraktGeraet {
 		}		
 		
 		return this.des;
+	}
+	
+	
+	/**
+	 * Erfragt das mit diesem Objekt assoziierte Systemobjekt
+	 * 
+	 * @return das mit diesem Objekt assoziierte Systemobjekt
+	 */
+	public final SystemObject getObjekt(){
+		return this.objekt;
 	}
 	
 	

@@ -65,7 +65,7 @@ public class DeTypLader {
 	 * "DE Fehleranalyse fehlende Messdaten" benötigt wird, um die Datenidentifikationen
 	 * eines bestimmten DE-Typs zu ermitteln, die Messwerte enthalten
 	 * 
-	 * @param deTypObj Objekt des DE-Typs wie er in der Konfiguration steht
+	 * @param deTypObj Systemobjekttyp des DE-Typs wie er in der Konfiguration steht
 	 * @return eine Instanz einer DE-Typ-Beschreibung des DE-Typs,
 	 * dessen PID übergeben wurde 
 	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder

@@ -1,0 +1,413 @@
+<!DOCTYPE konfigurationsBereich PUBLIC "-//K2S//DTD Dokument//DE" "K2S.dtd">
+<konfigurationsBereich pid="kb.fehlerTlsTest" verantwortlich="kv.aoe.bitctrl.tester">
+    <konfigurationsAenderung stand="12.11.2007" autor="Thomas Thierfelder, BitCtrl Systems GmbH" grund="Test">
+		Bereich zum Test der Messwertersetzung UFD erzeugt.</konfigurationsAenderung>
+    <modell>
+    </modell>
+    <objekte>
+
+		<konfigurationsObjekt pid="vrz" name="vrz" typ="typ.vrz">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+				<element pid="ap.vrz" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="ap.vrz" name="ap.vrz" typ="typ.anschlussPunkt">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteKommunikationsPartner">
+				<element pid="kp.ap.vrz" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kp.ap.vrz" name="kp.ap.vrz" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="viz" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+
+
+		<konfigurationsObjekt pid="viz" name="viz" typ="typ.viz">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+				<element pid="ap.viz" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="ap.viz" name="ap.viz" typ="typ.anschlussPunkt">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteKommunikationsPartner">
+				<element pid="kp.ap.viz" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kp.ap.viz" name="kp.ap.viz" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="uz" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+
+
+		<konfigurationsObjekt pid="uz" name="uz" typ="typ.uz">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+				<element pid="ap.uz" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="ap.uz" name="ap.uz" typ="typ.anschlussPunkt">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteKommunikationsPartner">
+				<element pid="kp.ap.uz" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kp.ap.uz" name="kp.ap.uz" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="kri" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+
+
+		<konfigurationsObjekt pid="kri" name="kri" typ="typ.kri">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+				<element pid="ap.kri" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="ap.kri" name="ap.kri" typ="typ.anschlussPunkt">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteKommunikationsPartner">
+				<element pid="kp.ap.kri" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kp.ap.kri" name="kp.ap.kri" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="sm" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+
+
+		<konfigurationsObjekt pid="sm" name="sm" typ="typ.steuerModul">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+			</objektMenge>
+			<objektMenge name="Eak">
+				<element pid="eak" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="eak" name="eak" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="deUfd" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="deUfd" name="deUfd" typ="typ.deUfd">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+
+<!-- Teil1 -->
+
+		<konfigurationsObjekt pid="kri1" name="kri1" typ="typ.kri">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+				<element pid="kri1.ib1" />
+				<element pid="kri1.ib2" />
+			</objektMenge>
+		</konfigurationsObjekt>
+		
+<!-- Anschlusspunkte -->
+
+		<konfigurationsObjekt pid="kri1.ib1" name="kri1.ib1" typ="typ.anschlussPunkt">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteKommunikationsPartner">
+				<element pid="kri1.ib1.apkp1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2" name="kri1.ib2" typ="typ.anschlussPunkt">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteKommunikationsPartner">
+				<element pid="kri1.ib2.apkp1" />
+				<element pid="kri1.ib2.apkp2" />
+				<element pid="kri1.ib2.apkp3" />
+			</objektMenge>
+		</konfigurationsObjekt>
+		
+<!-- Kommunikationspartner -->
+		
+		<konfigurationsObjekt pid="kri1.ib1.apkp1" name="kri1.ib1.apkp1" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="kri1.ib1.sm1" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.apkp1" name="kri1.ib2.apkp1" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="kri1.ib2.sm1" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.apkp2" name="kri1.ib2.apkp2" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="kri1.ib2.sm2" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.apkp3" name="kri1.ib2.apkp3" typ="typ.anschlussPunktKommunikationsPartner">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<datensatz attributgruppe="atg.anschlussPunktKommunikationsPartner">
+				<datum name="Bezeichnung" wert="egal" />
+				<datum name="ProtokollTyp" wert="egal" />
+				<datum name="KommunikationsPartner" wert="kri1.ib2.sm3" />
+				<datum name="PortNummer" wert="1" />
+			</datensatz>
+		</konfigurationsObjekt>
+		
+<!-- Steuermodule -->		
+
+		<konfigurationsObjekt pid="kri1.ib1.sm1" name="kri1.ib1.sm1" typ="typ.steuerModul">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+			</objektMenge>
+			<objektMenge name="Eak">
+				<element pid="kri1.ib1.sm1.eakufd1" />
+				<element pid="kri1.ib1.sm1.eaklve1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm1" name="kri1.ib2.sm1" typ="typ.steuerModul">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+			</objektMenge>
+			<objektMenge name="Eak">
+				<element pid="kri1.ib2.sm1.eakufd1" />
+				<element pid="kri1.ib2.sm1.eaklve1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.sm2" name="kri1.ib2.sm2" typ="typ.steuerModul">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+			</objektMenge>
+			<objektMenge name="Eak">
+				<element pid="kri1.ib2.sm2.eaklve1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.sm3" name="kri1.ib2.sm3" typ="typ.steuerModul">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="AnschlussPunkteGerät">
+			</objektMenge>
+			<objektMenge name="Eak">
+				<element pid="kri1.ib2.sm3.eaklve1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+<!-- EAKs -->
+
+		<konfigurationsObjekt pid="kri1.ib1.sm1.eakufd1" name="kri1.ib1.sm1.eakufd1" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="kri1.ib1.sm1.eakufd1.de1" />
+				<element pid="kri1.ib1.sm1.eakufd1.de2" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib1.sm1.eaklve1" name="kri1.ib1.sm1.eaklve1" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="kri1.ib1.sm1.eaklve1.de1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm1.eakufd1" name="kri1.ib2.sm1.eakufd1" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="kri1.ib2.sm1.eakufd1.de1" />
+				<element pid="kri1.ib2.sm1.eakufd1.de2" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm1.eaklve1" name="kri1.ib2.sm1.eaklve1" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="kri1.ib2.sm1.eaklve1.de1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm2.eaklve1" name="kri1.ib2.sm2.eaklve1" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="kri1.ib2.sm2.eaklve1.de1" />
+				<element pid="kri1.ib2.sm2.eaklve1.de2" />
+			</objektMenge>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.sm3.eaklve1" name="kri1.ib2.sm3.eaklve1" typ="typ.eak">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+			<objektMenge name="De">
+				<element pid="kri1.ib2.sm3.eaklve1.de1" />
+			</objektMenge>
+		</konfigurationsObjekt>
+
+<!-- Des -->
+
+		<konfigurationsObjekt pid="kri1.ib1.sm1.eakufd1.de1" name="kri1.ib1.sm1.eakufd1.de1" typ="typ.deUfd">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib1.sm1.eakufd1.de2" name="kri1.ib1.sm1.eakufd1.de2" typ="typ.deUfd">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib1.sm1.eaklve1.de1" name="kri1.ib1.sm1.eaklve1.de1" typ="typ.deLve">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm1.eakufd1.de1" name="kri1.ib2.sm1.eakufd1.de1" typ="typ.deUfd">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.sm1.eakufd1.de2" name="kri1.ib2.sm1.eakufd1.de2" typ="typ.deUfd">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm1.eaklve1.de1" name="kri1.ib2.sm1.eaklve1.de1" typ="typ.deLve">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm2.eaklve1.de1" name="kri1.ib2.sm2.eaklve1.de1" typ="typ.deLve">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="kri1.ib2.sm2.eaklve1.de2" name="kri1.ib2.sm2.eaklve1.de2" typ="typ.deLve">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+
+		<konfigurationsObjekt pid="kri1.ib2.sm3.eaklve1.de1" name="kri1.ib2.sm3.eaklve1.de1" typ="typ.deLve">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+		
+		<konfigurationsObjekt pid="DeFa" name="DeFa" typ="typ.tlsFehlerAnalyse">
+			<info>
+				<kurzinfo>info</kurzinfo>
+			</info>
+		</konfigurationsObjekt>
+					
+    </objekte>
+</konfigurationsBereich>

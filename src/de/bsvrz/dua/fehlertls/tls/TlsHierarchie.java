@@ -43,8 +43,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TlsHierarchie {
-	
+public class TlsHierarchie
+extends AbstraktGeraet{
+
 	/**
 	 * Debug-Logger
 	 */
@@ -59,7 +60,37 @@ public class TlsHierarchie {
 	 * Konfigurierende Eigenschaften eines Kommunikationspartners an einem Anschlusspunkt
 	 */
 	public static AttributeGroup KONFIG_ATG = null;
+	
+	/**
+	 * statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die Geraete, mit
+	 * der diese TLS-Hierarchie initialisiert wurde
+	 */
+	private static TlsHierarchie WURZEL = null;
 
+	
+	/**
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Datenverteiler-Verbindund
+	 */
+	private TlsHierarchie(ClientDavInterface dav) {
+		super(dav, null, null);
+	}
+	
+	
+	/**
+	 * Erfragt die statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die Geraete, mit
+	 * der diese TLS-Hierarchie initialisiert wurde
+	 * 
+	 * @return die statische Wurzel der TLS-Hierarchie
+	 */
+	public static final TlsHierarchie getWurzel(){
+		if(WURZEL == null){
+			throw new RuntimeException("TLS-Hierarchie wurde noch nicht initialisiert"); //$NON-NLS-1$
+		}
+		return WURZEL;
+	}
+	
 	
 	/**
 	 * Standardkonstruktor
@@ -68,12 +99,15 @@ public class TlsHierarchie {
 	 * @param geraete Geraete, die in der Kommandozeile uebergeben wurden
 	 */
 	public static final void initialisiere(ClientDavInterface dav, Set<SystemObject> geraete){
-		DAV = dav;
-		KONFIG_ATG = dav.getDataModel().
-			getAttributeGroup("atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
-		
-		for(SystemObject geraet:geraete){
-			initialisiere((ConfigurationObject)geraet);
+		if(WURZEL == null){
+			WURZEL = new TlsHierarchie(dav);
+			DAV = dav;
+			KONFIG_ATG = dav.getDataModel().
+				getAttributeGroup("atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
+			
+			for(SystemObject geraet:geraete){
+				initialisiere((ConfigurationObject)geraet);
+			}			
 		}
 	}
 	
@@ -85,10 +119,10 @@ public class TlsHierarchie {
 	 */
 	private static final void initialisiere(ConfigurationObject geraet){
 		if(geraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
-			new Sm(DAV, geraet, null);
+			WURZEL.kinder.add(new Sm(DAV, geraet, WURZEL));
 		}else
 		if(geraet.isOfType("typ.kri")){ //$NON-NLS-1$
-			new Kri(DAV, geraet, null);
+			WURZEL.kinder.add(new Kri(DAV, geraet, WURZEL));
 		}else
 		if(geraet.isOfType("typ.uz") || //$NON-NLS-1$
 			geraet.isOfType("typ.viz") || //$NON-NLS-1$
@@ -135,7 +169,7 @@ public class TlsHierarchie {
 				
 				if(unterGeraete.size() > 0){
 					if(unterGeraete.size() == steuerModulZaehler){
-						new Inselbus(DAV, anschlussPunktSysObj, null);					
+						WURZEL.kinder.add(new Inselbus(DAV, anschlussPunktSysObj, WURZEL));					
 					}else{
 						for(SystemObject unterGeraet:unterGeraete){
 							initialisiere((ConfigurationObject)unterGeraet);	
@@ -144,5 +178,24 @@ public class TlsHierarchie {
 				}
 			}
 		}
-	}	
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Art getGeraeteArt() {
+		return null;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void publiziereFehler(long zeitStempel) {
+		assert(false);
+	}
+	
 }

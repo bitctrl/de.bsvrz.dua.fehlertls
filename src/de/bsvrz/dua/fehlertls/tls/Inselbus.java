@@ -26,10 +26,20 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
+import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
+import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * TODO
@@ -98,6 +108,104 @@ extends AbstraktGeraet{
 	@Override
 	public Art getGeraeteArt() {
 		return Art.INSELBUS;
+	}
+
+	
+	/**
+	 * {@inheritDoc}<br>
+	 * 
+	 * Gibt <code>true</code> zurueck, wenn:<br> 
+	 * 1. mehr als ein Steuermodul angeschlossen ist und<br>
+	 * 2. mehr als ein angeschlossenes Steuermodul keine Daten liefert<br>
+	 */
+	@Override
+	public boolean kannFehlerHierPublizieren(long zeitStempel) {
+		boolean kannHierPublizieren = false;
+
+		if(this.kinder.size() > 1){
+			int steuerModuleOhneDaten = 0;
+			for(AbstraktGeraet steuerModul:this.kinder){
+				
+				boolean alleDeKeineDaten = true;
+				for(De de:steuerModul.getDes()){
+					if(de.isInTime()){
+						alleDeKeineDaten = false;
+						break;
+					}
+				}
+				
+				if(alleDeKeineDaten){
+					steuerModuleOhneDaten++;
+				}
+				
+				if(steuerModuleOhneDaten > 1){
+					kannHierPublizieren = true;
+					break;
+				}
+			}
+		}
+		
+		return kannHierPublizieren;
+	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void publiziereFehler(long zeitStempel) {
+		Set<AbstraktGeraet> steuerModuleOhneDaten = new HashSet<AbstraktGeraet>();
+
+		for(AbstraktGeraet steuerModul:this.kinder){
+				
+			boolean alleDeKeineDaten = true;
+			for(De de:steuerModul.getDes()){
+				if(de.isInTime()){
+					alleDeKeineDaten = false;
+					break;
+				}
+			}
+			
+			if(alleDeKeineDaten){
+				steuerModuleOhneDaten.add(steuerModul);
+			}			
+		}
+		
+		if(steuerModuleOhneDaten.size() == this.kinder.size()){
+			AbstraktGeraet[] steuerModulArray = steuerModuleOhneDaten.toArray(new AbstraktGeraet[0]);
+			String steuerModule = steuerModulArray[0].getObjekt().toString();
+			for(int i = 1; i < steuerModulArray.length; i++){
+				steuerModule += ", " + steuerModulArray[i]; //$NON-NLS-1$
+			}			
+			
+			MessageSender.getInstance().sendMessage(
+					MessageType.APPLICATION_DOMAIN,
+					DeFaApplikation.getAppName(),
+					MessageGrade.ERROR,
+					this.objekt,
+					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+					"Inselbus " + this.objekt + " gestört: Für die DE der Steuermodule " //$NON-NLS-1$ //$NON-NLS-2$
+					+ steuerModule + " sind keine Daten verfügbar. Inselbus " + this.objekt + " instand setzen");//$NON-NLS-1$ //$NON-NLS-2$
+			
+			for(AbstraktGeraet steuerModulOhneDaten:steuerModuleOhneDaten){
+				for(De de:steuerModulOhneDaten.getDes()){
+					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_DEFEKT);
+				}					
+			}
+		}else{
+			MessageSender.getInstance().sendMessage(
+					MessageType.APPLICATION_DOMAIN,
+					DeFaApplikation.getAppName(),
+					MessageGrade.ERROR,
+					this.objekt,
+					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+					"Modem am Inselbus " + this.objekt +//$NON-NLS-1$
+					" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");//$NON-NLS-1$
+			
+			for(De de:this.getDes()){
+				de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
+			}
+		}
 	}
 
 }

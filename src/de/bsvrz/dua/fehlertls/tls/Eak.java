@@ -29,7 +29,14 @@ package de.bsvrz.dua.fehlertls.tls;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
+import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
+import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
+import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * TODO
@@ -56,12 +63,13 @@ extends AbstraktGeraet{
 	 */
 	protected Eak(ClientDavInterface dav, SystemObject objekt,
 			AbstraktGeraet vater) {
-		super(dav, objekt, vater);
+		super(dav, objekt, vater);		
 		for(SystemObject deObj:this.objekt.getNonMutableSet("De").getElements()){ //$NON-NLS-1$
 			try {
 				De de = new De(dav, deObj, this);
 				this.kinder.add(de);
 			} catch (DeFaException e) {
+				e.printStackTrace();
 				LOGGER.warning("De " + deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
@@ -74,6 +82,44 @@ extends AbstraktGeraet{
 	@Override
 	public Art getGeraeteArt() {
 		return Art.EAK;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean kannFehlerHierPublizieren(long zeitStempel) {
+		boolean kannHierPublizieren = true;
+		
+		for(De de:this.getDes()){
+			if(de.isInTime()){
+				kannHierPublizieren = false;
+				break;
+			}
+		}
+		
+		return kannHierPublizieren;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void publiziereFehler(long zeitStempel) {
+		MessageSender.getInstance().sendMessage(
+				MessageType.APPLICATION_DOMAIN,
+				DeFaApplikation.getAppName(),
+				MessageGrade.ERROR,
+				this.objekt,
+				new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+				"EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " defekt." + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						" EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " instand setzen");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		
+		for(De de:this.getDes()){
+			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.EAK_AN_SM_DEFEKT);
+		}
 	}
 
 }

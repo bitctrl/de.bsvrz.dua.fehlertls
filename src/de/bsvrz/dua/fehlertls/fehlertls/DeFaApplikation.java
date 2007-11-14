@@ -32,6 +32,8 @@ import java.util.Set;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
+import de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand;
+import de.bsvrz.dua.fehlertls.tls.TlsHierarchie;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
@@ -84,7 +86,17 @@ implements StandardApplication{
 	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht)
 	 */
 	public static final SystemObject getTlsFehlerAnalyseObjekt(){
-		return null;
+		return TLS_FEHLER_ANALYSE_OBJEKT;
+	}
+	
+	
+	/**
+	 * Erfragt den Namen dieser Applikation
+	 * 
+	 * @return der Name dieser Applikation
+	 */
+	public static final String getAppName(){
+		return "DeFa"; //$NON-NLS-1$
 	}
 	
 
@@ -96,7 +108,11 @@ implements StandardApplication{
 		for(String pidVonGeraet:this.geraetePids){
 			SystemObject geraeteObjekt = dav.getDataModel().getObject(pidVonGeraet);
 			if(geraeteObjekt != null){
-				this.geraete.add(geraeteObjekt);
+				if(geraeteObjekt.isOfType("typ.gerät")){ //$NON-NLS-1$
+					this.geraete.add(geraeteObjekt);	
+				}else{
+					LOGGER.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
+				}				
 			}else{
 				LOGGER.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -120,12 +136,11 @@ implements StandardApplication{
 		if(this.geraete.isEmpty()){
 			LOGGER.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		}else{
-			
-			
-			
+			TlsHierarchie.initialisiere(dav, geraete);			
+			DeErfassungsZustand.initialisiere(dav, TlsHierarchie.getWurzel().getDes());
 		}
 	}
-
+	
 	
 	/**
 	 * {@inheritDoc}
