@@ -26,7 +26,9 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
-import java.util.Date;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
@@ -45,6 +47,7 @@ import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
 import de.bsvrz.dua.fehlertls.parameter.IParameterTlsFehlerAnalyseListener;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
+import de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand.Zustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
@@ -55,7 +58,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TODO
+ * Repraesentiert ein DE fuer die DeFa. Liest alle generischen DE-Parameter
+ * und meldet sich auf alle Daten an, auf die von dem DE gewartet werden soll.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -64,7 +68,15 @@ public class De
 extends AbstraktGeraet
 implements ClientReceiverInterface,
 		   ClientSenderInterface,
-		   IObjektWeckerListener{
+		   IObjektWeckerListener,
+		   IDeErfassungsZustandListener,
+		   IParameterTlsFehlerAnalyseListener{
+	
+	/**
+	 * Die Zeit, die mindestens zwischen Daten, Fehlererkennung und
+	 * Fehleranalyse vergehen muss
+	 */
+	private static final long STANDARD_ZEIT_ABSTAND = 1000L;
 	
 	/**
 	 * Debug-Logger
@@ -92,19 +104,13 @@ implements ClientReceiverInterface,
 	 * Der zusätzliche Zeitverzug, der nach dem erwarteten Empfangszeitpunkt noch bis zur
 	 * Erkennung eines nicht gelieferten Messwertes abgewartet werden muss
 	 */
-	private static long ZEIT_VERZUG_FEHLER_ERKENNUNG = Long.MIN_VALUE;
+	private long zeitVerzugFehlerErkennung = Long.MIN_VALUE;
 	
 	/**
 	 * Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis zur Fehlerermittlung
 	 * abgewartet werden muss
 	 */
-	private static long ZEIT_VERZUG_FEHLER_ERMITTLUNG = Long.MIN_VALUE;
-	
-	/**
-	 * dieses Objekt wird alarmiert, wenn ein Fehler für dieses Objekt
-	 * erkannt wurde (also ein erwarteter Wert ausgefallen ist)
-	 */
-	private FehlerAlarmPunkt fehlerAlarmPunkt = new FehlerAlarmPunkt();
+	private long zeitVerzugFehlerErmittlung = Long.MIN_VALUE;
 	
 	/**
 	 * als letztes wurde fuer diesen Zeitstempel (Datenzeit) ein Nutzdatum
@@ -116,13 +122,22 @@ implements ClientReceiverInterface,
 	 * Zeitstempel des letzten fuer dieses DE publizierten Fehlers
 	 */
 	private long zeitStempelLetzterPublizierterFehler = -1;
-
 	
 	/**
 	 * erfragt, ob dieses DE zur Zeit "in Time" ist
 	 */
 	private boolean inTime = true;
 	
+	/**
+	 * aktueller Erfassungszustand bzgl. der DeFa
+	 */
+	private DeErfassungsZustand.Zustand aktuellerZustand = null;
+	
+	/**
+	 * zur einmaligen Publikation von Fehlermeldungen
+	 */
+	private EinmaligeNachrichtenPublikator einzelPublikator = new EinmaligeNachrichtenPublikator();
+
 		
 	/**
 	 * Standardkonstruktor
@@ -136,40 +151,29 @@ implements ClientReceiverInterface,
 	throws DeFaException{
 		super(dav, objekt, vater);
 		
-		/**
-		 * stelle statisch die Parameter der TLS-Fehler-Analyse
-		 * zu Verfügung
-		 */
-		if(ZEIT_VERZUG_FEHLER_ERKENNUNG == Long.MIN_VALUE){
-			ZEIT_VERZUG_FEHLER_ERKENNUNG = -1;
+		if(FEHLER_DATEN_BESCHREIBUNG == null){
 			FEHLER_DATEN_BESCHREIBUNG = new DataDescription(
 					dav.getDataModel().getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
 					dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
-
-			ParameterTlsFehlerAnalyse.getInstanz(dav, DeFaApplikation.getTlsFehlerAnalyseObjekt()).
-				addListener(new IParameterTlsFehlerAnalyseListener(){
-
-					public void aktualisiereParameterTlsFehlerAnalyse(
-							long zeitverzugFehlerErkennung,
-							long zeitverzugFehlerErmittlung) {
-						ZEIT_VERZUG_FEHLER_ERKENNUNG = zeitverzugFehlerErkennung;
-						ZEIT_VERZUG_FEHLER_ERMITTLUNG = zeitverzugFehlerErmittlung;
-					}
-					
-				});
 		}
-				
+		
+		ParameterTlsFehlerAnalyse.getInstanz(dav, DeFaApplikation.getTlsFehlerAnalyseObjekt()).
+				addListener(this);
+						
 		for(DataDescription messWertBeschreibung:DeTypLader.getDeTyp(objekt.getType()).getDeFaMesswertDataDescriptions(dav)){
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
 			LOGGER.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung);  //$NON-NLS-1$//$NON-NLS-2$
 		}
+		
 		try {
 			dav.subscribeSender(this, objekt, FEHLER_DATEN_BESCHREIBUNG,
 					SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
 			throw new DeFaException(e);
-		}		
+		}
+		
+		new DeErfassungsZustand(DAV, this.getObjekt()).addListener(this);
 	}
 
 	
@@ -180,32 +184,15 @@ implements ClientReceiverInterface,
 		if(erwarteteResultate != null){
 			for(ResultData erwartetesResultat:erwarteteResultate){
 				if(erwartetesResultat != null){
-					
-					if(ZEIT_VERZUG_FEHLER_ERKENNUNG > 0 &&
-						ZEIT_VERZUG_FEHLER_ERMITTLUNG > 0){
-						
-						/**
-						 * Nutzdatum empfangen
-						 */
-						if(erwartetesResultat.getData() != null){
-							this.inTime = true;
-							
-							DeErfassungsZustand.Zustand erfassungsZustand =
-								DeErfassungsZustand.getInstanz(erwartetesResultat.getObject()).getZustand();
-							
-							if(erfassungsZustand.isErfasst()){
-								this.letzterErwarteterDatenZeitpunkt = erwartetesResultat.getDataTime() + 
-																	   2 * erfassungsZustand.getErfassungsIntervallDauer();
-								long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt + 
-																   ZEIT_VERZUG_FEHLER_ERKENNUNG;
-								FEHLER_WECKER.setWecker(this.fehlerAlarmPunkt, nachsterErwarteterZeitpunkt);									
-							}		
-						}
-						
-					}else{
-						LOGGER.info("Es wurden noch keine DeFa-Parameter empfangen"); //$NON-NLS-1$
+
+					/**
+					 * Nutzdatum empfangen
+					 */
+					if(erwartetesResultat.getData() != null){
+						this.inTime = true;
+
+						this.versucheErwartung();
 					}
-					
 				}
 			}
 		}
@@ -219,21 +206,6 @@ implements ClientReceiverInterface,
 	public Art getGeraeteArt() {
 		return Art.DE;
 	}
-
-
-	/**
-	 * {@inheritDoc}<br>
-	 * 
-	 * Diese Methode wird aufgerufen, wenn fuer dieses DE ein Fehlergrund ermittelt
-	 * und publiziert werden soll. 
-	 */
-	public void alarm() {
-		System.out.println(new Date() + ", UrsachenAlarm fuer " + De.this.objekt);
-		if(!this.inTime){
-			System.out.println("2" + De.this.objekt);
-			versucheFehlerPublikation(this.letzterErwarteterDatenZeitpunkt);
-		}
-	}	
 	
 	
 	/**
@@ -247,6 +219,7 @@ implements ClientReceiverInterface,
 		this.zeitStempelLetzterPublizierterFehler = fehlerZeit;
 		
 		Data datum = DAV.createData(FEHLER_DATEN_BESCHREIBUNG.getAttributeGroup());
+		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode()); //$NON-NLS-1$
 		try {
 			DAV.sendData(new ResultData(this.objekt, FEHLER_DATEN_BESCHREIBUNG, fehlerZeit, datum));
 		} catch (Exception e) {
@@ -255,16 +228,17 @@ implements ClientReceiverInterface,
 					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
 		}
 		
-		DeErfassungsZustand.Zustand erfassungsZustand =
-			DeErfassungsZustand.getInstanz(this.getObjekt()).getZustand();
-		
-		if(erfassungsZustand.isErfasst()){
-			this.letzterErwarteterDatenZeitpunkt = fehlerZeit + 
-												   2 * erfassungsZustand.getErfassungsIntervallDauer();
-			long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt + 
-											   ZEIT_VERZUG_FEHLER_ERKENNUNG;
-			FEHLER_WECKER.setWecker(this.fehlerAlarmPunkt, nachsterErwarteterZeitpunkt);									
-		}
+		this.versucheErwartung();
+	}
+	
+	
+	/**
+	 * Erfragt den aktuellen Erfassungszustand dieses DE
+	 * 
+	 * @return der aktuellen Erfassungszustand dieses DE
+	 */
+	public final synchronized DeErfassungsZustand.Zustand getZustand(){
+		return this.aktuellerZustand;
 	}
 	
 	
@@ -300,6 +274,63 @@ implements ClientReceiverInterface,
 	/**
 	 * {@inheritDoc}
 	 */
+	public synchronized void aktualisiereParameterTlsFehlerAnalyse(
+			long zeitverzugFehlerErkennung,
+			long zeitverzugFehlerErmittlung) {
+		this.zeitVerzugFehlerErkennung = zeitverzugFehlerErkennung;
+		this.zeitVerzugFehlerErmittlung = zeitverzugFehlerErmittlung;
+		this.versucheErwartung();
+	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public synchronized void aktualisiereErfassungsZustand(Zustand zustand) {
+		this.aktuellerZustand = zustand;
+		this.versucheErwartung();
+	}
+	
+	
+	/**
+	 * Initiiert die Erwartung eines Nutzdatums dieses DE, wenn dies
+	 * aufgrund der aktuellen Parameter bzw. Online-Daten des DE moeglich
+	 * bzw. notwendig ist
+	 */
+	private final synchronized void versucheErwartung(){
+		if(this.zeitVerzugFehlerErkennung >= 0){
+			
+			if(this.aktuellerZustand != null &&
+			   this.aktuellerZustand.getErfassungsIntervallDauer() > 0){
+								
+				this.letzterErwarteterDatenZeitpunkt = getNaechstenIntervallZeitstempel(
+						System.currentTimeMillis(), this.aktuellerZustand.getErfassungsIntervallDauer()); 
+				long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt + 
+												   zeitVerzugFehlerErkennung;
+				
+				FEHLER_WECKER.setWecker(this, nachsterErwarteterZeitpunkt + STANDARD_ZEIT_ABSTAND);
+			}else{
+				if(this.aktuellerZustand != null && this.aktuellerZustand.isInitialisiert()){
+					if(this.aktuellerZustand.getErfassungsIntervallDauer() <= 0){
+						FEHLER_WECKER.setWecker(this, ObjektWecker.AUS);
+						this.einzelPublikator.publiziere(this.aktuellerZustand.getGrund());
+					}
+				}else{
+					LOGGER.warning("DE " + De.this.objekt + " ist (noch) nicht vollstaendig initialisiert");  //$NON-NLS-1$//$NON-NLS-2$
+				}
+			}
+			
+		}else{
+			LOGGER.warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
+					" erwarten, da noch keine (sinnvollen) " + //$NON-NLS-1$
+					"Parameter zur TLS-Fehleranalyse empfangen wurden"); //$NON-NLS-1$
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// wird ignoriert (Anmeldung als Quelle)		
@@ -316,42 +347,113 @@ implements ClientReceiverInterface,
 	
 	
 	/**
-	 * Dieses Objekt wird alarmiert, wenn ein Fehler für dieses Objekt
-	 * erkannt wurde (also ein erwarteter Wert ausgefallen ist)
+	 * {@inheritDoc}
+	 */
+	public void alarm() {
+		/**
+		 * Ueberpruefe Bedingungen nach Afo-9.0 DUA BW C1C2-21 (S. 45)
+		 */
+		
+		DeErfassungsZustand.Zustand zustand = De.this.aktuellerZustand;
+		
+		if(zustand.isErfasst()){
+			De.this.inTime = false;
+			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
+			
+			ANALYSE_WECKER.setWecker(
+				new IObjektWeckerListener(){
+
+					public void alarm() {
+						if(!De.this.inTime){
+							versucheFehlerPublikation(fehlerZeit);
+						}
+					}
+						
+				},
+				fehlerZeit + zeitVerzugFehlerErkennung + zeitVerzugFehlerErmittlung + 2 * STANDARD_ZEIT_ABSTAND);								
+		}else{
+			if(zustand.isInitialisiert()){
+				De.this.einzelPublikator.publiziere(zustand.getGrund());
+			}else{
+				LOGGER.warning(De.this.objekt + " ist (noch) nicht vollstaendig initialisiert");  //$NON-NLS-1$
+			}
+		}			
+	}
+	
+	
+	/**
+	 * Erfragt den ersten Zeitstempel, der sich echt (> 500ms) nach dem Zeitstempel
+	 * <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet und der
+	 * zur uebergebenen Erfassungsintervalllange passt 
+	 * 
+	 * @param jetzt angenommener Jetzt-Zeitpunkt (in ms)
+	 * @param intervallLaenge eine Erfassungsintervalllaenge (in ms)
+	 * @return der ersten Zeitstempel, der sich echt nach dem Zeitstempel
+	 * <code>jetzt</code> befindet und der zur uebergebenen Erfassungsintervalllange
+	 * passt (in ms)
+	 */
+	private static final long getNaechstenIntervallZeitstempel(final long jetzt,
+															  final long intervallLaenge){
+		final long jetztPlus = jetzt + 500L;
+		GregorianCalendar stundenAnfang = new GregorianCalendar();
+		stundenAnfang.setTimeInMillis(jetztPlus);
+		stundenAnfang.set(Calendar.MINUTE, 0);
+		stundenAnfang.set(Calendar.SECOND, 0);
+		stundenAnfang.set(Calendar.MILLISECOND, 0);			
+		
+		long naechsterIntervallZeitstempel;
+		if(intervallLaenge >= Konstante.STUNDE_IN_MS){
+			stundenAnfang.set(Calendar.HOUR_OF_DAY, 0);
+			final long msNachTagesAnfang = jetztPlus - stundenAnfang.getTimeInMillis();
+			final long intervalleSeitTagesAnfang = msNachTagesAnfang / intervallLaenge;
+			naechsterIntervallZeitstempel = stundenAnfang.getTimeInMillis() +
+											(intervalleSeitTagesAnfang + 1) * intervallLaenge;
+		}else{
+			final long msNachStundenAnfang = jetztPlus - stundenAnfang.getTimeInMillis();
+			final long intervalleSeitStundenAnfang = msNachStundenAnfang / intervallLaenge;
+			naechsterIntervallZeitstempel = stundenAnfang.getTimeInMillis() +
+											(intervalleSeitStundenAnfang + 1) * intervallLaenge; 
+		}
+				
+		return naechsterIntervallZeitstempel;
+	}
+	
+	
+	/**
+	 * Klasse zur einmaligen Publikation von Fehlermeldungen
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 *
 	 */
-	private class FehlerAlarmPunkt
-	implements IObjektWeckerListener{
-
+	private class EinmaligeNachrichtenPublikator{
+		
 		/**
-		 * {@inheritDoc}
+		 * letzte fuer dieses DE publizierte einmalige Betriebsmeldung
 		 */
-		public void alarm() {
-			/**
-			 * Ueberpruefe Bedingungen nach Afo-9.0 DUA BW C1C2-21 (S. 45)
-			 */
-			System.out.println(new Date() + ", FehlerAlarm fuer " + De.this.objekt);
-			
-			DeErfassungsZustand.Zustand zustand = DeErfassungsZustand.getInstanz(De.this.objekt).getZustand();
-			if(zustand.isErfasst()){
-				De.this.inTime = false;
-				ANALYSE_WECKER.setWecker(De.this, De.this.letzterErwarteterDatenZeitpunkt + ZEIT_VERZUG_FEHLER_ERMITTLUNG);								
-			}else{
-				if(zustand.isInitialisiert()){
+		private String letzteEinmaligeNachricht = Konstante.LEERSTRING;
+		
+		
+		/**
+		 * Publiziert eine Fehlermeldung einmalig
+		 * 
+		 * @param text der Text der Fehlermeldung
+		 */
+		protected final void publiziere(final String text){
+			synchronized (De.this) {
+				if( !this.letzteEinmaligeNachricht.equals(text) ){
+					this.letzteEinmaligeNachricht = text;
 					MessageSender.getInstance().sendMessage(
 							MessageType.APPLICATION_DOMAIN,
 							DeFaApplikation.getAppName(),
 							MessageGrade.ERROR,
 							De.this.objekt,
 							new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
-							zustand.getGrund());
-					LOGGER.info(zustand.getGrund());
+							text);
+					LOGGER.info(De.this.objekt + ", " + text); //$NON-NLS-1$
 				}else{
-					LOGGER.warning("DE " + De.this.objekt + " ist (noch) nicht vollstaendig initialisiert");  //$NON-NLS-1$//$NON-NLS-2$
-				}
-			}			
-		}	
+					LOGGER.info(De.this.objekt + ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
+				}				
+			}
+		}
 	}
 }

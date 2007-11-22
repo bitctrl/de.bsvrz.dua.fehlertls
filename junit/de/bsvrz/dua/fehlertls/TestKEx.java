@@ -39,6 +39,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
 import de.bsvrz.dua.fehlertls.de.DeTypLader;
 import de.bsvrz.dua.fehlertls.de.IDeTyp;
+import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
 import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -307,13 +308,13 @@ implements ClientSenderInterface{
 	 */
 	public final void setDe(SystemObject de, long zeitStempel, DeStatus status){
 		if(status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AN)){
-			this.setDeFehlerStatus(de, DAVTest.R.nextInt(2) + 1, false);
+			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(), false);
 		}else
 		if(status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS)){
 			this.setDeFehlerStatus(de, 0, false);
 		}else
 		if(status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AN)){
-			this.setDeFehlerStatus(de, DAVTest.R.nextInt(2) + 1, true);
+			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(), true);
 		}else
 		if(status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS)){
 			this.setDeFehlerStatus(de, 0, true);
@@ -322,7 +323,11 @@ implements ClientSenderInterface{
 			this.sendeDatum(de, zeitStempel);
 		}else
 		if(status.equals(DeStatus.ZYKLISCH_AN)){
-			this.setBetriebsParameter(de, 15L * 1000L);
+			if(de.isOfType("typ.deUfd")){ //$NON-NLS-1$
+				this.setBetriebsParameter(de, 60L * 1000L);	
+			}else{
+				this.setBetriebsParameter(de, 15L * 1000L);
+			}			
 		}else
 		if(status.equals(DeStatus.ZYKLISCH_AUS)){
 			this.setBetriebsParameter(de, -1L);

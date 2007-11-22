@@ -37,7 +37,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TODO
+ * TLS-Hierarchieelement KRI
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -89,7 +89,7 @@ extends AbstraktGeraet{
 				"Verbindung zum KRI " + this.objekt + " oder KRI selbst defekt." + //$NON-NLS-1$ //$NON-NLS-2$
 						" Verbindung zum KRI oder KRI instand setzen"); //$NON-NLS-1$
 		
-		for(De de:this.getDes()){
+		for(De de:this.getErfassteDes()){
 			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.KRI_DEFEKT);
 		}
 	}

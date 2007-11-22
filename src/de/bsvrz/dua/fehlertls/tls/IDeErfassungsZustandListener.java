@@ -23,56 +23,22 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
-
-package de.bsvrz.dua.fehlertls.de.typen;
-
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+package de.bsvrz.dua.fehlertls.tls;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung 
- * (PID: typ.deLve)
- * 
+ * Hoert auf Veraenderungen im Erfassungszustand eines DE bezueglich der DeFa. Dieser
+ * Zustand kann die Werte <code>erfasst</code> und <code>nicht erfasst</code> annehmen
+ *   
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public interface IDeErfassungsZustandListener {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
-	}
-
-
-	/**
-	 * {@inheritDoc}<br>
+	 * Aktualisiert den Erfassungszustand eines DE bezueglich der DeFa
 	 * 
-	 * <b>Achtung: </b> Diese Methode wird so nur fuer Testzwecke benoetigt. Eine
-	 * spezifische Implementation sollte der Nutzer vornehmen
+	 * @param zustand Erfassungszustand eines DE bezueglich der DeFa
 	 */
-	@Override
-	protected DataDescriptionPid[] getDataIdentifikations() {
-		
-		/**
-		 * !!! nur fuer Testzwecke !!!
-		 */
-		
-		return new DataDescriptionPid[]{
-					new DataDescriptionPid("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-				};
-	}
+	public void aktualisiereErfassungsZustand(DeErfassungsZustand.Zustand zustand);
 	
 }

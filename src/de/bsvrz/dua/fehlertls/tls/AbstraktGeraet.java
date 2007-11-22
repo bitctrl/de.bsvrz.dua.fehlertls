@@ -45,7 +45,7 @@ public abstract class AbstraktGeraet {
 	/**
 	 * ob die TLS-Hierarchie in einem Baum dargestellt werden soll
 	 */
-	private static final boolean TLS_BAUM = true;
+	private static final boolean TLS_BAUM = false;
 	
 	/**
 	 * moegliche Geraetearten
@@ -98,8 +98,8 @@ public abstract class AbstraktGeraet {
 	/**
 	 * Diese Methode muss zurueckgeben, ob an diesem Knoten innerhalb der
 	 * TLS-Hierarchie eine Publikation eines Fehlers moeglich "waere".<br> 
-	 * Das heisst fuer ein EAK z.B., dass alle angeschlossenen DEs keine
-	 * Daten liefern und also theoretisch die Fehlermeldung "Kein DE am
+	 * Das heisst fuer ein EAK z.B., dass alle angeschlossenen (und erfassten)
+	 * DEs keine Daten liefern und also theoretisch die Fehlermeldung "Kein DE am
 	 * EAK x des Steuermodul y liefert Daten" ausgegeben werden koennte.<br>
 	 * <b>Achtung:</b> Dies impliziert nicht, dass das Element eine TLS-Hierarchie-
 	 * Ebene hoeher (beiom EAK ein Steuermodul) keine Fehlermeldung publizieren
@@ -112,10 +112,10 @@ public abstract class AbstraktGeraet {
 	public boolean kannFehlerHierPublizieren(long zeitStempel) {		
 		boolean kannHierPublizieren = false;
 		
-		if(this.getDes().size() > 1){
+		if(this.getErfassteDes().size() > 0){
 			kannHierPublizieren = true;
 			
-			for(De de:this.getDes()){
+			for(De de:this.getErfassteDes()){
 				if(de.isInTime()){
 					kannHierPublizieren = false;
 					break;
@@ -158,13 +158,15 @@ public abstract class AbstraktGeraet {
 	 * @param zeitStempel der Zeitstempel des Fehlers
 	 */
 	protected final void versucheFehlerPublikation(final long zeitStempel){
-		if(this.isTopElement()){
-			publiziereFehler(zeitStempel);
-		}else{
-			if(this.vater.kannFehlerHierPublizieren(zeitStempel)){
-				this.vater.versucheFehlerPublikation(zeitStempel);
-			}else{
+		if(kannFehlerHierPublizieren(zeitStempel)){
+			if(this.isTopElement()){
 				publiziereFehler(zeitStempel);
+			}else{
+				if(this.vater.kannFehlerHierPublizieren(zeitStempel)){
+					this.vater.versucheFehlerPublikation(zeitStempel);
+				}else{
+					publiziereFehler(zeitStempel);
+				}
 			}
 		}
 	}
@@ -263,6 +265,27 @@ public abstract class AbstraktGeraet {
 	
 	/**
 	 * Erfragt die in der untersten TLS-Hierarchie unter diesem Geraet
+	 * liegenden DEs, die von der DeFa im Moment erfasst sind
+	 * 
+	 * @return die in der untersten TLS-Hierarchie unter diesem Geraet
+	 * liegenden DEs, die von der DeFa im Moment erfasst sind (ggf.
+	 * leere Liste)
+	 */
+	public final Set<De> getErfassteDes(){
+		Set<De> erfassteDes = new HashSet<De>();
+		
+		for(De de:getDes()){
+			if(de.getZustand() != null && de.getZustand().isErfasst()){
+				erfassteDes.add(de);
+			}
+		}
+		
+		return erfassteDes;
+	}
+	
+	
+	/**
+	 * Erfragt die in der untersten TLS-Hierarchie unter diesem Geraet
 	 * liegenden Geraete (DEs)
 	 * 
 	 * @return die in der untersten TLS-Hierarchie unter diesem Geraet
@@ -304,4 +327,30 @@ public abstract class AbstraktGeraet {
 			}
 		}
 	}
+	
+	
+//	
+//	/**
+//	 * Erfragt, ob dieses Geraet komplett ignoriert werden kann.<br>
+//	 * Dies ist dann der Fall, wenn alle unmittelbar oder mittelbar angeschlossenen
+//	 * DE <code>nicht erfasst</code> im Sinne der DeFa sind. Oder wenn an
+//	 * dieses Geraet unmittelbar bzw. mittelbar keine DE angeschlossen sind 
+//	 * 
+//	 * @return ob dieses Geraet komplett ignoriert werden kann
+//	 */
+//	protected final boolean kannGeraetKomplettIgnorieren(){
+//		boolean ignorieren = true;
+//		
+//		for(De de:this.getDes()){
+//			DeErfassungsZustand.Zustand deErfassungsZustand = 
+//								DeErfassungsZustand.getInstanz(de.getObjekt()).getZustand();
+//			if(deErfassungsZustand.isErfasst()){
+//				ignorieren = false;
+//				break;
+//			}
+//		}
+//		
+//		return ignorieren;
+//	}
+	
 }

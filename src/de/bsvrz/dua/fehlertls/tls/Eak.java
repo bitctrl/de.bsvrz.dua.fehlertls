@@ -39,7 +39,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TODO
+ * TLS-Hierarchieelement EAK
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -89,24 +89,6 @@ extends AbstraktGeraet{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean kannFehlerHierPublizieren(long zeitStempel) {
-		boolean kannHierPublizieren = true;
-		
-		for(De de:this.getDes()){
-			if(de.isInTime()){
-				kannHierPublizieren = false;
-				break;
-			}
-		}
-		
-		return kannHierPublizieren;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public void publiziereFehler(long zeitStempel) {
 		MessageSender.getInstance().sendMessage(
 				MessageType.APPLICATION_DOMAIN,
@@ -117,7 +99,7 @@ extends AbstraktGeraet{
 				"EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " defekt." + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						" EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " instand setzen");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		
-		for(De de:this.getDes()){
+		for(De de:this.getErfassteDes()){
 			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.EAK_AN_SM_DEFEKT);
 		}
 	}

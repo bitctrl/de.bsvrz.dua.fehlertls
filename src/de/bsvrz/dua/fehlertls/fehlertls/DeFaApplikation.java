@@ -32,7 +32,6 @@ import java.util.Set;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
-import de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand;
 import de.bsvrz.dua.fehlertls.tls.TlsHierarchie;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
@@ -136,8 +135,7 @@ implements StandardApplication{
 		if(this.geraete.isEmpty()){
 			LOGGER.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		}else{
-			TlsHierarchie.initialisiere(dav, geraete);			
-			DeErfassungsZustand.initialisiere(dav, TlsHierarchie.getWurzel().getDes());
+			TlsHierarchie.initialisiere(dav, geraete);
 		}
 	}
 	

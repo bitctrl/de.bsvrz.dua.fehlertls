@@ -37,7 +37,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TODO
+ * TLS-Hierarchieelement Steuermodul
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -85,7 +85,7 @@ extends AbstraktGeraet{
 				"Modem am Steuermodul " + this.objekt + " oder Steuermodul defekt. " + //$NON-NLS-1$ //$NON-NLS-2$
 					"Modem am Steuermodul " + this.objekt + " oder Steuermodul instand setzen");//$NON-NLS-1$ //$NON-NLS-2$
 		
-		for(De de:this.getDes()){
+		for(De de:this.getErfassteDes()){
 			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT);
 		}
 	}

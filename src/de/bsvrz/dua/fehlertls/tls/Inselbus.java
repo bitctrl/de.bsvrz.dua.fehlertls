@@ -26,8 +26,13 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -42,7 +47,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TODO
+ * TLS-Hierarchieelement Inselbus
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -115,36 +120,68 @@ extends AbstraktGeraet{
 	 * {@inheritDoc}<br>
 	 * 
 	 * Gibt <code>true</code> zurueck, wenn:<br> 
-	 * 1. mehr als ein Steuermodul angeschlossen ist und<br>
-	 * 2. mehr als ein angeschlossenes Steuermodul keine Daten liefert<br>
+	 * 1. mehr als ein (wenigstens teilweise erfasstes) Steuermodul angeschlossen
+	 * ist <b>und</b><br>
+	 * 2. mehr als ein (wenigstens teilweise erfasstes) angeschlossenes Steuermodul
+	 * keine Daten liefert<br>
 	 */
 	@Override
 	public boolean kannFehlerHierPublizieren(long zeitStempel) {
 		boolean kannHierPublizieren = false;
+		
+		/**
+		 * ermittle alle Steuermodule, die unterhalb dieses Inselbusses liegen
+		 * und wenigstens ein erfasstes DE haben (mit ihren erfassten DE)
+		 */
+		Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<Sm, Set<De>>();
 
-		if(this.kinder.size() > 1){
-			int steuerModuleOhneDaten = 0;
-			for(AbstraktGeraet steuerModul:this.kinder){
-				
-				boolean alleDeKeineDaten = true;
-				for(De de:steuerModul.getDes()){
-					if(de.isInTime()){
-						alleDeKeineDaten = false;
-						break;
+		for(De erfassteDe:this.getErfassteDes()){
+			Sm steuerModulVonDe = (Sm)erfassteDe.getVater().getVater();
+			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes.get(steuerModulVonDe);
+			if(erfassteDesAmSteuerModul == null){
+				erfassteDesAmSteuerModul = new HashSet<De>();
+				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe, erfassteDesAmSteuerModul);
+			}
+			erfassteDesAmSteuerModul.add(erfassteDe);
+		}
+
+		/**
+		 * Ermittle alle erfassten Steuermodule, die teilweise ausgefallen sind
+		 */
+		Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<Sm, Set<De>>();
+		for(Sm erfasstesSm:erfassteSteuerModuleMitErfasstenDes.keySet()){
+			for(De erfassteDe:erfassteSteuerModuleMitErfasstenDes.get(erfasstesSm)){
+				if(!erfassteDe.isInTime()){	
+					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes.get(erfasstesSm);	
+					if(alleTimeOutDesVonSteuerModul == null){
+						alleTimeOutDesVonSteuerModul = new HashSet<De>();
+						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm, alleTimeOutDesVonSteuerModul);
 					}
-				}
-				
-				if(alleDeKeineDaten){
-					steuerModuleOhneDaten++;
-				}
-				
-				if(steuerModuleOhneDaten > 1){
-					kannHierPublizieren = true;
-					break;
+					alleTimeOutDesVonSteuerModul.add(erfassteDe);
 				}
 			}
 		}
+
+		/**
+		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen sind
+		 */
+		Set<Sm> totalAusfallSteuerModule = new HashSet<Sm>();
+		for(Sm timeOutSteuerModul:timeOutSteuerModuleMitTimeOutDes.keySet()){
+			/**
+			 * ist das Steuermodul vollstaendig aufgefallen?
+			 */
+			int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(timeOutSteuerModul).size();
+			int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(timeOutSteuerModul).size();
+			if(erfassteDes == timeoutDes){
+				totalAusfallSteuerModule.add(timeOutSteuerModul);
+			}			
+		}
 		
+		if(totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes.keySet().size() ||
+			totalAusfallSteuerModule.size() > 1){
+			kannHierPublizieren = true;
+		}
+				
 		return kannHierPublizieren;
 	}
 	
@@ -154,29 +191,88 @@ extends AbstraktGeraet{
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		Set<AbstraktGeraet> steuerModuleOhneDaten = new HashSet<AbstraktGeraet>();
+		/**
+		 * ermittle alle Steuermodule, die unterhalb dieses Inselbusses liegen
+		 * und wenigstens ein erfasstes DE haben (mit ihren erfassten DE)
+		 */
+		Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<Sm, Set<De>>();
+		
+		for(De erfassteDe:this.getErfassteDes()){
+			Sm steuerModulVonDe = (Sm)erfassteDe.getVater().getVater();
+			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes.get(steuerModulVonDe);
+			if(erfassteDesAmSteuerModul == null){
+				erfassteDesAmSteuerModul = new HashSet<De>();
+				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe, erfassteDesAmSteuerModul);
+			}
+			erfassteDesAmSteuerModul.add(erfassteDe);
+		}
 
-		for(AbstraktGeraet steuerModul:this.kinder){
-				
-			boolean alleDeKeineDaten = true;
-			for(De de:steuerModul.getDes()){
-				if(de.isInTime()){
-					alleDeKeineDaten = false;
-					break;
+		/**
+		 * Ermittle alle erfassten Steuermodule, die teilweise ausgefallen sind
+		 */
+		Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<Sm, Set<De>>();
+		for(Sm erfasstesSm:erfassteSteuerModuleMitErfasstenDes.keySet()){
+			for(De erfassteDe:erfassteSteuerModuleMitErfasstenDes.get(erfasstesSm)){
+				if(!erfassteDe.isInTime()){	
+					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes.get(erfasstesSm);	
+					if(alleTimeOutDesVonSteuerModul == null){
+						alleTimeOutDesVonSteuerModul = new HashSet<De>();
+						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm, alleTimeOutDesVonSteuerModul);
+					}
+					alleTimeOutDesVonSteuerModul.add(erfassteDe);
 				}
 			}
-			
-			if(alleDeKeineDaten){
-				steuerModuleOhneDaten.add(steuerModul);
+		}
+
+		/**
+		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen sind
+		 */
+		Set<Sm> totalAusfallSteuerModule = new HashSet<Sm>();
+		for(Sm timeOutSteuerModul:timeOutSteuerModuleMitTimeOutDes.keySet()){
+			/**
+			 * ist das Steuermodul vollstaendig aufgefallen?
+			 */
+			int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(timeOutSteuerModul).size();
+			int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(timeOutSteuerModul).size();
+			if(erfassteDes == timeoutDes){
+				totalAusfallSteuerModule.add(timeOutSteuerModul);
 			}			
 		}
 		
-		if(steuerModuleOhneDaten.size() == this.kinder.size()){
-			AbstraktGeraet[] steuerModulArray = steuerModuleOhneDaten.toArray(new AbstraktGeraet[0]);
+		if(totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes.keySet().size()){
+			MessageSender.getInstance().sendMessage(
+					MessageType.APPLICATION_DOMAIN,
+					DeFaApplikation.getAppName(),
+					MessageGrade.ERROR,
+					this.objekt,
+					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+					"Modem am Inselbus " + this.objekt +//$NON-NLS-1$
+			" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");//$NON-NLS-1$
+
+			for(AbstraktGeraet steuerModulOhneDaten:totalAusfallSteuerModule){
+				for(De de:timeOutSteuerModuleMitTimeOutDes.get(steuerModulOhneDaten)){
+					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
+				}					
+			}
+		}else{
+			/**
+			 * Nach Pid und Name sortierte Ausgabe der Steuermodule wegen JUnit-Tests
+			 */
+			SortedSet<AbstraktGeraet> totalAusfallSteuerModuleSortiert = new TreeSet<AbstraktGeraet>(
+					new Comparator<AbstraktGeraet>(){
+
+						public int compare(AbstraktGeraet o1, AbstraktGeraet o2) {
+							return o1.getObjekt().toString().compareTo(o2.getObjekt().toString());
+						}
+						
+					});
+			totalAusfallSteuerModuleSortiert.addAll(totalAusfallSteuerModule);
+			AbstraktGeraet[] steuerModulArray = totalAusfallSteuerModuleSortiert.toArray(new AbstraktGeraet[0]);
 			String steuerModule = steuerModulArray[0].getObjekt().toString();
 			for(int i = 1; i < steuerModulArray.length; i++){
-				steuerModule += ", " + steuerModulArray[i]; //$NON-NLS-1$
-			}			
+				steuerModule += ", " + steuerModulArray[i].getObjekt().toString(); //$NON-NLS-1$
+			}
+
 			
 			MessageSender.getInstance().sendMessage(
 					MessageType.APPLICATION_DOMAIN,
@@ -186,24 +282,11 @@ extends AbstraktGeraet{
 					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
 					"Inselbus " + this.objekt + " gestört: Für die DE der Steuermodule " //$NON-NLS-1$ //$NON-NLS-2$
 					+ steuerModule + " sind keine Daten verfügbar. Inselbus " + this.objekt + " instand setzen");//$NON-NLS-1$ //$NON-NLS-2$
-			
-			for(AbstraktGeraet steuerModulOhneDaten:steuerModuleOhneDaten){
-				for(De de:steuerModulOhneDaten.getDes()){
+
+			for(AbstraktGeraet steuerModulOhneDaten:totalAusfallSteuerModule){
+				for(De de:timeOutSteuerModuleMitTimeOutDes.get(steuerModulOhneDaten)){
 					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_DEFEKT);
 				}					
-			}
-		}else{
-			MessageSender.getInstance().sendMessage(
-					MessageType.APPLICATION_DOMAIN,
-					DeFaApplikation.getAppName(),
-					MessageGrade.ERROR,
-					this.objekt,
-					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
-					"Modem am Inselbus " + this.objekt +//$NON-NLS-1$
-					" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");//$NON-NLS-1$
-			
-			for(De de:this.getDes()){
-				de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
 			}
 		}
 	}

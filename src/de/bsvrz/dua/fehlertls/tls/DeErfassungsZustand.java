@@ -26,8 +26,8 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -38,6 +38,8 @@ import de.bsvrz.dua.fehlertls.online.ITlsGloDeFehlerListener;
 import de.bsvrz.dua.fehlertls.online.TlsGloDeFehler;
 import de.bsvrz.dua.fehlertls.parameter.IZyklusSteuerungsParameterListener;
 import de.bsvrz.dua.fehlertls.parameter.ZyklusSteuerungsParameter;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -56,15 +58,13 @@ implements ITlsGloDeFehlerListener,
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
 	
-	/**
-	 * statische Instanzen dieser Klasse
-	 */
-	private static Map<SystemObject, DeErfassungsZustand> INSTANZEN = null;
+	protected static final String GRUND_PRAEFIX = "Keine TLS-Fehleranalyse moeglich. "; //$NON-NLS-1$
 	
 	/**
 	 * indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
 	 */
 	protected Boolean aktiv = null;
+	
 	
 	/**
 	 * TLS-DE-Fehler-Status
@@ -76,38 +76,24 @@ implements ITlsGloDeFehlerListener,
 	 * Abruf parametriert ist und -1 sonst
 	 */
 	protected Long erfassungsIntervallDauer = null;
-
-
-	/**
-	 * @param dav Datenverteiler-Verbindung
-	 * @param deObjekte
-	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
-	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
-	 */
-	public static final synchronized void initialisiere(ClientDavInterface dav, Set<De> deObjekte)
-	throws DeFaException{
-		if(INSTANZEN == null){
-			INSTANZEN = new HashMap<SystemObject, DeErfassungsZustand>();
-			for(De deObjekt:deObjekte){
-				INSTANZEN.put(deObjekt.getObjekt(), new DeErfassungsZustand(dav, deObjekt.getObjekt()));
-			}
-		}else{
-			LOGGER.warning("DeErfassungsZustand wurde bereits initialisiert"); //$NON-NLS-1$
-		}
-	}
-	
 	
 	/**
-	 * Erfragt eine statische Instanz dieser Klasse
-	 * 
-	 * @param objekt ein durch diese Instanz zu ueberwachendes DE
-	 * @return eine statische Instanz dieser Klasse
+	 * aktueller Erfassungszustand bzgl. der DeFa des mit dieser Instanz
+	 * assoziierten DE 
 	 */
-	public static final DeErfassungsZustand getInstanz(SystemObject objekt){
-		return INSTANZEN.get(objekt);	
-	}
+	protected Zustand aktuellerZustand = null;
 	
+	/**
+	 * Menge aller Listener dieses Objektes
+	 */
+	private Set<IDeErfassungsZustandListener> listenerMenge = new HashSet<IDeErfassungsZustandListener>();
 	
+	/**
+	 * das erfasste DE
+	 */
+	private SystemObject obj =  null;
+
+
 	/**
 	 * Standardkonstruktor
 	 * 
@@ -116,11 +102,13 @@ implements ITlsGloDeFehlerListener,
 	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
 	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	private DeErfassungsZustand(ClientDavInterface dav, SystemObject objekt)
+	public DeErfassungsZustand(ClientDavInterface dav, SystemObject objekt)
 	throws DeFaException{
+		this.obj = objekt;
+		this.aktuellerZustand = new Zustand();
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
-		LOGGER.info("DeFa-Zustand von " + objekt + " erfasst");  //$NON-NLS-1$//$NON-NLS-2$
+		LOGGER.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 
@@ -131,7 +119,8 @@ implements ITlsGloDeFehlerListener,
 			TlsDeFehlerStatus deFehlerStatus){
 		synchronized (this) {
 			this.aktiv = aktiv;
-			this.deFehlerStatus = deFehlerStatus;			
+			this.deFehlerStatus = deFehlerStatus;
+			informiereListener();
 		}
 	}
 
@@ -140,7 +129,27 @@ implements ITlsGloDeFehlerListener,
 	 * {@inheritDoc}
 	 */
 	public void aktualisiereZyklusSteuerungsParameter(long erfassungsIntervallDauer) {
-		this.erfassungsIntervallDauer = erfassungsIntervallDauer;		
+		synchronized (this) {
+			this.erfassungsIntervallDauer = erfassungsIntervallDauer;
+			informiereListener();
+		}		
+	}
+	
+	
+	/**
+	 * Informiert alle Listener ueber eine Veraenderung des Erfassungszustandes
+	 * dieses Objektes
+	 */
+	private final void informiereListener(){
+		synchronized (this) {
+			Zustand neuerZustand = new Zustand();
+			if( !neuerZustand.equals(this.aktuellerZustand) ){
+				this.aktuellerZustand = neuerZustand;
+				for(IDeErfassungsZustandListener listener:this.listenerMenge){
+					listener.aktualisiereErfassungsZustand(this.aktuellerZustand);
+				}				
+			}
+		}				
 	}
 	
 	
@@ -157,8 +166,22 @@ implements ITlsGloDeFehlerListener,
 	
 	
 	/**
+	 * Fuegt diesem Objekt einen neuen Listener hinzu und informiert diesen sofort
+	 * ueber den aktuellen Zustand dieses Objektes 
+	 * 
+	 * @param listener ein neuer Listener
+	 */
+	public final synchronized void addListener(IDeErfassungsZustandListener listener){
+		if(this.listenerMenge.add(listener)){
+			listener.aktualisiereErfassungsZustand(this.aktuellerZustand);
+		}
+	}
+	
+	
+	/**
 	 * Repraesentiert den Erfassungszustand dieses DE bezueglich der DeFa. Dieser
-	 * Zustand kann die Werte <code>erfasst</code> und <code>nicht erfasst</code> annehmen
+	 * Zustand kann die Werte <code>erfasst</code> und <code>nicht erfasst</code>
+	 * annehmen
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 *
@@ -196,20 +219,20 @@ implements ITlsGloDeFehlerListener,
 									if(DeErfassungsZustand.this.erfassungsIntervallDauer >= 0){
 										this.erfassungsIntervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
 									}else{
-										this.grund = "Überwachung nicht möglich, da keine " + //$NON-NLS-1$
+										this.grund = "TLS-Fehlerueberwachung nicht moeglich, da keine " + //$NON-NLS-1$
 												"zyklische Abgabe von Meldungen eingestellt"; //$NON-NLS-1$
 									}
 								}else{
 									this.initialisiert = false;
 								}								 
 							}else{
-								this.grund = "DE-Kanal ist passiviert"; //$NON-NLS-1$
+								this.grund = GRUND_PRAEFIX + "DE-Kanal ist passiviert"; //$NON-NLS-1$
 							}
 						}else{
 							this.initialisiert = false;
 						}
 					}else{
-						this.grund = "DE-Fehler(" +  //$NON-NLS-1$
+						this.grund = GRUND_PRAEFIX + "DE-Fehler(" +  //$NON-NLS-1$
 							DeErfassungsZustand.this.deFehlerStatus.toString() + "): " //$NON-NLS-1$
 							+ DeErfassungsZustand.this.deFehlerStatus.getText();
 					}
@@ -217,6 +240,8 @@ implements ITlsGloDeFehlerListener,
 					this.initialisiert = false;
 				}
 			}
+			
+			LOGGER.info("Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj.getPid() + "):\n" + this); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		
@@ -270,6 +295,53 @@ implements ITlsGloDeFehlerListener,
 		public final boolean isErfasst(){
 			return this.erfassungsIntervallDauer >= 0;
 		}
+
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			boolean gleich = false;
+			
+			if(obj != null && obj instanceof Zustand){
+				Zustand that = (Zustand)obj;
+				gleich = this.initialisiert == that.initialisiert &&
+						 this.erfassungsIntervallDauer == that.erfassungsIntervallDauer;
+				if(gleich){
+					if(this.grund != null && that.grund != null){
+						gleich &= this.grund.equals(that.grund);
+					}else{
+						gleich &= this.grund == null && that.grund == null;
+					}
+				}				
+			}
+			
+			return gleich;
+		}
+
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String toString() {
+			String s = Konstante.LEERSTRING;
+			
+			if(initialisiert){
+				if(this.erfassungsIntervallDauer >= 0){
+					s += "erfasst (Intervalldauer: " +  //$NON-NLS-1$
+					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(this.erfassungsIntervallDauer)) +  ")"; //$NON-NLS-1$
+				}else{
+					s += this.grund;
+				}
+			}else{
+				s += "nicht initialisiert"; //$NON-NLS-1$
+			}
+			
+			return s;
+		}
+	
 	}
 	
 }
