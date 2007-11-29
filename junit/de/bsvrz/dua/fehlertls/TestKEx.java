@@ -83,7 +83,7 @@ implements ClientSenderInterface{
 	 *
 	 * @param dav Datenverteiler-Verbindung
 	 * @return die statische Instanz dieser Klasse
-	 * @param Exception wird weitergereicht
+	 * @throws Exception wird weitergereicht
 	 */
 	public static final TestKEx getInstanz(final ClientDavInterface dav)
 	throws Exception{
@@ -98,7 +98,7 @@ implements ClientSenderInterface{
 	 * Standardkonstruktor 
 	 * 
 	 * @param dav Datenverteiler-Verbindung
-	 * @param Exception wird weitergereicht
+	 * @throws Exception wird weitergereicht
 	 */
 	private TestKEx(final ClientDavInterface dav)
 	throws Exception{

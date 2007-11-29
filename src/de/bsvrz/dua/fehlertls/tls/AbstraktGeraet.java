@@ -328,29 +328,4 @@ public abstract class AbstraktGeraet {
 		}
 	}
 	
-	
-//	
-//	/**
-//	 * Erfragt, ob dieses Geraet komplett ignoriert werden kann.<br>
-//	 * Dies ist dann der Fall, wenn alle unmittelbar oder mittelbar angeschlossenen
-//	 * DE <code>nicht erfasst</code> im Sinne der DeFa sind. Oder wenn an
-//	 * dieses Geraet unmittelbar bzw. mittelbar keine DE angeschlossen sind 
-//	 * 
-//	 * @return ob dieses Geraet komplett ignoriert werden kann
-//	 */
-//	protected final boolean kannGeraetKomplettIgnorieren(){
-//		boolean ignorieren = true;
-//		
-//		for(De de:this.getDes()){
-//			DeErfassungsZustand.Zustand deErfassungsZustand = 
-//								DeErfassungsZustand.getInstanz(de.getObjekt()).getZustand();
-//			if(deErfassungsZustand.isErfasst()){
-//				ignorieren = false;
-//				break;
-//			}
-//		}
-//		
-//		return ignorieren;
-//	}
-	
 }

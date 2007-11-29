@@ -65,7 +65,6 @@ implements ITlsGloDeFehlerListener,
 	 */
 	protected Boolean aktiv = null;
 	
-	
 	/**
 	 * TLS-DE-Fehler-Status
 	 */
