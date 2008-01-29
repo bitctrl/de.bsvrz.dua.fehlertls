@@ -31,7 +31,7 @@ import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * DeFa-Beschreibung eines DE-Typs zur Umfelddatenerfassung 
+ * DeFa-Beschreibung eines DE-Typs zur Umfelddatenerfassung<br>
  * (PID: typ.deUfd)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
