@@ -24,6 +24,11 @@ Versionsgeschichte
 1.0.0
 
   - Erste Auslieferung
+  
+1.1.0
+
+  - Anpassung der Tests 
+  
 
 Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
 de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation mit folgenden Parametern gestartet
