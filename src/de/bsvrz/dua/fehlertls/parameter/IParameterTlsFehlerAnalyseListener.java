@@ -46,5 +46,5 @@ public interface IParameterTlsFehlerAnalyseListener {
 	 */
 	public void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung,
 													  long zeitverzugFehlerErmittlung);
-	
+
 }
