@@ -58,21 +58,11 @@ extends AbstraktDeTyp{
 
 
 	/**
-	 * {@inheritDoc}<br>
-	 * 
-	 * <b>Achtung: </b> Diese Methode wird so nur fuer Testzwecke benoetigt. Eine
-	 * spezifische Implementation sollte der Nutzer vornehmen
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected DataDescriptionPid[] getDataIdentifikations() {
-		
-//		/**
-//		 * !!! nur fuer Testzwecke !!!
-//		 */
-//		return new DataDescriptionPid[]{
-//					new DataDescriptionPid("atg.tlsSveErgebnisMeldungVersion0Bis1", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-//				};
-		
+
 		return new DataDescriptionPid[]{
 				new DataDescriptionPid("atg.tlsLveErgebnisMeldungVersion0Bis4", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
 			};
