@@ -118,11 +118,13 @@ implements StandardApplication{
 		}
 		
 		for(SystemObject obj:dav.getDataModel().getType("typ.tlsFehlerAnalyse").getElements()){ //$NON-NLS-1$
-			if(TLS_FEHLER_ANALYSE_OBJEKT != null){
-				LOGGER.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
-				break;
+			if(obj.isValid()){
+				if(TLS_FEHLER_ANALYSE_OBJEKT != null){
+					LOGGER.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+					break;
+				}
+				TLS_FEHLER_ANALYSE_OBJEKT = obj;
 			}
-			TLS_FEHLER_ANALYSE_OBJEKT = obj;
 		}
 		if(TLS_FEHLER_ANALYSE_OBJEKT == null){
 			throw new RuntimeException("Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$

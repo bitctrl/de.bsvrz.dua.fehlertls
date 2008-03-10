@@ -29,10 +29,11 @@ package de.bsvrz.dua.fehlertls.tls;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.gerät</code>
@@ -229,7 +230,7 @@ public abstract class AbstraktGeraet {
 	@Override
 	public String toString() {
 		if(TLS_BAUM){
-			String baum = Konstante.LEERSTRING;
+			String baum = Constants.EMPTY_STRING;
 			
 			AbstraktGeraet dummy = this;
 			while(dummy.getVater() != null){

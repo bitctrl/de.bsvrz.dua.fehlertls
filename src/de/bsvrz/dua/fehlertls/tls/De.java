@@ -30,15 +30,19 @@ package de.bsvrz.dua.fehlertls.tls;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.DataNotSubscribedException;
 import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
@@ -50,7 +54,6 @@ import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand.Zustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
@@ -222,12 +225,16 @@ implements ClientReceiverInterface,
 		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode()); //$NON-NLS-1$
 		try {
 			DAV.sendData(new ResultData(this.objekt, FEHLER_DATEN_BESCHREIBUNG, fehlerZeit, datum));
-		} catch (Exception e) {
+		} catch (DataNotSubscribedException  e) {
+			e.printStackTrace();
+			LOGGER.error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
+		} catch (SendSubscriptionNotConfirmed e){
 			e.printStackTrace();
 			LOGGER.error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
 		}
-		
+
 		this.versucheErwartung();
 	}
 	
@@ -402,7 +409,7 @@ implements ClientReceiverInterface,
 		stundenAnfang.set(Calendar.MILLISECOND, 0);			
 		
 		long naechsterIntervallZeitstempel;
-		if(intervallLaenge >= Konstante.STUNDE_IN_MS){
+		if(intervallLaenge >= Constants.MILLIS_PER_HOUR){
 			stundenAnfang.set(Calendar.HOUR_OF_DAY, 0);
 			final long msNachTagesAnfang = jetztPlus - stundenAnfang.getTimeInMillis();
 			final long intervalleSeitTagesAnfang = msNachTagesAnfang / intervallLaenge;
@@ -430,7 +437,7 @@ implements ClientReceiverInterface,
 		/**
 		 * letzte fuer dieses DE publizierte einmalige Betriebsmeldung
 		 */
-		private String letzteEinmaligeNachricht = Konstante.LEERSTRING;
+		private String letzteEinmaligeNachricht = Constants.EMPTY_STRING;
 		
 		
 		/**
@@ -447,7 +454,7 @@ implements ClientReceiverInterface,
 							DeFaApplikation.getAppName(),
 							MessageGrade.ERROR,
 							De.this.objekt,
-							new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+							new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
 							text);
 					LOGGER.info(De.this.objekt + ", " + text); //$NON-NLS-1$
 				}else{

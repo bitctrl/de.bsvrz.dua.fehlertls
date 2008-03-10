@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
@@ -39,7 +41,6 @@ import de.bsvrz.dua.fehlertls.online.TlsGloDeFehler;
 import de.bsvrz.dua.fehlertls.parameter.IZyklusSteuerungsParameterListener;
 import de.bsvrz.dua.fehlertls.parameter.ZyklusSteuerungsParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -325,7 +326,7 @@ implements ITlsGloDeFehlerListener,
 		 */
 		@Override
 		public String toString() {
-			String s = Konstante.LEERSTRING;
+			String s = Constants.EMPTY_STRING;
 			
 			if(initialisiert){
 				if(this.erfassungsIntervallDauer >= 0){

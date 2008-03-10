@@ -34,12 +34,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
@@ -78,30 +79,32 @@ extends AbstraktGeraet{
 		 */
 		for(SystemObject komPartner:
 				this.objekt.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
-			Data konfigDatum = komPartner.getConfigurationData(TlsHierarchie.KONFIG_ATG);
-			if(konfigDatum != null){
-				SystemObject steuerModul = konfigDatum.getReferenceValue
-							("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
-				if(steuerModul != null){
-					if(steuerModul.isOfType("typ.steuerModul")){ //$NON-NLS-1$
-						this.kinder.add(new Sm(dav, steuerModul, this));						
+			if(komPartner.isValid()){
+				Data konfigDatum = komPartner.getConfigurationData(TlsHierarchie.KONFIG_ATG);
+				if(konfigDatum != null){
+					SystemObject steuerModul = konfigDatum.getReferenceValue
+								("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+					if(steuerModul != null){
+						if(steuerModul.isOfType("typ.steuerModul")){ //$NON-NLS-1$
+							this.kinder.add(new Sm(dav, steuerModul, this));						
+						}else{
+							LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
+									" (Inselbus: " + this.objekt +  //$NON-NLS-1$
+									") duerfen nur Steuermodule definiert sein. Aber: " + //$NON-NLS-1$
+									steuerModul + " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
+									")"); //$NON-NLS-1$				
+						}
 					}else{
 						LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
 								" (Inselbus: " + this.objekt +  //$NON-NLS-1$
-								") duerfen nur Steuermodule definiert sein. Aber: " + //$NON-NLS-1$
-								steuerModul + " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
-								")"); //$NON-NLS-1$				
+								") ist kein Steuermodul definiert"); //$NON-NLS-1$				
 					}
 				}else{
-					LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
+					LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
 							" (Inselbus: " + this.objekt +  //$NON-NLS-1$
-							") ist kein Steuermodul definiert"); //$NON-NLS-1$				
+							") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
+							"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
 				}
-			}else{
-				LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
-						" (Inselbus: " + this.objekt +  //$NON-NLS-1$
-						") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
-						"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
 			}
 		}
 
@@ -245,7 +248,7 @@ extends AbstraktGeraet{
 					DeFaApplikation.getAppName(),
 					MessageGrade.ERROR,
 					this.objekt,
-					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+					new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
 					"Modem am Inselbus " + this.objekt +//$NON-NLS-1$
 			" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");//$NON-NLS-1$
 
@@ -279,7 +282,7 @@ extends AbstraktGeraet{
 					DeFaApplikation.getAppName(),
 					MessageGrade.ERROR,
 					this.objekt,
-					new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+					new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
 					"Inselbus " + this.objekt + " gestört: Für die DE der Steuermodule " //$NON-NLS-1$ //$NON-NLS-2$
 					+ steuerModule + " sind keine Daten verfügbar. Inselbus " + this.objekt + " instand setzen");//$NON-NLS-1$ //$NON-NLS-2$
 

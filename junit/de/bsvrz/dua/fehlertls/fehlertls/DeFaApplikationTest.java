@@ -34,6 +34,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.AtgTlsFehlerAnalyse;
@@ -46,7 +48,6 @@ import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.IBmListener;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Stellt eine Datenverteiler-Verbindung
@@ -455,7 +456,7 @@ implements IBmListener{
 		 */
 		new MeldungsZeitpunkt(//Zeitpunkt Nr.7
 				new ErwarteteMeldung[]{
-				new ErwarteteMeldung(Konstante.LEERSTRING, Konstante.LEERSTRING)}),
+				new ErwarteteMeldung(Constants.EMPTY_STRING, Constants.EMPTY_STRING)}),
 
 	};
 	

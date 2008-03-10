@@ -129,50 +129,52 @@ extends AbstraktGeraet{
 			geraet.isOfType("typ.vrz")){ //$NON-NLS-1$
 			for(SystemObject anschlussPunktSysObj:
 				geraet.getNonMutableSet("AnschlussPunkteGerät").getElements()){ //$NON-NLS-1$
-				ConfigurationObject anschlussPunktKonObj = (ConfigurationObject)anschlussPunktSysObj;
-				
-				Set<SystemObject> unterGeraete = new HashSet<SystemObject>(); 
-				for(SystemObject komPartner:
-					anschlussPunktKonObj.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
+				if(anschlussPunktSysObj.isValid()){
+					ConfigurationObject anschlussPunktKonObj = (ConfigurationObject)anschlussPunktSysObj;
 					
-					Data konfigDatum = komPartner.getConfigurationData(KONFIG_ATG);
-					if(konfigDatum != null){
-						SystemObject unterGeraet = konfigDatum.getReferenceValue
-									("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
-						if(unterGeraet != null){
-							unterGeraete.add(unterGeraet);
+					Set<SystemObject> unterGeraete = new HashSet<SystemObject>(); 
+					for(SystemObject komPartner:
+						anschlussPunktKonObj.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
+						
+						Data konfigDatum = komPartner.getConfigurationData(KONFIG_ATG);
+						if(konfigDatum != null){
+							SystemObject unterGeraet = konfigDatum.getReferenceValue
+										("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+							if(unterGeraet != null){
+								unterGeraete.add(unterGeraet);
+							}else{
+								LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
+										" (Geraet: " + geraet +  //$NON-NLS-1$
+										") ist kein Geraet definiert"); //$NON-NLS-1$				
+							}
 						}else{
-							LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
-									" (Geraet: " + geraet +  //$NON-NLS-1$
-									") ist kein Geraet definiert"); //$NON-NLS-1$				
+							LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
+									" (an Geraet: " + geraet +  //$NON-NLS-1$
+									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
+									"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
 						}
-					}else{
-						LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
-								" (an Geraet: " + geraet +  //$NON-NLS-1$
-								") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
-								"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
 					}
-				}
 
-				/**
-				 * Iteriere ueber alle Untergeraete dieses Anschlusspunktes.
-				 * Wenn ALLE Anschlusspunkte Steuermodule sein sollten, dann
-				 * wird davon ausgegangen, dass es sich bei diesem Anschlusspunkt 
-				 * um einen Inselbus handelt
-				 */
-				int steuerModulZaehler = 0;
-				for(SystemObject unterGeraet:unterGeraete){
-					if(unterGeraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
-						steuerModulZaehler++;
+					/**
+					 * Iteriere ueber alle Untergeraete dieses Anschlusspunktes.
+					 * Wenn ALLE Anschlusspunkte Steuermodule sein sollten, dann
+					 * wird davon ausgegangen, dass es sich bei diesem Anschlusspunkt 
+					 * um einen Inselbus handelt
+					 */
+					int steuerModulZaehler = 0;
+					for(SystemObject unterGeraet:unterGeraete){
+						if(unterGeraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
+							steuerModulZaehler++;
+						}
 					}
-				}
-				
-				if(unterGeraete.size() > 0){
-					if(unterGeraete.size() == steuerModulZaehler){
-						WURZEL.kinder.add(new Inselbus(DAV, anschlussPunktSysObj, WURZEL));					
-					}else{
-						for(SystemObject unterGeraet:unterGeraete){
-							initialisiere((ConfigurationObject)unterGeraet);	
+
+					if(unterGeraete.size() > 0){
+						if(unterGeraete.size() == steuerModulZaehler){
+							WURZEL.kinder.add(new Inselbus(DAV, anschlussPunktSysObj, WURZEL));					
+						}else{
+							for(SystemObject unterGeraet:unterGeraete){
+								initialisiere((ConfigurationObject)unterGeraet);	
+							}
 						}
 					}
 				}

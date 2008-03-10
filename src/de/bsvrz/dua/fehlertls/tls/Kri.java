@@ -26,11 +26,12 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
@@ -61,7 +62,9 @@ extends AbstraktGeraet{
 		 */
 		for(SystemObject inselBus:
 				this.objekt.getNonMutableSet("AnschlussPunkteGerät").getElements()){ //$NON-NLS-1$
-			this.kinder.add(new Inselbus(dav, inselBus, this));
+			if(inselBus.isValid()){
+				this.kinder.add(new Inselbus(dav, inselBus, this));	
+			}
 		}
 	}
 
@@ -85,7 +88,7 @@ extends AbstraktGeraet{
 				DeFaApplikation.getAppName(),
 				MessageGrade.ERROR,
 				this.objekt,
-				new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+				new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
 				"Verbindung zum KRI " + this.objekt + " oder KRI selbst defekt." + //$NON-NLS-1$ //$NON-NLS-2$
 						" Verbindung zum KRI oder KRI instand setzen"); //$NON-NLS-1$
 		

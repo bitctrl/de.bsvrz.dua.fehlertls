@@ -229,14 +229,29 @@ implements ClientSenderInterface{
 				break;
 			}
 		}else{
-			atg = DAV.getDataModel().getAttributeGroup("atg.tlsSveErgebnisMeldungVersion0Bis1"); //$NON-NLS-1$
+//			atg = DAV.getDataModel().getAttributeGroup("atg.tlsSveErgebnisMeldungVersion0Bis1"); //$NON-NLS-1$
+//			datum = DAV.createData(atg);
+//			datum.getUnscaledValue("vKfzReise").set(0); //$NON-NLS-1$
+//			datum.getUnscaledValue("vPkwReise").set(0); //$NON-NLS-1$
+//			datum.getUnscaledValue("vLkwReise").set(0); //$NON-NLS-1$
+//			datum.getUnscaledValue("kKfz").set(0); //$NON-NLS-1$
+//			datum.getUnscaledValue("kPkw").set(0); //$NON-NLS-1$
+//			datum.getUnscaledValue("kLkw").set(0); //$NON-NLS-1$
+			
+			atg = DAV.getDataModel().getAttributeGroup("atg.tlsLveErgebnisMeldungVersion0Bis4"); //$NON-NLS-1$
 			datum = DAV.createData(atg);
-			datum.getUnscaledValue("vKfzReise").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("vPkwReise").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("vLkwReise").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("kKfz").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("kPkw").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("kLkw").set(0); //$NON-NLS-1$
+			
+			datum.getTimeValue("T").setMillis(0); //$NON-NLS-1$
+			datum.getUnscaledValue("qKfz").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("qLkwÄ").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("vPkwÄ").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("vLkwÄ").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("tNetto").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("b").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("sKfz").set(0); //$NON-NLS-1$
+			datum.getUnscaledValue("vKfz").set(0); //$NON-NLS-1$
+			datum.getArray("qPkwÄGeschwKlasse").setLength(0); //$NON-NLS-1$
+			datum.getArray("qLkwÄGeschwKlasse").setLength(0); //$NON-NLS-1$
 		}
 		
 		ResultData sendeDatum = 

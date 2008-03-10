@@ -26,12 +26,13 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
@@ -65,12 +66,14 @@ extends AbstraktGeraet{
 			AbstraktGeraet vater) {
 		super(dav, objekt, vater);		
 		for(SystemObject deObj:this.objekt.getNonMutableSet("De").getElements()){ //$NON-NLS-1$
-			try {
-				De de = new De(dav, deObj, this);
-				this.kinder.add(de);
-			} catch (DeFaException e) {
-				e.printStackTrace();
-				LOGGER.warning("De " + deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+			if(deObj.isValid()){
+				try {
+					De de = new De(dav, deObj, this);
+					this.kinder.add(de);
+				} catch (DeFaException e) {
+					e.printStackTrace();
+					LOGGER.warning("De " + deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 			}
 		}
 	}
@@ -95,7 +98,7 @@ extends AbstraktGeraet{
 				DeFaApplikation.getAppName(),
 				MessageGrade.ERROR,
 				this.objekt,
-				new MessageCauser(DAV.getLocalUser(), Konstante.LEERSTRING, DeFaApplikation.getAppName()),
+				new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
 				"EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " defekt." + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						" EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " instand setzen");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		
