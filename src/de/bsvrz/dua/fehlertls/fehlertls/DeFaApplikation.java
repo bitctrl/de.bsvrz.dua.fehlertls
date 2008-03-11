@@ -124,6 +124,10 @@ implements StandardApplication{
 					break;
 				}
 				TLS_FEHLER_ANALYSE_OBJEKT = obj;
+				if(obj.getConfigurationArea().equals(
+						dav.getDataModel().getConfigurationAuthority().getConfigurationArea())){
+					break;
+				}
 			}
 		}
 		if(TLS_FEHLER_ANALYSE_OBJEKT == null){
