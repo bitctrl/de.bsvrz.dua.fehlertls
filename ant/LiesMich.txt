@@ -29,6 +29,10 @@ Versionsgeschichte
 
   - Anpassung der Tests 
   
+1.1.1
+
+  - Bash-Startskript hinzu 
+  
 
 Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
 de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation mit folgenden Parametern gestartet
