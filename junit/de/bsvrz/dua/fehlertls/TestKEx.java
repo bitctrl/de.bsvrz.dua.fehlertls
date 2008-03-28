@@ -26,8 +26,6 @@
 
 package de.bsvrz.dua.fehlertls;
 
-import java.util.Date;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -262,8 +260,6 @@ implements ClientSenderInterface{
 							zeitStempel, datum);
 		
 		try {
-			System.out.println("... " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + //$NON-NLS-1$
-					":\n" + sendeDatum + " ..."); //$NON-NLS-1$ //$NON-NLS-2$
 			DAV.sendData(sendeDatum);
 		} catch (Exception e) {
 			throw new RuntimeException(sendeDatum.toString(), e);

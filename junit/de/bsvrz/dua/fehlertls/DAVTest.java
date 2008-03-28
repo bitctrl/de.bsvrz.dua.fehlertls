@@ -44,25 +44,25 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
  */
 public class DAVTest {
 
-//	/**
-//	 * Verbindungsdaten
-//	 */
-//	private static final String[] CON_DATA = new String[] {
-//			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
-//			"-benutzer=Tester", //$NON-NLS-1$
-//			"-authentifizierung=passwd", //$NON-NLS-1$
-//			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
-//			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
-
 	/**
 	 * Verbindungsdaten
 	 */
 	private static final String[] CON_DATA = new String[] {
 			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
 			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=c:\\passwd", //$NON-NLS-1$
+			"-authentifizierung=passwd", //$NON-NLS-1$
 			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
 			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
+
+//	/**
+//	 * Verbindungsdaten
+//	 */
+//	private static final String[] CON_DATA = new String[] {
+//			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
+//			"-benutzer=Tester", //$NON-NLS-1$
+//			"-authentifizierung=c:\\passwd", //$NON-NLS-1$
+//			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
+//			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
 	
 	/**
 	 * Verbindung zum Datenverteiler
