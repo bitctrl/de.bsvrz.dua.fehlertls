@@ -44,7 +44,6 @@ import de.bsvrz.dua.fehlertls.DeStatus;
 import de.bsvrz.dua.fehlertls.IAtgTlsFehlerAnalyseListener;
 import de.bsvrz.dua.fehlertls.TestKEx;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
-import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.IBmListener;
@@ -217,7 +216,7 @@ implements IBmListener{
 				
 			});
 		}
-		Pause.warte(1000L);
+		try{ Thread.sleep(1000L); }catch(InterruptedException e){}
 		
 		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.SECOND, 0);
@@ -492,7 +491,7 @@ implements IBmListener{
 	 */
 	public final void warteBis(long zeitStempel){
 		while(System.currentTimeMillis() < zeitStempel){
-			Pause.warte(50L);
+			try{ Thread.sleep(50L); }catch(InterruptedException e){}
 		}
 	}
 	

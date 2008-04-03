@@ -38,7 +38,6 @@ import de.bsvrz.dua.fehlertls.de.DeFaException;
 import de.bsvrz.dua.fehlertls.de.DeTypLader;
 import de.bsvrz.dua.fehlertls.de.IDeTyp;
 import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
-import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
@@ -135,7 +134,7 @@ implements ClientSenderInterface{
 		/**
 		 * Warten bis alle Anmeldungen durchgefuehrt sein sollten
 		 */
-		Pause.warte(1000);
+		try{ Thread.sleep(1000L); }catch(InterruptedException e){}
 	}
 	
 	
