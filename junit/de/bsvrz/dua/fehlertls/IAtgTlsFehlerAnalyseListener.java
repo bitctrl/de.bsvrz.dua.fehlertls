@@ -29,18 +29,22 @@ package de.bsvrz.dua.fehlertls;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 
 /**
- * Hoert auf DE-Daten von <code>atg.tlsFehlerAnalyse</code>, <code>asp.analyse</code>
+ * Hoert auf DE-Daten von <code>atg.tlsFehlerAnalyse</code>,
+ * <code>asp.analyse</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
 public interface IAtgTlsFehlerAnalyseListener {
 
 	/**
-	 * Aktualisiert die TLS-Fehleranalyse
+	 * Aktualisiert die TLS-Fehleranalyse.
 	 * 
-	 * @param fehlerAnalyse aktuelle TLS-Fehleranalyse
+	 * @param fehlerAnalyse
+	 *            aktuelle TLS-Fehleranalyse
 	 */
-	public void aktualisiereTlsFehlerAnalyse(final TlsFehlerAnalyse fehlerAnalyse);
-	
+	void aktualisiereTlsFehlerAnalyse(
+			final TlsFehlerAnalyse fehlerAnalyse);
+
 }

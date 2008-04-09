@@ -43,105 +43,105 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Korrespondiert mit der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
- * (Kanalsteuerung (FG alle / Typ 29))
- *  
+ * (Kanalsteuerung (FG alle / Typ 29)).
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TlsGloKanalSteuerung 
-implements ClientReceiverInterface{
+public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 
 	/**
-	 * statische Instanzen dieser Klasse
+	 * statische Instanzen dieser Klasse.
 	 */
-	private static Map<SystemObject, TlsGloKanalSteuerung> INSTANZEN =
-								Collections.synchronizedMap(new HashMap<SystemObject, TlsGloKanalSteuerung>());
-	
+	private static Map<SystemObject, TlsGloKanalSteuerung> instanzen = Collections
+			.synchronizedMap(new HashMap<SystemObject, TlsGloKanalSteuerung>());
+
 	/**
-	 * Menge aller Beobachterobjekte
+	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<ITlsGloKanalSteuerungsListener> listenerMenge = Collections.synchronizedSet(
-			new HashSet<ITlsGloKanalSteuerungsListener>());
-	
+	private Set<ITlsGloKanalSteuerungsListener> listenerMenge = Collections
+			.synchronizedSet(new HashSet<ITlsGloKanalSteuerungsListener>());
+
 	/**
-	 * Indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
+	 * Indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht.
 	 */
 	private Boolean aktiv = null;
-	
-	
+
 	/**
-	 * Erfragt eine statische Instanz dieser Klasse
+	 * Erfragt eine statische Instanz dieser Klasse.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static final TlsGloKanalSteuerung getInstanz(ClientDavInterface dav,
-														SystemObject objekt){
+	public static TlsGloKanalSteuerung getInstanz(ClientDavInterface dav,
+			SystemObject objekt) {
 		TlsGloKanalSteuerung instanz = null;
-		
-		synchronized (INSTANZEN) {
-			instanz= INSTANZEN.get(objekt);	
-		}		
-		
-		if(instanz == null){
-			instanz = new TlsGloKanalSteuerung(dav, objekt);
-			synchronized (INSTANZEN) {
-				INSTANZEN.put(objekt, instanz);	
-			}			
+
+		synchronized (instanzen) {
+			instanz = instanzen.get(objekt);
 		}
-		
+
+		if (instanz == null) {
+			instanz = new TlsGloKanalSteuerung(dav, objekt);
+			synchronized (instanzen) {
+				instanzen.put(objekt, instanz);
+			}
+		}
+
 		return instanz;
 	}
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private TlsGloKanalSteuerung(ClientDavInterface dav,
-								 SystemObject objekt){
-		dav.subscribeReceiver(this, 
-							  objekt,
-							  new DataDescription(
-									  dav.getDataModel().getAttributeGroup("atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
-									  dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-									  (short)0),
-							  ReceiveOptions.normal(),
-							  ReceiverRole.receiver());
+	private TlsGloKanalSteuerung(ClientDavInterface dav, SystemObject objekt) {
+		dav.subscribeReceiver(this, objekt, new DataDescription(
+				dav.getDataModel()
+						.getAttributeGroup("atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
+				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	
 	/**
-	 * Fuegt diesem Objekt einen Listener hinzu
+	 * Fuegt diesem Objekt einen Listener hinzu.
 	 * 
-	 * @param listener eine neuer Listener
+	 * @param listener
+	 *            eine neuer Listener
 	 */
-	public final synchronized void addListener(final ITlsGloKanalSteuerungsListener listener){
-		if(listenerMenge.add(listener) && this.aktiv != null){
+	public synchronized void addListener(
+			final ITlsGloKanalSteuerungsListener listener) {
+		if (listenerMenge.add(listener) && this.aktiv != null) {
 			listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 		}
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		if(resultate != null){
-			for(ResultData resultat:resultate){
-				if(resultat != null && resultat.getData() != null){
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						this.aktiv = resultat.getData().getUnscaledValue("DEKanalStatus").intValue() == 0; //$NON-NLS-1$
-						for(ITlsGloKanalSteuerungsListener listener:this.listenerMenge){
-							listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
+						this.aktiv = resultat.getData().getUnscaledValue(
+								"DEKanalStatus").intValue() == 0; //$NON-NLS-1$
+						for (ITlsGloKanalSteuerungsListener listener : this.listenerMenge) {
+							listener
+									.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 						}
-					}					
+					}
 				}
 			}
-		}		
+		}
 	}
-	
+
 }

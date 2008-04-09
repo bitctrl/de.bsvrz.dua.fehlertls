@@ -37,119 +37,122 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Initialisiert alle Objekte im Teilmodel TLS, die (inklusive und) unterhalb 
- * der uebergebenen Objekte vom Typ <code>typ.gerät</code> konfiguriert sind
+ * Initialisiert alle Objekte im Teilmodel TLS, die (inklusive und) unterhalb
+ * der uebergebenen Objekte vom Typ <code>typ.gerät</code> konfiguriert sind.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TlsHierarchie
-extends AbstraktGeraet{
+public final class TlsHierarchie extends AbstraktGeraet {
 
 	/**
-	 * Debug-Logger
+	 * Debug-Logger.
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
-	 * Datenverteiler-Verbindung
+	 * Datenverteiler-Verbindung.
 	 */
-	private static ClientDavInterface DAV = null;
-	
-	/**
-	 * Konfigurierende Eigenschaften eines Kommunikationspartners an einem Anschlusspunkt
-	 */
-	public static AttributeGroup KONFIG_ATG = null;
-	
-	/**
-	 * statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die Geraete, mit
-	 * der diese TLS-Hierarchie initialisiert wurde
-	 */
-	private static TlsHierarchie WURZEL = null;
+	private static ClientDavInterface sDav = null;
 
-	
 	/**
-	 * Standardkonstruktor
+	 * Konfigurierende Eigenschaften eines Kommunikationspartners an einem
+	 * Anschlusspunkt.
+	 */
+	public static AttributeGroup konfigAtg = null;
+
+	/**
+	 * statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die
+	 * Geraete, mit der diese TLS-Hierarchie initialisiert wurde.
+	 */
+	private static TlsHierarchie wurzel = null;
+
+	/**
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindund
+	 * @param dav
+	 *            Datenverteiler-Verbindund
 	 */
 	private TlsHierarchie(ClientDavInterface dav) {
 		super(dav, null, null);
 	}
-	
-	
+
 	/**
-	 * Erfragt die statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die Geraete, mit
-	 * der diese TLS-Hierarchie initialisiert wurde
+	 * Erfragt die statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel
+	 * haengen die Geraete, mit der diese TLS-Hierarchie initialisiert wurde.
 	 * 
 	 * @return die statische Wurzel der TLS-Hierarchie
 	 */
-	public static final TlsHierarchie getWurzel(){
-		if(WURZEL == null){
-			throw new RuntimeException("TLS-Hierarchie wurde noch nicht initialisiert"); //$NON-NLS-1$
+	public static TlsHierarchie getWurzel() {
+		if (wurzel == null) {
+			throw new RuntimeException(
+					"TLS-Hierarchie wurde noch nicht initialisiert"); //$NON-NLS-1$
 		}
-		return WURZEL;
+		return wurzel;
 	}
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindund
-	 * @param geraete Geraete, die in der Kommandozeile uebergeben wurden
+	 * @param dav
+	 *            Datenverteiler-Verbindund
+	 * @param geraete
+	 *            Geraete, die in der Kommandozeile uebergeben wurden
 	 */
-	public static final void initialisiere(ClientDavInterface dav, Set<SystemObject> geraete){
-		if(WURZEL == null){
-			WURZEL = new TlsHierarchie(dav);
-			DAV = dav;
-			KONFIG_ATG = dav.getDataModel().
-				getAttributeGroup("atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
-			
-			for(SystemObject geraet:geraete){
-				initialisiere((ConfigurationObject)geraet);
-			}			
+	public static void initialisiere(ClientDavInterface dav,
+			Set<SystemObject> geraete) {
+		if (wurzel == null) {
+			wurzel = new TlsHierarchie(dav);
+			sDav = dav;
+			konfigAtg = dav.getDataModel().getAttributeGroup(
+					"atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
+
+			for (SystemObject geraet : geraete) {
+				initialisiere((ConfigurationObject) geraet);
+			}
 		}
 	}
-	
-	
+
 	/**
-	 * Initialisiert ein einzelnes Objekt vom Typ <code>typ.gerät</code>
+	 * Initialisiert ein einzelnes Objekt vom Typ <code>typ.gerät</code>.
 	 * 
-	 * @param geraet ein Objekt vom Typ <code>typ.gerät</code>
+	 * @param geraet
+	 *            ein Objekt vom Typ <code>typ.gerät</code>
 	 */
-	private static final void initialisiere(ConfigurationObject geraet){
-		if(geraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
-			WURZEL.kinder.add(new Sm(DAV, geraet, WURZEL));
-		}else
-		if(geraet.isOfType("typ.kri")){ //$NON-NLS-1$
-			WURZEL.kinder.add(new Kri(DAV, geraet, WURZEL));
-		}else
-		if(geraet.isOfType("typ.uz") || //$NON-NLS-1$
-			geraet.isOfType("typ.viz") || //$NON-NLS-1$
-			geraet.isOfType("typ.vrz")){ //$NON-NLS-1$
-			for(SystemObject anschlussPunktSysObj:
-				geraet.getNonMutableSet("AnschlussPunkteGerät").getElements()){ //$NON-NLS-1$
-				if(anschlussPunktSysObj.isValid()){
-					ConfigurationObject anschlussPunktKonObj = (ConfigurationObject)anschlussPunktSysObj;
-					
-					Set<SystemObject> unterGeraete = new HashSet<SystemObject>(); 
-					for(SystemObject komPartner:
-						anschlussPunktKonObj.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
-						
-						Data konfigDatum = komPartner.getConfigurationData(KONFIG_ATG);
-						if(konfigDatum != null){
-							SystemObject unterGeraet = konfigDatum.getReferenceValue
-										("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
-							if(unterGeraet != null){
+	private static void initialisiere(ConfigurationObject geraet) {
+		if (geraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
+			wurzel.kinder.add(new Sm(sDav, geraet, wurzel));
+		} else if (geraet.isOfType("typ.kri")) { //$NON-NLS-1$
+			wurzel.kinder.add(new Kri(sDav, geraet, wurzel));
+		} else if (geraet.isOfType("typ.uz") || //$NON-NLS-1$
+				geraet.isOfType("typ.viz") || //$NON-NLS-1$
+				geraet.isOfType("typ.vrz")) { //$NON-NLS-1$
+			for (SystemObject anschlussPunktSysObj : geraet.getNonMutableSet(
+					"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
+				if (anschlussPunktSysObj.isValid()) {
+					ConfigurationObject anschlussPunktKonObj = (ConfigurationObject) anschlussPunktSysObj;
+
+					Set<SystemObject> unterGeraete = new HashSet<SystemObject>();
+					for (SystemObject komPartner : anschlussPunktKonObj
+							.getNonMutableSet(
+									"AnschlussPunkteKommunikationsPartner").getElements()) { //$NON-NLS-1$
+
+						Data konfigDatum = komPartner
+								.getConfigurationData(konfigAtg);
+						if (konfigDatum != null) {
+							SystemObject unterGeraet = konfigDatum
+									.getReferenceValue("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+							if (unterGeraet != null) {
 								unterGeraete.add(unterGeraet);
-							}else{
-								LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
-										" (Geraet: " + geraet +  //$NON-NLS-1$
+							} else {
+								LOGGER.warning("An " + komPartner + //$NON-NLS-1$
+										" (Geraet: " + geraet + //$NON-NLS-1$
 										") ist kein Geraet definiert"); //$NON-NLS-1$				
 							}
-						}else{
-							LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
-									" (an Geraet: " + geraet +  //$NON-NLS-1$
+						} else {
+							LOGGER.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+									" (an Geraet: " + geraet + //$NON-NLS-1$
 									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
 									"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
 						}
@@ -158,22 +161,23 @@ extends AbstraktGeraet{
 					/**
 					 * Iteriere ueber alle Untergeraete dieses Anschlusspunktes.
 					 * Wenn ALLE Anschlusspunkte Steuermodule sein sollten, dann
-					 * wird davon ausgegangen, dass es sich bei diesem Anschlusspunkt 
-					 * um einen Inselbus handelt
+					 * wird davon ausgegangen, dass es sich bei diesem
+					 * Anschlusspunkt um einen Inselbus handelt
 					 */
 					int steuerModulZaehler = 0;
-					for(SystemObject unterGeraet:unterGeraete){
-						if(unterGeraet.isOfType("typ.steuerModul")){ //$NON-NLS-1$
+					for (SystemObject unterGeraet : unterGeraete) {
+						if (unterGeraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
 							steuerModulZaehler++;
 						}
 					}
 
-					if(unterGeraete.size() > 0){
-						if(unterGeraete.size() == steuerModulZaehler){
-							WURZEL.kinder.add(new Inselbus(DAV, anschlussPunktSysObj, WURZEL));					
-						}else{
-							for(SystemObject unterGeraet:unterGeraete){
-								initialisiere((ConfigurationObject)unterGeraet);	
+					if (unterGeraete.size() > 0) {
+						if (unterGeraete.size() == steuerModulZaehler) {
+							wurzel.kinder.add(new Inselbus(sDav,
+									anschlussPunktSysObj, wurzel));
+						} else {
+							for (SystemObject unterGeraet : unterGeraete) {
+								initialisiere((ConfigurationObject) unterGeraet);
 							}
 						}
 					}
@@ -181,7 +185,6 @@ extends AbstraktGeraet{
 			}
 		}
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -191,13 +194,12 @@ extends AbstraktGeraet{
 		return null;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		assert(false);
+		assert (false);
 	}
-	
+
 }

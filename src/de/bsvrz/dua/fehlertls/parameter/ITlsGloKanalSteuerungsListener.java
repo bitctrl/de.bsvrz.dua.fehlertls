@@ -27,18 +27,23 @@
 package de.bsvrz.dua.fehlertls.parameter;
 
 /**
- * Hoert auf Veraenderungen der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
- *  
+ * Hoert auf Veraenderungen der Attributgruppe
+ * <code>atg.tlsGloKanalSteuerung</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface ITlsGloKanalSteuerungsListener {
 
 	/**
-	 * Informiert ueber neue Parameter der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
+	 * Informiert ueber neue Parameter der Attributgruppe
+	 * <code>atg.tlsGloKanalSteuerung</code>.
 	 * 
-	 * @param aktiv indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
+	 * @param aktiv
+	 *            indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code>
+	 *            steht
 	 */
-	public void aktualisiereTlsGloKanalSteuerung(boolean aktiv);
-	
+	void aktualisiereTlsGloKanalSteuerung(boolean aktiv);
+
 }

@@ -26,24 +26,25 @@
 
 package de.bsvrz.dua.fehlertls.parameter;
 
-
-
 /**
- * Hoert auf Veraenderungen der Betriebsparameter zur Zyklussteuerung
- * eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>
- *  
+ * Hoert auf Veraenderungen der Betriebsparameter zur Zyklussteuerung eines
+ * allgemeinen Systemobjektes vom Typ <code>typ.de</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IZyklusSteuerungsParameterListener {
 
 	/**
-	 * Aktualisiert die Betriebsparameter zur Zyklussteuerung
-	 * eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>
+	 * Aktualisiert die Betriebsparameter zur Zyklussteuerung eines allgemeinen
+	 * Systemobjektes vom Typ <code>typ.de</code>.
 	 * 
-	 * @param erfassungsIntervallDauer die entsprechende Erassungsintervalldauer 
-	 * (in ms), wenn das DE auf zyklischen Abruf parametriert ist und -1 sonst
+	 * @param erfassungsIntervallDauer
+	 *            die entsprechende Erassungsintervalldauer (in ms), wenn das DE
+	 *            auf zyklischen Abruf parametriert ist und -1 sonst
 	 */
-	public void aktualisiereZyklusSteuerungsParameter(long erfassungsIntervallDauer);
-	
+	void aktualisiereZyklusSteuerungsParameter(
+			long erfassungsIntervallDauer);
+
 }

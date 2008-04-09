@@ -31,60 +31,63 @@ package de.bsvrz.dua.fehlertls;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
-public class DeStatus {
-	
+public final class DeStatus {
+
 	/**
-	 * Sende irgendwelche Nutzdaten
+	 * Sende irgendwelche Nutzdaten.
 	 */
 	public static final DeStatus NUTZ_DATEN = new DeStatus("Nutzdaten"); //$NON-NLS-1$
-		
-	/**
-	 * Sende DE-Kanal aktiviert UND DE-Fehler an
-	 */
-	public static final DeStatus KANAL_AKTIVIERT_DE_FEHLER_AN = new DeStatus("DE-Kanal aktiviert UND DE-Fehler an"); //$NON-NLS-1$
-	
-	/**
-	 * Sende DE-Kanal aktiviert UND DE-Fehler aus
-	 */
-	public static final DeStatus KANAL_AKTIVIERT_DE_FEHLER_AUS = new DeStatus("DE-Kanal aktiviert UND DE-Fehler aus"); //$NON-NLS-1$
-	
-	/**
-	 * Sende DE-Kanal passiviert UND DE-Fehler an
-	 */
-	public static final DeStatus KANAL_PASSIVIERT_DE_FEHLER_AN = new DeStatus("DE-Kanal passiviert UND DE-Fehler an"); //$NON-NLS-1$
 
 	/**
-	 * Sende DE-Kanal passiviert UND DE-Fehler AUS
+	 * Sende DE-Kanal aktiviert UND DE-Fehler an.
 	 */
-	public static final DeStatus KANAL_PASSIVIERT_DE_FEHLER_AUS = new DeStatus("DE-Kanal passiviert UND DE-Fehler aus"); //$NON-NLS-1$
+	public static final DeStatus KANAL_AKTIVIERT_DE_FEHLER_AN = new DeStatus(
+			"DE-Kanal aktiviert UND DE-Fehler an"); //$NON-NLS-1$
 
 	/**
-	 * Sende zyklisch an
+	 * Sende DE-Kanal aktiviert UND DE-Fehler aus.
+	 */
+	public static final DeStatus KANAL_AKTIVIERT_DE_FEHLER_AUS = new DeStatus(
+			"DE-Kanal aktiviert UND DE-Fehler aus"); //$NON-NLS-1$
+
+	/**
+	 * Sende DE-Kanal passiviert UND DE-Fehler an.
+	 */
+	public static final DeStatus KANAL_PASSIVIERT_DE_FEHLER_AN = new DeStatus(
+			"DE-Kanal passiviert UND DE-Fehler an"); //$NON-NLS-1$
+
+	/**
+	 * Sende DE-Kanal passiviert UND DE-Fehler AUS.
+	 */
+	public static final DeStatus KANAL_PASSIVIERT_DE_FEHLER_AUS = new DeStatus(
+			"DE-Kanal passiviert UND DE-Fehler aus"); //$NON-NLS-1$
+
+	/**
+	 * Sende zyklisch an.
 	 */
 	public static final DeStatus ZYKLISCH_AN = new DeStatus("Zyklisch an"); //$NON-NLS-1$
 
 	/**
-	 * Sende zyklisch aus (nur UFD-DE)
+	 * Sende zyklisch aus (nur UFD-DE).
 	 */
 	public static final DeStatus ZYKLISCH_AUS = new DeStatus("Zyklisch aus"); //$NON-NLS-1$
 
-	
 	/**
-	 * Name des Status
+	 * Name des Status.
 	 */
 	private String name = null;
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param name der Name des Status
+	 * @param name
+	 *            der Name des Status
 	 */
-	private DeStatus(String name){
+	private DeStatus(String name) {
 		this.name = name;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -92,15 +95,14 @@ public class DeStatus {
 	@Override
 	public boolean equals(Object obj) {
 		boolean gleich = false;
-		
-		if(obj != null && obj instanceof DeStatus){
-			DeStatus that = (DeStatus)obj;
+
+		if (obj != null && obj instanceof DeStatus) {
+			DeStatus that = (DeStatus) obj;
 			gleich = this.name.equals(that.name);
 		}
-		
+
 		return gleich;
 	}
-
 
 	/**
 	 * {@inheritDoc}

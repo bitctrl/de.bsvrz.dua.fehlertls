@@ -29,20 +29,26 @@ package de.bsvrz.dua.fehlertls.online;
 import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
 
 /**
- * Hoert auf Veraenderungen der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>
- *  
+ * Hoert auf Veraenderungen der Online-Attributgruppe
+ * <code>atg.tlsGloDeFehler</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface ITlsGloDeFehlerListener {
 
 	/**
-	 * Informiert ueber neue Daten der Attributgruppe <code>atg.tlsGloDeFehler</code>
+	 * Informiert ueber neue Daten der Attributgruppe
+	 * <code>atg.tlsGloDeFehler</code>.
 	 * 
-	 * @param aktiv indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
-	 * @param deFehlerStatus TLS-DE-Fehler-Status
+	 * @param aktiv
+	 *            indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code>
+	 *            steht
+	 * @param deFehlerStatus
+	 *            TLS-DE-Fehler-Status
 	 */
-	public void aktualisiereTlsGloDeFehler(boolean aktiv,
-										   TlsDeFehlerStatus deFehlerStatus);
-	
+	void aktualisiereTlsGloDeFehler(boolean aktiv,
+			TlsDeFehlerStatus deFehlerStatus);
+
 }

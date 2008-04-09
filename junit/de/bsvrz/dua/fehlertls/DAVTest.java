@@ -36,16 +36,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.ufd.typen.UmfeldDatenArt;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 
 /**
- * Stellt eine Datenverteiler-Verbindung
- * zur Verfügung.
+ * Stellt eine Datenverteiler-Verbindung zur Verfügung.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
-public class DAVTest {
+public final class DAVTest {
 
 	/**
-	 * Verbindungsdaten
+	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] {
 			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
@@ -54,71 +54,76 @@ public class DAVTest {
 			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
 			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
 
-//	/**
-//	 * Verbindungsdaten
-//	 */
-//	private static final String[] CON_DATA = new String[] {
-//			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
-//			"-benutzer=Tester", //$NON-NLS-1$
-//			"-authentifizierung=c:\\passwd", //$NON-NLS-1$
-//			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
-//			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
-	
-	/**
-	 * Verbindung zum Datenverteiler
-	 */
-	protected static ClientDavInterface VERBINDUNG = null;
+	// /**
+	// * Verbindungsdaten
+	// */
+	// private static final String[] CON_DATA = new String[] {
+	// "-datenverteiler=localhost:8083", //$NON-NLS-1$
+	// "-benutzer=Tester", //$NON-NLS-1$
+	// "-authentifizierung=c:\\passwd", //$NON-NLS-1$
+	// "-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
+	// "-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
 
 	/**
-	 * Randomizer
+	 * Verbindung zum Datenverteiler.
 	 */
-	public static Random R = new Random(System.currentTimeMillis());
-	
+	protected static ClientDavInterface verbindung = null;
+
 	/**
-	 * Erste Datenzeit der Testdaten
+	 * Randomizer.
+	 */
+	public static Random r = new Random(System.currentTimeMillis());
+
+	/**
+	 * Erste Datenzeit der Testdaten.
 	 */
 	public static final long START_ZEIT = 0;
 
 	
 	/**
-	 * Erfragt bzw. initialisiert eine
-	 * Datenverteiler-Verbindung
+	 * Konstruktor.
+	 */
+	private DAVTest() {
+		
+	}
+	
+	/**
+	 * Erfragt bzw. initialisiert eine Datenverteiler-Verbindung.
 	 * 
 	 * @return die Datenverteiler-Verbindung
-	 * @throws Exception falls die Verbindung nicht
-	 * hergestellt werden konnte
+	 * @throws Exception
+	 *             falls die Verbindung nicht hergestellt werden konnte
 	 */
-	public static final ClientDavInterface getDav()
-	throws Exception {
-		
-		if(VERBINDUNG == null) {
+	public static ClientDavInterface getDav() throws Exception {
 
-			String[] CON_DATA_APP = new String[CON_DATA.length + 1];
+		if (verbindung == null) {
+
+			String[] conDataApp = new String[CON_DATA.length + 1];
 			int i = 0;
-			for(String str:CON_DATA){
-				CON_DATA_APP[i++] = new String(str.getBytes());
+			for (String str : CON_DATA) {
+				conDataApp[i++] = new String(str.getBytes());
 			}
-			CON_DATA_APP[i] = "-geraet=kri1"; //$NON-NLS-1$
+			conDataApp[i] = "-geraet=kri1"; //$NON-NLS-1$
 
 			StandardApplicationRunner.run(new StandardApplication() {
-	
+
 				public void initialize(ClientDavInterface connection)
 						throws Exception {
-					DAVTest.VERBINDUNG = connection;
-					UmfeldDatenArt.initialisiere(VERBINDUNG);
-					TestKEx.getInstanz(VERBINDUNG);
+					DAVTest.verbindung = connection;
+					UmfeldDatenArt.initialisiere(verbindung);
+					TestKEx.getInstanz(verbindung);
 				}
-	
+
 				public void parseArguments(ArgumentList argumentList)
 						throws Exception {
 					//
 				}
-	
+
 			}, CON_DATA);
-			StandardApplicationRunner.run(new DeFaApplikation(), CON_DATA_APP);
+			StandardApplicationRunner.run(new DeFaApplikation(), conDataApp);
 		}
-				
-		return VERBINDUNG;
+
+		return verbindung;
 	}
-	
+
 }

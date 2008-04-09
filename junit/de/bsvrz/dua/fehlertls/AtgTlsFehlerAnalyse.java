@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.fehlertls;
 
 import java.util.Collections;
@@ -40,90 +41,96 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 
 /**
- * Assoziiert mit DE-Daten von <code>atg.tlsFehlerAnalyse</code>, <code>asp.analyse</code>
+ * Assoziiert mit DE-Daten von <code>atg.tlsFehlerAnalyse</code>,
+ * <code>asp.analyse</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
-public class AtgTlsFehlerAnalyse
-implements ClientReceiverInterface{
-	
+public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
+
 	/**
-	 * statische Instanzen dieser Klasse
+	 * statische Instanzen dieser Klasse.
 	 */
-	private static Map<SystemObject, AtgTlsFehlerAnalyse> INSTANZEN = new HashMap<SystemObject, AtgTlsFehlerAnalyse>();
-	
+	private static Map<SystemObject, AtgTlsFehlerAnalyse> instanzen = new HashMap<SystemObject, AtgTlsFehlerAnalyse>();
+
 	/**
-	 * Listenermenge
+	 * Listenermenge.
 	 */
-	private Set<IAtgTlsFehlerAnalyseListener> listenerMenge = 
-		Collections.synchronizedSet(new HashSet<IAtgTlsFehlerAnalyseListener>());
-	
+	private Set<IAtgTlsFehlerAnalyseListener> listenerMenge = Collections
+			.synchronizedSet(new HashSet<IAtgTlsFehlerAnalyseListener>());
+
 	/**
-	 * aktueller Fehler
+	 * aktueller Fehler.
 	 */
 	private TlsFehlerAnalyse aktuellerFehler = null;
-	
-	
+
 	/**
-	 * Erfragt eine statische Instanz dieser Klasse
+	 * Erfragt eine statische Instanz dieser Klasse.
 	 * 
-	 * @param obj ein DE-Objekt
+	 * @param obj
+	 *            ein DE-Objekt
 	 * @return eine statische Instanz dieser Klasse
-	 * @throws Exception wird weitergereicht
+	 * @throws Exception
+	 *             wird weitergereicht
 	 */
-	public static final AtgTlsFehlerAnalyse getInstanz(SystemObject obj)
-	throws Exception{
-		AtgTlsFehlerAnalyse instanz = INSTANZEN.get(obj);
-		
-		if(instanz == null){
+	public static AtgTlsFehlerAnalyse getInstanz(SystemObject obj)
+			throws Exception {
+		AtgTlsFehlerAnalyse instanz = instanzen.get(obj);
+
+		if (instanz == null) {
 			instanz = new AtgTlsFehlerAnalyse(obj);
-			INSTANZEN.put(obj, instanz);
+			instanzen.put(obj, instanz);
 		}
-		
+
 		return instanz;
 	}
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param obj ein DE-Objekt
-	 * @throws Exception wird weitergereicht
+	 * @param obj
+	 *            ein DE-Objekt
+	 * @throws Exception
+	 *             wird weitergereicht
 	 */
-	private AtgTlsFehlerAnalyse(SystemObject obj)
-	throws Exception{
-		DataDescription datenBeschreibung = new DataDescription(
-					DAVTest.getDav().getDataModel().getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
-					DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
-		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung, ReceiveOptions.normal(), ReceiverRole.receiver());
+	private AtgTlsFehlerAnalyse(SystemObject obj) throws Exception {
+		DataDescription datenBeschreibung = new DataDescription(DAVTest
+				.getDav().getDataModel().getAttributeGroup(
+						"atg.tlsFehlerAnalyse"), //$NON-NLS-1$
+				DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
+		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung,
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-
 	/**
-	 * Fuegt Listener hinzu
+	 * Fuegt Listener hinzu.
 	 * 
-	 * @param listener neuer Listener
+	 * @param listener
+	 *            neuer Listener
 	 */
-	public final synchronized void addListener(IAtgTlsFehlerAnalyseListener listener){
-		if(this.listenerMenge.add(listener) && this.aktuellerFehler != null){
+	public synchronized void addListener(
+			IAtgTlsFehlerAnalyseListener listener) {
+		if (this.listenerMenge.add(listener) && this.aktuellerFehler != null) {
 			listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 		}
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] results) {
-		if(results != null){
-			for(ResultData result:results){
-				if(result != null && result.getData() != null){
+		if (results != null) {
+			for (ResultData result : results) {
+				if (result != null && result.getData() != null) {
 					synchronized (this) {
-						this.aktuellerFehler = TlsFehlerAnalyse.getZustand(
-								result.getData().getUnscaledValue("TlsFehlerAnalyse").intValue()); //$NON-NLS-1$
-						for(IAtgTlsFehlerAnalyseListener listener:this.listenerMenge){
-							listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
+						this.aktuellerFehler = TlsFehlerAnalyse
+								.getZustand(result.getData().getUnscaledValue(
+										"TlsFehlerAnalyse").intValue()); //$NON-NLS-1$
+						for (IAtgTlsFehlerAnalyseListener listener : this.listenerMenge) {
+							listener
+									.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 						}
 					}
 				}

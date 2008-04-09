@@ -23,22 +23,27 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.fehlertls.tls;
 
 /**
- * Hoert auf Veraenderungen im Erfassungszustand eines DE bezueglich der DeFa. Dieser
- * Zustand kann die Werte <code>erfasst</code> und <code>nicht erfasst</code> annehmen
- *   
+ * Hoert auf Veraenderungen im Erfassungszustand eines DE bezueglich der DeFa.
+ * Dieser Zustand kann die Werte <code>erfasst</code> und
+ * <code>nicht erfasst</code> annehmen
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IDeErfassungsZustandListener {
 
 	/**
-	 * Aktualisiert den Erfassungszustand eines DE bezueglich der DeFa
+	 * Aktualisiert den Erfassungszustand eines DE bezueglich der DeFa.
 	 * 
-	 * @param zustand Erfassungszustand eines DE bezueglich der DeFa
+	 * @param zustand
+	 *            Erfassungszustand eines DE bezueglich der DeFa
 	 */
-	public void aktualisiereErfassungsZustand(DeErfassungsZustand.Zustand zustand);
-	
+	void aktualisiereErfassungsZustand(
+			DeErfassungsZustand.Zustand zustand);
+
 }

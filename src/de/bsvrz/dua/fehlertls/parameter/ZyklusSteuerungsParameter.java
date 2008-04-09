@@ -43,116 +43,120 @@ import de.bsvrz.dua.fehlertls.de.DeTypLader;
 import de.bsvrz.dua.fehlertls.de.IDeTyp;
 
 /**
- * Klasse zum Auslesen und Anmelden auf die Betriebsparameter zur Zyklussteuerung
- * eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>
- *  
+ * Klasse zum Auslesen und Anmelden auf die Betriebsparameter zur
+ * Zyklussteuerung eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class ZyklusSteuerungsParameter
-implements ClientReceiverInterface{
-	
+public final class ZyklusSteuerungsParameter implements ClientReceiverInterface {
+
 	/**
-	 * statische Instanzen dieser Klasse
+	 * statische Instanzen dieser Klasse.
 	 */
-	private static Map<SystemObject, ZyklusSteuerungsParameter> INSTANZEN =
-								Collections.synchronizedMap(new TreeMap<SystemObject, ZyklusSteuerungsParameter>());
-	
+	private static Map<SystemObject, ZyklusSteuerungsParameter> instanzen = Collections
+			.synchronizedMap(new TreeMap<SystemObject, ZyklusSteuerungsParameter>());
+
 	/**
-	 * Menge aller Beobachterobjekte
+	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<IZyklusSteuerungsParameterListener> listenerMenge = Collections.synchronizedSet(
-			new HashSet<IZyklusSteuerungsParameterListener>());
-	
+	private Set<IZyklusSteuerungsParameterListener> listenerMenge = Collections
+			.synchronizedSet(new HashSet<IZyklusSteuerungsParameterListener>());
+
 	/**
-	 * Schnittstelle zum De-Typ
+	 * Schnittstelle zum De-Typ.
 	 */
 	private IDeTyp deTyp = null;
-	
+
 	/**
-	 * die aktuelle Erfassungsintervalldauer 
+	 * die aktuelle Erfassungsintervalldauer.
 	 */
 	private Long erfassungsIntervallDauer = null;
-	
-	
+
 	/**
-	 * Erfragt eine statische Instanz dieser Klasse
+	 * Erfragt eine statische Instanz dieser Klasse.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
-	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
-	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
+	 * @throws DeFaException
+	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
+	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	public static final ZyklusSteuerungsParameter getInstanz(ClientDavInterface dav,
-															 SystemObject objekt)
-	throws DeFaException{
+	public static ZyklusSteuerungsParameter getInstanz(
+			ClientDavInterface dav, SystemObject objekt) throws DeFaException {
 		ZyklusSteuerungsParameter instanz = null;
-		
-		synchronized (INSTANZEN) {
-			instanz = INSTANZEN.get(objekt);	
-		}		
-		
-		if(instanz == null){
-			instanz = new ZyklusSteuerungsParameter(dav, objekt);
-			synchronized (INSTANZEN) {
-				INSTANZEN.put(objekt, instanz);	
-			}			
+
+		synchronized (instanzen) {
+			instanz = instanzen.get(objekt);
 		}
-		
+
+		if (instanz == null) {
+			instanz = new ZyklusSteuerungsParameter(dav, objekt);
+			synchronized (instanzen) {
+				instanzen.put(objekt, instanz);
+			}
+		}
+
 		return instanz;
 	}
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
-	 * @throws DeFaException wird geworfen, wenn es Probleme beim Laden oder
-	 * Instanziieren der Klasse gibt, die den erfragten DE-Typ beschreibt
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.de</code>
+	 * @throws DeFaException
+	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
+	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
 	private ZyklusSteuerungsParameter(ClientDavInterface dav,
-								 	  SystemObject objekt)
-	throws DeFaException{
+			SystemObject objekt) throws DeFaException {
 		this.deTyp = DeTypLader.getDeTyp(objekt.getType());
-				
-		dav.subscribeReceiver(this, 
-							  objekt,
-							  this.deTyp.getDeFaIntervallParameterDataDescription(dav),
-							  ReceiveOptions.normal(),
-							  ReceiverRole.receiver());
+
+		dav.subscribeReceiver(this, objekt, this.deTyp
+				.getDeFaIntervallParameterDataDescription(dav), ReceiveOptions
+				.normal(), ReceiverRole.receiver());
 	}
 
-	
 	/**
-	 * Fuegt diesem Objekt einen Listener hinzu
+	 * Fuegt diesem Objekt einen Listener hinzu.
 	 * 
-	 * @param listener eine neuer Listener
+	 * @param listener
+	 *            eine neuer Listener
 	 */
-	public final synchronized void addListener(final IZyklusSteuerungsParameterListener listener){
-		if(listenerMenge.add(listener) && this.erfassungsIntervallDauer != null){
-			listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
+	public synchronized void addListener(
+			final IZyklusSteuerungsParameterListener listener) {
+		if (listenerMenge.add(listener)
+				&& this.erfassungsIntervallDauer != null) {
+			listener
+					.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 		}
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		if(resultate != null){
-			for(ResultData resultat:resultate){
-				if(resultat != null && resultat.getData() != null){
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						this.erfassungsIntervallDauer = this.deTyp.getErfassungsIntervall(resultat.getData());
-						for(IZyklusSteuerungsParameterListener listener:this.listenerMenge){
-							listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
+						this.erfassungsIntervallDauer = this.deTyp
+								.getErfassungsIntervall(resultat.getData());
+						for (IZyklusSteuerungsParameterListener listener : this.listenerMenge) {
+							listener
+									.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 						}
-					}					
+					}
 				}
 			}
-		}		
+		}
 	}
-	
+
 }

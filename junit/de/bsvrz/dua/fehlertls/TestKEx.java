@@ -42,202 +42,273 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Simuliert KEx
+ * Simuliert KEx.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
-public class TestKEx
-implements ClientSenderInterface{
-	
-	/**
-	 * alle DEs
-	 */
-	public static SystemObject IB1_SM1_UFD1_DE1 = null;
-	public static SystemObject IB1_SM1_UFD1_DE2 = null;
-	public static SystemObject IB1_SM1_LVE1_DE1 = null;
-	
-	public static SystemObject IB2_SM3_LVE1_DE1 = null;
-	public static SystemObject IB2_SM1_LVE1_DE1 = null;
-	public static SystemObject IB2_SM1_UFD1_DE1 = null;
-	public static SystemObject IB2_SM1_UFD1_DE2 = null;	
-	public static SystemObject IB2_SM2_LVE1_DE1 = null;
-	public static SystemObject IB2_SM2_LVE1_DE2 = null;
-	
-	/**
-	 * statische Instanz dieser Klasse
-	 */
-	private static TestKEx INSTANZ = null;
-	
-	/**
-	 * statische Datenverteiler-Verbindung
-	 */
-	private static ClientDavInterface DAV = null;
-	
-	
-	/**
-	 * Erfragt die statische Instanz dieser Klasse
-	 *
-	 * @param dav Datenverteiler-Verbindung
-	 * @return die statische Instanz dieser Klasse
-	 * @throws Exception wird weitergereicht
-	 */
-	public static final TestKEx getInstanz(final ClientDavInterface dav)
-	throws Exception{
-		if(INSTANZ == null){
-			INSTANZ = new TestKEx(dav);
-		}
-		return INSTANZ;
-	}
-	
-	
-	/**
-	 * Standardkonstruktor 
-	 * 
-	 * @param dav Datenverteiler-Verbindung
-	 * @throws Exception wird weitergereicht
-	 */
-	private TestKEx(final ClientDavInterface dav)
-	throws Exception{
-		DAV = dav;
+public final class TestKEx implements ClientSenderInterface {
 
-		IB1_SM1_UFD1_DE1 = dav.getDataModel().getObject("kri1.ib1.sm1.eakufd1.de1"); //$NON-NLS-1$
-		IB1_SM1_UFD1_DE2 = dav.getDataModel().getObject("kri1.ib1.sm1.eakufd1.de2"); //$NON-NLS-1$
-		IB1_SM1_LVE1_DE1 = dav.getDataModel().getObject("kri1.ib1.sm1.eaklve1.de1"); //$NON-NLS-1$
-		
-		IB2_SM3_LVE1_DE1 = dav.getDataModel().getObject("kri1.ib2.sm3.eaklve1.de1"); //$NON-NLS-1$
-		IB2_SM1_LVE1_DE1 = dav.getDataModel().getObject("kri1.ib2.sm1.eaklve1.de1"); //$NON-NLS-1$
-		IB2_SM1_UFD1_DE1 = dav.getDataModel().getObject("kri1.ib2.sm1.eakufd1.de1"); //$NON-NLS-1$
-		IB2_SM1_UFD1_DE2 = dav.getDataModel().getObject("kri1.ib2.sm1.eakufd1.de2"); //$NON-NLS-1$
-		IB2_SM2_LVE1_DE1 = dav.getDataModel().getObject("kri1.ib2.sm2.eaklve1.de1"); //$NON-NLS-1$
-		IB2_SM2_LVE1_DE2 = dav.getDataModel().getObject("kri1.ib2.sm2.eaklve1.de2"); //$NON-NLS-1$
-		
-		for(SystemObject de:dav.getDataModel().getType("typ.de").getElements()){ //$NON-NLS-1$
-			IDeTyp deTyp = DeTypLader.getDeTyp(de.getType());
-			for(DataDescription datenBeschreibung:deTyp.getDeFaMesswertDataDescriptions(dav)){
-				dav.subscribeSender(this, de, datenBeschreibung, SenderRole.source());
-			}
-						
-			dav.subscribeSender(this, de, 
-					new DataDescription(deTyp.getDeFaIntervallParameterDataDescription(dav).getAttributeGroup(),
-							DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)), SenderRole.sender());
-			dav.subscribeSender(this, de, 
-					new DataDescription(
-							dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
-							dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole.source());
+	/**
+	 * alle DEs.
+	 */
+	public static SystemObject iB1SM1UFD1DE1 = null;
+	
+	/**
+	 * iB1SM1UFD1DE2.
+	 */
+	public static SystemObject iB1SM1UFD1DE2 = null;
+	
+	/**
+	 * iB1SM1LVE1DE1.
+	 */
+	public static SystemObject iB1SM1LVE1DE1 = null;
+
+	/**
+	 * iB2SM3LVE1DE1.
+	 */
+	public static SystemObject iB2SM3LVE1DE1 = null;
+	
+	/**
+	 * iB2SM1LVE1DE1.
+	 */
+	public static SystemObject iB2SM1LVE1DE1 = null;
+	
+	/**
+	 * DE.
+	 */
+	public static SystemObject iB2SM1UFD1DE1 = null;
+	
+	/**
+	 * DE.
+	 */
+	public static SystemObject iB2SM1UFD1DE2 = null;
+	
+	/**
+	 * DE.
+	 */
+	public static SystemObject iB2SM2LVE1DE1 = null;
+	
+	/**
+	 * DE.
+	 */
+	public static SystemObject iB2SM2LVE1DE2 = null;
+
+	/**
+	 * statische Instanz dieser Klasse.
+	 */
+	private static TestKEx instanz = null;
+
+	/**
+	 * statische Datenverteiler-Verbindung.
+	 */
+	private static ClientDavInterface sDav = null;
+
+	/**
+	 * Erfragt die statische Instanz dieser Klasse.
+	 * 
+	 * @param dav
+	 *            Datenverteiler-Verbindung
+	 * @return die statische Instanz dieser Klasse
+	 * @throws Exception
+	 *             wird weitergereicht
+	 */
+	public static TestKEx getInstanz(final ClientDavInterface dav)
+			throws Exception {
+		if (instanz == null) {
+			instanz = new TestKEx(dav);
 		}
-		dav.subscribeSender(this, dav.getDataModel().getObject("DeFa"),  //$NON-NLS-1$
-				new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),  //$NON-NLS-1$
-						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)), SenderRole.sender());
-		
+		return instanz;
+	}
+
+	/**
+	 * Standardkonstruktor.
+	 * 
+	 * @param dav
+	 *            Datenverteiler-Verbindung
+	 * @throws Exception
+	 *             wird weitergereicht
+	 */
+	private TestKEx(final ClientDavInterface dav) throws Exception {
+		sDav = dav;
+
+		iB1SM1UFD1DE1 = dav.getDataModel().getObject(
+				"kri1.ib1.sm1.eakufd1.de1"); //$NON-NLS-1$
+		iB1SM1UFD1DE2 = dav.getDataModel().getObject(
+				"kri1.ib1.sm1.eakufd1.de2"); //$NON-NLS-1$
+		iB1SM1LVE1DE1 = dav.getDataModel().getObject(
+				"kri1.ib1.sm1.eaklve1.de1"); //$NON-NLS-1$
+
+		iB2SM3LVE1DE1 = dav.getDataModel().getObject(
+				"kri1.ib2.sm3.eaklve1.de1"); //$NON-NLS-1$
+		iB2SM1LVE1DE1 = dav.getDataModel().getObject(
+				"kri1.ib2.sm1.eaklve1.de1"); //$NON-NLS-1$
+		iB2SM1UFD1DE1 = dav.getDataModel().getObject(
+				"kri1.ib2.sm1.eakufd1.de1"); //$NON-NLS-1$
+		iB2SM1UFD1DE2 = dav.getDataModel().getObject(
+				"kri1.ib2.sm1.eakufd1.de2"); //$NON-NLS-1$
+		iB2SM2LVE1DE1 = dav.getDataModel().getObject(
+				"kri1.ib2.sm2.eaklve1.de1"); //$NON-NLS-1$
+		iB2SM2LVE1DE2 = dav.getDataModel().getObject(
+				"kri1.ib2.sm2.eaklve1.de2"); //$NON-NLS-1$
+
+		for (SystemObject de : dav.getDataModel()
+				.getType("typ.de").getElements()) { //$NON-NLS-1$
+			IDeTyp deTyp = DeTypLader.getDeTyp(de.getType());
+			for (DataDescription datenBeschreibung : deTyp
+					.getDeFaMesswertDataDescriptions(dav)) {
+				dav.subscribeSender(this, de, datenBeschreibung, SenderRole
+						.source());
+			}
+
+			dav.subscribeSender(this, de, new DataDescription(deTyp
+					.getDeFaIntervallParameterDataDescription(dav)
+					.getAttributeGroup(), sDav.getDataModel().getAspect(
+					DaVKonstanten.ASP_PARAMETER_VORGABE)), SenderRole.sender());
+			dav.subscribeSender(this, de,
+					new DataDescription(dav.getDataModel().getAttributeGroup(
+							"atg.tlsGloDeFehler"), //$NON-NLS-1$
+							dav.getDataModel().getAspect(
+									DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole
+							.source());
+		}
+		dav.subscribeSender(this,
+				dav.getDataModel().getObject("DeFa"), //$NON-NLS-1$
+				new DataDescription(dav.getDataModel().getAttributeGroup(
+						"atg.parameterTlsFehlerAnalyse"), //$NON-NLS-1$
+						dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				SenderRole.sender());
+
 		/**
 		 * Warten bis alle Anmeldungen durchgefuehrt sein sollten
 		 */
-		try{ Thread.sleep(1000L); }catch(InterruptedException e){}
-	}
-	
-	
-	/**
-	 * Setzt die Parameter der DeFa
-	 * 
-	 * @param zeitverzugFehlerErkennung Der zusätzliche Zeitverzug, der nach dem erwarteten Empfangszeitpunkt noch
-	 * bis zur Erkennung eines nicht gelieferten Messwertes abgewartet werden muss
-	 * @param zeitverzugFehlerErmittlung Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis zur
-	 * Fehlerermittlung abgewartet werden muss
-	 */
-	public final void setAnalyseParameter(long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung){
-		Data datum = DAV.createData(DAV.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse")); //$NON-NLS-1$
-		
-		datum.getTimeValue("ZeitverzugFehlerErkennung").setMillis(zeitverzugFehlerErkennung); //$NON-NLS-1$
-		datum.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(zeitverzugFehlerErmittlung); //$NON-NLS-1$
-		
-		ResultData resultat = new ResultData(DAV.getDataModel().getObject("DeFa"), //$NON-NLS-1$
-				new DataDescription(
-						DAV.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),  //$NON-NLS-1$
-						DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
-				System.currentTimeMillis(),
-				datum);	
-		
 		try {
-			DAV.sendData(resultat);
+			Thread.sleep(1000L);
+		} catch (InterruptedException e) {
+			//
+		}
+	}
+
+	/**
+	 * Setzt die Parameter der DeFa.
+	 * 
+	 * @param zeitverzugFehlerErkennung
+	 *            Der zusätzliche Zeitverzug, der nach dem erwarteten
+	 *            Empfangszeitpunkt noch bis zur Erkennung eines nicht
+	 *            gelieferten Messwertes abgewartet werden muss
+	 * @param zeitverzugFehlerErmittlung
+	 *            Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis
+	 *            zur Fehlerermittlung abgewartet werden muss
+	 */
+	public void setAnalyseParameter(long zeitverzugFehlerErkennung,
+			long zeitverzugFehlerErmittlung) {
+		Data datum = sDav.createData(sDav.getDataModel().getAttributeGroup(
+				"atg.parameterTlsFehlerAnalyse")); //$NON-NLS-1$
+
+		datum
+				.getTimeValue("ZeitverzugFehlerErkennung").setMillis(zeitverzugFehlerErkennung); //$NON-NLS-1$
+		datum
+				.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(zeitverzugFehlerErmittlung); //$NON-NLS-1$
+
+		ResultData resultat = new ResultData(sDav.getDataModel().getObject(
+				"DeFa"), //$NON-NLS-1$
+				new DataDescription(sDav.getDataModel().getAttributeGroup(
+						"atg.parameterTlsFehlerAnalyse"), //$NON-NLS-1$
+						sDav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_VORGABE)), System
+						.currentTimeMillis(), datum);
+
+		try {
+			sDav.sendData(resultat);
 		} catch (Exception e) {
 			throw new RuntimeException(resultat.toString(), e);
 		}
 	}
-	
-	
+
 	/**
-	 * Setzt den DE-Fehler
+	 * Setzt den DE-Fehler.
 	 * 
-	 * @param de das DE
-	 * @param fehlerStatus Zustand des DE-Fehlers 0 = ok, 1 = StörEAK, 2 = StörSM
-	 * @param passiviert ob der Kanal passiviert ist 
+	 * @param de
+	 *            das DE
+	 * @param fehlerStatus
+	 *            Zustand des DE-Fehlers 0 = ok, 1 = StörEAK, 2 = StörSM
+	 * @param passiviert
+	 *            ob der Kanal passiviert ist
 	 */
-	public final void setDeFehlerStatus(SystemObject de, int fehlerStatus, boolean passiviert){
-		AttributeGroup atg = DAV.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"); //$NON-NLS-1$
-		Data datum = DAV.createData(atg);
+	public void setDeFehlerStatus(SystemObject de, int fehlerStatus,
+			boolean passiviert) {
+		AttributeGroup atg = sDav.getDataModel().getAttributeGroup(
+				"atg.tlsGloDeFehler"); //$NON-NLS-1$
+		Data datum = sDav.createData(atg);
 		datum.getUnscaledValue("DEFehlerStatus").set(fehlerStatus); //$NON-NLS-1$
-		datum.getUnscaledValue("DEKanalStatus").set(passiviert?1:0); //$NON-NLS-1$
+		datum.getUnscaledValue("DEKanalStatus").set(passiviert ? 1 : 0); //$NON-NLS-1$
 		datum.getUnscaledValue("DEProjektierungsStatus").set(0); //$NON-NLS-1$
 		datum.getUnscaledValue("HerstellerDefinierterCode").set(0); //$NON-NLS-1$
 		datum.getUnscaledValue("Hersteller").set(0); //$NON-NLS-1$
-		ResultData resultat = new ResultData(de,
-				new DataDescription(
-						DAV.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
-						DAV.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
-				System.currentTimeMillis(),
-				datum);
-		
+		ResultData resultat = new ResultData(de, new DataDescription(sDav
+				.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
+				sDav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+				System.currentTimeMillis(), datum);
+
 		try {
-			DAV.sendData(resultat);
+			sDav.sendData(resultat);
 		} catch (Exception e) {
 			throw new RuntimeException(resultat.toString(), e);
 		}
 	}
-	
-	
+
 	/**
-	 * Sendet ein Nutzdatum fuer ein DE
+	 * Sendet ein Nutzdatum fuer ein DE.
 	 * 
-	 * @param de das DE
-	 * @param zeitStempel der Zeitstempel des Nutzdatums
+	 * @param de
+	 *            das DE
+	 * @param zeitStempel
+	 *            der Zeitstempel des Nutzdatums
 	 */
-	public final void sendeDatum(SystemObject de, long zeitStempel){
+	public void sendeDatum(SystemObject de, long zeitStempel) {
 		Data datum = null;
 		AttributeGroup atg = null;
-		
-		if(de.isOfType("typ.deUfd")){ //$NON-NLS-1$
-			switch(DAVTest.R.nextInt(3)){
+
+		if (de.isOfType("typ.deUfd")) { //$NON-NLS-1$
+			switch (DAVTest.r.nextInt(3)) {
 			case 0:
-				atg = DAV.getDataModel().getAttributeGroup("atg.tlsUfdErgebnisMeldungHelligkeitHK"); //$NON-NLS-1$
-				datum = DAV.createData(atg);
+				atg = sDav.getDataModel().getAttributeGroup(
+						"atg.tlsUfdErgebnisMeldungHelligkeitHK"); //$NON-NLS-1$
+				datum = sDav.createData(atg);
 				datum.getUnscaledValue("Helligkeit").set(0); //$NON-NLS-1$
 				break;
 			case 1:
-				atg = DAV.getDataModel().getAttributeGroup("atg.tlsUfdErgebnisMeldungNiederschlag"); //$NON-NLS-1$
-				datum = DAV.createData(atg);
+				atg = sDav.getDataModel().getAttributeGroup(
+						"atg.tlsUfdErgebnisMeldungNiederschlag"); //$NON-NLS-1$
+				datum = sDav.createData(atg);
 				datum.getUnscaledValue("Niederschlag").set(0); //$NON-NLS-1$
 				break;
 			case 2:
-				atg = DAV.getDataModel().getAttributeGroup("atg.tlsUfdErgebnisMeldungLuftTemperaturLT"); //$NON-NLS-1$
-				datum = DAV.createData(atg);
+				atg = sDav.getDataModel().getAttributeGroup(
+						"atg.tlsUfdErgebnisMeldungLuftTemperaturLT"); //$NON-NLS-1$
+				datum = sDav.createData(atg);
 				datum.getUnscaledValue("Lufttemperatur").set(0); //$NON-NLS-1$
 				break;
+			default:
 			}
-		}else{
-//			atg = DAV.getDataModel().getAttributeGroup("atg.tlsSveErgebnisMeldungVersion0Bis1"); //$NON-NLS-1$
-//			datum = DAV.createData(atg);
-//			datum.getUnscaledValue("vKfzReise").set(0); //$NON-NLS-1$
-//			datum.getUnscaledValue("vPkwReise").set(0); //$NON-NLS-1$
-//			datum.getUnscaledValue("vLkwReise").set(0); //$NON-NLS-1$
-//			datum.getUnscaledValue("kKfz").set(0); //$NON-NLS-1$
-//			datum.getUnscaledValue("kPkw").set(0); //$NON-NLS-1$
-//			datum.getUnscaledValue("kLkw").set(0); //$NON-NLS-1$
-			
-			atg = DAV.getDataModel().getAttributeGroup("atg.tlsLveErgebnisMeldungVersion0Bis4"); //$NON-NLS-1$
-			datum = DAV.createData(atg);
-			
+		} else {
+			// atg =
+			// DAV.getDataModel().getAttributeGroup("atg.tlsSveErgebnisMeldungVersion0Bis1");
+			// //$NON-NLS-1$
+			// datum = DAV.createData(atg);
+			// datum.getUnscaledValue("vKfzReise").set(0); //$NON-NLS-1$
+			// datum.getUnscaledValue("vPkwReise").set(0); //$NON-NLS-1$
+			// datum.getUnscaledValue("vLkwReise").set(0); //$NON-NLS-1$
+			// datum.getUnscaledValue("kKfz").set(0); //$NON-NLS-1$
+			// datum.getUnscaledValue("kPkw").set(0); //$NON-NLS-1$
+			// datum.getUnscaledValue("kLkw").set(0); //$NON-NLS-1$
+
+			atg = sDav.getDataModel().getAttributeGroup(
+					"atg.tlsLveErgebnisMeldungVersion0Bis4"); //$NON-NLS-1$
+			datum = sDav.createData(atg);
+
 			datum.getTimeValue("T").setMillis(0); //$NON-NLS-1$
 			datum.getUnscaledValue("qKfz").set(0); //$NON-NLS-1$
 			datum.getUnscaledValue("qLkwÄ").set(0); //$NON-NLS-1$
@@ -250,40 +321,40 @@ implements ClientSenderInterface{
 			datum.getArray("qPkwÄGeschwKlasse").setLength(0); //$NON-NLS-1$
 			datum.getArray("qLkwÄGeschwKlasse").setLength(0); //$NON-NLS-1$
 		}
-		
-		ResultData sendeDatum = 
-			new ResultData(de, 
-					new DataDescription(
-							atg,
-							DAV.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
-							zeitStempel, datum);
-		
+
+		ResultData sendeDatum = new ResultData(de, new DataDescription(atg, sDav
+				.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+				zeitStempel, datum);
+
 		try {
-			DAV.sendData(sendeDatum);
+			sDav.sendData(sendeDatum);
 		} catch (Exception e) {
 			throw new RuntimeException(sendeDatum.toString(), e);
 		}
 	}
-	
-	
+
 	/**
-	 * Setzt die Betriebsparameter eines DE
+	 * Setzt die Betriebsparameter eines DE.
 	 * 
-	 * @param de ein DE
-	 * @param zyklus der Abfragezyklus (in ms) (-1 == nicht zyklusche Abfrage)
+	 * @param de
+	 *            ein DE
+	 * @param zyklus
+	 *            der Abfragezyklus (in ms) (-1 == nicht zyklusche Abfrage)
 	 */
-	public final void setBetriebsParameter(SystemObject de, long zyklus){
+	public void setBetriebsParameter(SystemObject de, long zyklus) {
 		Data datenSatz;
 		try {
-			datenSatz = DAV.createData(DeTypLader.getDeTyp(de.getType()).
-					getDeFaIntervallParameterDataDescription(DAV).getAttributeGroup());
+			datenSatz = sDav.createData(DeTypLader.getDeTyp(de.getType())
+					.getDeFaIntervallParameterDataDescription(sDav)
+					.getAttributeGroup());
 		} catch (DeFaException e1) {
 			throw new RuntimeException(e1);
 		}
-		
-		if(de.isOfType("typ.deLve")){ //$NON-NLS-1$
+
+		if (de.isOfType("typ.deLve")) { //$NON-NLS-1$
 			datenSatz.getUnscaledValue("VersionKurzZeitDaten").set(0); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("IntervallDauerKurzZeitDaten").set(zyklus >= 0?zyklus / (15L * 1000L):15L * 1000L); //$NON-NLS-1$
+			datenSatz
+					.getUnscaledValue("IntervallDauerKurzZeitDaten").set(zyklus >= 0 ? zyklus / (15L * 1000L) : 15L * 1000L); //$NON-NLS-1$
 			datenSatz.getUnscaledValue("VersionLangZeitDaten").set(10); //$NON-NLS-1$
 			datenSatz.getUnscaledValue("IntervallDauerLangZeit").set(129); //$NON-NLS-1$
 			datenSatz.getUnscaledValue("alpha1").set(1); //$NON-NLS-1$
@@ -291,108 +362,94 @@ implements ClientSenderInterface{
 			datenSatz.getUnscaledValue("LängenGrenzWert").set(400); //$NON-NLS-1$
 			datenSatz.getUnscaledValue("ArtMittelWertBildung").set(0); //$NON-NLS-1$
 			datenSatz.getUnscaledValue("StartMittelWertBildung").set(0); //$NON-NLS-1$	
-		}else{
-			datenSatz.getUnscaledValue("Erfassungsperiodendauer").set(zyklus >= 0?zyklus / 1000L:60); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0?1:0); //$NON-NLS-1$
+		} else {
+			datenSatz
+					.getUnscaledValue("Erfassungsperiodendauer").set(zyklus >= 0 ? zyklus / 1000L : 60); //$NON-NLS-1$
+			datenSatz
+					.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0); //$NON-NLS-1$
 		}
 
-		ResultData neuerParameter = null; 
-		try{
-			neuerParameter = new ResultData(de, new DataDescription(DeTypLader.getDeTyp(de.getType()).
-					getDeFaIntervallParameterDataDescription(DAV).getAttributeGroup(),
-					DAV.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)), System.currentTimeMillis(), datenSatz);
-			DAV.sendData(neuerParameter);
+		ResultData neuerParameter = null;
+		try {
+			neuerParameter = new ResultData(de, new DataDescription(DeTypLader
+					.getDeTyp(de.getType())
+					.getDeFaIntervallParameterDataDescription(sDav)
+					.getAttributeGroup(), sDav.getDataModel().getAspect(
+					DaVKonstanten.ASP_PARAMETER_VORGABE)), System
+					.currentTimeMillis(), datenSatz);
+			sDav.sendData(neuerParameter);
 			System.out.println("Sende Betriebsparameter:\n" + neuerParameter); //$NON-NLS-1$
 		} catch (Exception e) {
 			throw new RuntimeException(neuerParameter.toString(), e);
 		}
 	}
-	
-	
+
 	/**
-	 * Setzt ein DE in einen bestimmten Zustand bzgl der DeFa
+	 * Setzt ein DE in einen bestimmten Zustand bzgl der DeFa.
 	 * 
-	 * @param de das DE
-	 * @param zeitStempel der Zeitstempel der Zustandsaenderung
-	 * @param status der neue Zustand
+	 * @param de
+	 *            das DE
+	 * @param zeitStempel
+	 *            der Zeitstempel der Zustandsaenderung
+	 * @param status
+	 *            der neue Zustand
 	 */
-	public final void setDe(SystemObject de, long zeitStempel, DeStatus status){
-		if(status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AN)){
-			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(), false);
-		}else
-		if(status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS)){
+	public void setDe(SystemObject de, long zeitStempel, DeStatus status) {
+		if (status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AN)) {
+			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(),
+					false);
+		} else if (status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS)) {
 			this.setDeFehlerStatus(de, 0, false);
-		}else
-		if(status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AN)){
-			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(), true);
-		}else
-		if(status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS)){
+		} else if (status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AN)) {
+			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(),
+					true);
+		} else if (status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS)) {
 			this.setDeFehlerStatus(de, 0, true);
-		}else
-		if(status.equals(DeStatus.NUTZ_DATEN)){
+		} else if (status.equals(DeStatus.NUTZ_DATEN)) {
 			this.sendeDatum(de, zeitStempel);
-		}else
-		if(status.equals(DeStatus.ZYKLISCH_AN)){
-			if(de.isOfType("typ.deUfd")){ //$NON-NLS-1$
-				this.setBetriebsParameter(de, 60L * 1000L);	
-			}else{
+		} else if (status.equals(DeStatus.ZYKLISCH_AN)) {
+			if (de.isOfType("typ.deUfd")) { //$NON-NLS-1$
+				this.setBetriebsParameter(de, 60L * 1000L);
+			} else {
 				this.setBetriebsParameter(de, 15L * 1000L);
-			}			
-		}else
-		if(status.equals(DeStatus.ZYKLISCH_AUS)){
+			}
+		} else if (status.equals(DeStatus.ZYKLISCH_AUS)) {
 			this.setBetriebsParameter(de, -1L);
 		}
 	}
-	
-	
+
 	/**
-	 * Erfragt alle Test-Des
+	 * Erfragt alle Test-Des.
 	 * 
 	 * @return alle Test-Des
 	 */
-	public final SystemObject[] getAlleDes(){
-		return new SystemObject[]{IB1_SM1_UFD1_DE1,
-								  IB1_SM1_UFD1_DE2,
-								  IB1_SM1_LVE1_DE1,
-								  IB2_SM3_LVE1_DE1,
-								  IB2_SM1_LVE1_DE1,
-								  IB2_SM1_UFD1_DE1,
-								  IB2_SM1_UFD1_DE2,
-								  IB2_SM2_LVE1_DE1,
-								  IB2_SM2_LVE1_DE2
-		};
+	public SystemObject[] getAlleDes() {
+		return new SystemObject[] { iB1SM1UFD1DE1, iB1SM1UFD1DE2,
+				iB1SM1LVE1DE1, iB2SM3LVE1DE1, iB2SM1LVE1DE1,
+				iB2SM1UFD1DE1, iB2SM1UFD1DE2, iB2SM2LVE1DE1,
+				iB2SM2LVE1DE2 };
 	}
-	
 
 	/**
-	 * Erfragt alle Test-LVE-Des
+	 * Erfragt alle Test-LVE-Des.
 	 * 
 	 * @return alle Test-LVE-Des
 	 */
-	public final SystemObject[] getAlleLveDes(){
-		return new SystemObject[]{IB1_SM1_LVE1_DE1,
-								  IB2_SM3_LVE1_DE1,
-								  IB2_SM1_LVE1_DE1,
-								  IB2_SM2_LVE1_DE1,
-								  IB2_SM2_LVE1_DE2
-		};
+	public SystemObject[] getAlleLveDes() {
+		return new SystemObject[] { iB1SM1LVE1DE1, iB2SM3LVE1DE1,
+				iB2SM1LVE1DE1, iB2SM2LVE1DE1, iB2SM2LVE1DE2 };
 	}
 
-	
 	/**
-	 * Erfragt alle Test-UFD-Des
+	 * Erfragt alle Test-UFD-Des.
 	 * 
 	 * @return alle Test-UFD-Des
 	 */
-	public final SystemObject[] getAlleUFDDes(){
-		return new SystemObject[]{IB1_SM1_UFD1_DE1,
-								  IB1_SM1_UFD1_DE2,
-								  IB2_SM1_UFD1_DE1,
-								  IB2_SM1_UFD1_DE2
-		};
+	public SystemObject[] getAlleUFDDes() {
+		return new SystemObject[] { iB1SM1UFD1DE1, iB1SM1UFD1DE2,
+				iB2SM1UFD1DE1, iB2SM1UFD1DE2 };
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -401,7 +458,6 @@ implements ClientSenderInterface{
 		// Quellenanmeldung
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -409,5 +465,5 @@ implements ClientSenderInterface{
 			DataDescription dataDescription) {
 		return false;
 	}
-	
+
 }

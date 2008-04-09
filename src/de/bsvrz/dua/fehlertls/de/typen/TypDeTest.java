@@ -31,29 +31,29 @@ import de.bsvrz.dua.fehlertls.de.AbstraktDeTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * DeFa-Beschreibung eines Test DE-Typs (nur für Test-Zwecke innerhalb
- * der Test-Konfiguration)<br>
+ * DeFa-Beschreibung eines Test DE-Typs (nur für Test-Zwecke innerhalb der
+ * Test-Konfiguration).<br>
  * (PID: typ.deTest)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TypDeTest 
-extends AbstraktDeTyp{
+public class TypDeTest extends AbstraktDeTyp {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public long getErfassungsIntervall(Data parameter){
+	public long getErfassungsIntervall(Data parameter) {
 		long erfassungsIntervallDauer = -1;
-		
-		if(parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1){ //$NON-NLS-1$
-			erfassungsIntervallDauer = parameter.getUnscaledValue("Erfassungsperiodendauer").longValue() * 1000L; //$NON-NLS-1$
-		}			
-		
+
+		if (parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1) { //$NON-NLS-1$
+			erfassungsIntervallDauer = parameter.getUnscaledValue(
+					"Erfassungsperiodendauer").longValue() * 1000L; //$NON-NLS-1$
+		}
+
 		return erfassungsIntervallDauer;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -63,13 +63,12 @@ extends AbstraktDeTyp{
 		return "atg.tlsUfdBetriebsParameter"; //$NON-NLS-1$
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public DataDescriptionPid[] getDataIdentifikations() {
-		return new DataDescriptionPid[]{
-			new DataDescriptionPid("atg.test", DUAKonstanten.ASP_TLS_ANTWORT, (short)0), //$NON-NLS-1$
+		return new DataDescriptionPid[] { new DataDescriptionPid(
+				"atg.test", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0), //$NON-NLS-1$
 		};
 	}
 

@@ -48,60 +48,67 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TLS-Hierarchieelement Inselbus
+ * TLS-Hierarchieelement Inselbus.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class Inselbus 
-extends AbstraktGeraet{
-	
-	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-	
+public class Inselbus extends AbstraktGeraet {
 
 	/**
-	 * Standardkonstruktor
-	 * 
-	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.anschlussPunkt</code> 
-	 * (unterhalb eines Objektes vom Typ <code>typ.kri</code>)
-	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
-	 * Geraet 
+	 * Debug-Logger.
 	 */
-	protected Inselbus(ClientDavInterface dav, SystemObject objekt, AbstraktGeraet vater) {
+	private static final Debug LOGGER = Debug.getLogger();
+
+	/**
+	 * Standardkonstruktor.
+	 * 
+	 * @param dav
+	 *            Datenverteiler-Verbindund
+	 * @param objekt
+	 *            ein Systemobjekt vom Typ <code>typ.anschlussPunkt</code>
+	 *            (unterhalb eines Objektes vom Typ <code>typ.kri</code>)
+	 * @param vater
+	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
+	 */
+	protected Inselbus(ClientDavInterface dav, SystemObject objekt,
+			AbstraktGeraet vater) {
 		super(dav, objekt, vater);
-		
+
 		/**
 		 * Initialisiere Steuermodule
 		 */
-		for(SystemObject komPartner:
-				this.objekt.getNonMutableSet("AnschlussPunkteKommunikationsPartner").getElements()){ //$NON-NLS-1$
-			if(komPartner.isValid()){
-				Data konfigDatum = komPartner.getConfigurationData(TlsHierarchie.KONFIG_ATG);
-				if(konfigDatum != null){
-					SystemObject steuerModul = konfigDatum.getReferenceValue
-								("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
-					if(steuerModul != null){
-						if(steuerModul.isOfType("typ.steuerModul")){ //$NON-NLS-1$
-							this.kinder.add(new Sm(dav, steuerModul, this));						
-						}else{
-							LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
-									" (Inselbus: " + this.objekt +  //$NON-NLS-1$
-									") duerfen nur Steuermodule definiert sein. Aber: " + //$NON-NLS-1$
-									steuerModul + " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
+		for (SystemObject komPartner : this.objekt.getNonMutableSet(
+				"AnschlussPunkteKommunikationsPartner").getElements()) { //$NON-NLS-1$
+			if (komPartner.isValid()) {
+				Data konfigDatum = komPartner
+						.getConfigurationData(TlsHierarchie.konfigAtg);
+				if (konfigDatum != null) {
+					SystemObject steuerModul = konfigDatum.getReferenceValue(
+							"KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+					if (steuerModul != null) {
+						if (steuerModul.isOfType("typ.steuerModul")) { //$NON-NLS-1$
+							this.kinder.add(new Sm(dav, steuerModul, this));
+						} else {
+							LOGGER.warning("An " + komPartner + //$NON-NLS-1$
+									" (Inselbus: "
+									+ this.objekt
+									+ //$NON-NLS-1$
+									") duerfen nur Steuermodule definiert sein. Aber: "
+									+ //$NON-NLS-1$
+									steuerModul
+									+ " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
 									")"); //$NON-NLS-1$				
 						}
-					}else{
-						LOGGER.warning("An " + komPartner +  //$NON-NLS-1$
-								" (Inselbus: " + this.objekt +  //$NON-NLS-1$
+					} else {
+						LOGGER.warning("An " + komPartner + //$NON-NLS-1$
+								" (Inselbus: " + this.objekt + //$NON-NLS-1$
 								") ist kein Steuermodul definiert"); //$NON-NLS-1$				
 					}
-				}else{
-					LOGGER.warning("Konfiguration von " + komPartner +  //$NON-NLS-1$
-							" (Inselbus: " + this.objekt +  //$NON-NLS-1$
+				} else {
+					LOGGER.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+							" (Inselbus: " + this.objekt + //$NON-NLS-1$
 							") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
 							"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
 				}
@@ -111,39 +118,40 @@ extends AbstraktGeraet{
 	}
 
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.INSELBUS;
 	}
 
-	
 	/**
 	 * {@inheritDoc}<br>
 	 * 
-	 * Gibt <code>true</code> zurueck, wenn:<br> 
-	 * 1. mehr als ein (wenigstens teilweise erfasstes) Steuermodul angeschlossen
-	 * ist <b>und</b><br>
-	 * 2. mehr als ein (wenigstens teilweise erfasstes) angeschlossenes Steuermodul
-	 * keine Daten liefert<br>
+	 * Gibt <code>true</code> zurueck, wenn:<br>
+	 * 1. mehr als ein (wenigstens teilweise erfasstes) Steuermodul
+	 * angeschlossen ist <b>und</b><br>
+	 * 2. mehr als ein (wenigstens teilweise erfasstes) angeschlossenes
+	 * Steuermodul keine Daten liefert<br>
 	 */
 	@Override
 	public boolean kannFehlerHierPublizieren(long zeitStempel) {
 		boolean kannHierPublizieren = false;
-		
+
 		/**
 		 * ermittle alle Steuermodule, die unterhalb dieses Inselbusses liegen
 		 * und wenigstens ein erfasstes DE haben (mit ihren erfassten DE)
 		 */
 		Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<Sm, Set<De>>();
 
-		for(De erfassteDe:this.getErfassteDes()){
-			Sm steuerModulVonDe = (Sm)erfassteDe.getVater().getVater();
-			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes.get(steuerModulVonDe);
-			if(erfassteDesAmSteuerModul == null){
+		for (De erfassteDe : this.getErfassteDes()) {
+			Sm steuerModulVonDe = (Sm) erfassteDe.getVater().getVater();
+			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes
+					.get(steuerModulVonDe);
+			if (erfassteDesAmSteuerModul == null) {
 				erfassteDesAmSteuerModul = new HashSet<De>();
-				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe, erfassteDesAmSteuerModul);
+				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe,
+						erfassteDesAmSteuerModul);
 			}
 			erfassteDesAmSteuerModul.add(erfassteDe);
 		}
@@ -152,13 +160,16 @@ extends AbstraktGeraet{
 		 * Ermittle alle erfassten Steuermodule, die teilweise ausgefallen sind
 		 */
 		Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<Sm, Set<De>>();
-		for(Sm erfasstesSm:erfassteSteuerModuleMitErfasstenDes.keySet()){
-			for(De erfassteDe:erfassteSteuerModuleMitErfasstenDes.get(erfasstesSm)){
-				if(!erfassteDe.isInTime()){	
-					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes.get(erfasstesSm);	
-					if(alleTimeOutDesVonSteuerModul == null){
+		for (Sm erfasstesSm : erfassteSteuerModuleMitErfasstenDes.keySet()) {
+			for (De erfassteDe : erfassteSteuerModuleMitErfasstenDes
+					.get(erfasstesSm)) {
+				if (!erfassteDe.isInTime()) {
+					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes
+							.get(erfasstesSm);
+					if (alleTimeOutDesVonSteuerModul == null) {
 						alleTimeOutDesVonSteuerModul = new HashSet<De>();
-						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm, alleTimeOutDesVonSteuerModul);
+						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm,
+								alleTimeOutDesVonSteuerModul);
 					}
 					alleTimeOutDesVonSteuerModul.add(erfassteDe);
 				}
@@ -166,28 +177,31 @@ extends AbstraktGeraet{
 		}
 
 		/**
-		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen sind
+		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen
+		 * sind
 		 */
 		Set<Sm> totalAusfallSteuerModule = new HashSet<Sm>();
-		for(Sm timeOutSteuerModul:timeOutSteuerModuleMitTimeOutDes.keySet()){
+		for (Sm timeOutSteuerModul : timeOutSteuerModuleMitTimeOutDes.keySet()) {
 			/**
 			 * ist das Steuermodul vollstaendig aufgefallen?
 			 */
-			int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(timeOutSteuerModul).size();
-			int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(timeOutSteuerModul).size();
-			if(erfassteDes == timeoutDes){
+			int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(
+					timeOutSteuerModul).size();
+			int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(
+					timeOutSteuerModul).size();
+			if (erfassteDes == timeoutDes) {
 				totalAusfallSteuerModule.add(timeOutSteuerModul);
-			}			
+			}
 		}
-		
-		if(totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes.keySet().size() ||
-			totalAusfallSteuerModule.size() > 1){
+
+		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
+				.keySet().size()
+				|| totalAusfallSteuerModule.size() > 1) {
 			kannHierPublizieren = true;
 		}
-				
+
 		return kannHierPublizieren;
 	}
-	
 
 	/**
 	 * {@inheritDoc}
@@ -199,13 +213,15 @@ extends AbstraktGeraet{
 		 * und wenigstens ein erfasstes DE haben (mit ihren erfassten DE)
 		 */
 		Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<Sm, Set<De>>();
-		
-		for(De erfassteDe:this.getErfassteDes()){
-			Sm steuerModulVonDe = (Sm)erfassteDe.getVater().getVater();
-			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes.get(steuerModulVonDe);
-			if(erfassteDesAmSteuerModul == null){
+
+		for (De erfassteDe : this.getErfassteDes()) {
+			Sm steuerModulVonDe = (Sm) erfassteDe.getVater().getVater();
+			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes
+					.get(steuerModulVonDe);
+			if (erfassteDesAmSteuerModul == null) {
 				erfassteDesAmSteuerModul = new HashSet<De>();
-				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe, erfassteDesAmSteuerModul);
+				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe,
+						erfassteDesAmSteuerModul);
 			}
 			erfassteDesAmSteuerModul.add(erfassteDe);
 		}
@@ -214,13 +230,16 @@ extends AbstraktGeraet{
 		 * Ermittle alle erfassten Steuermodule, die teilweise ausgefallen sind
 		 */
 		Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<Sm, Set<De>>();
-		for(Sm erfasstesSm:erfassteSteuerModuleMitErfasstenDes.keySet()){
-			for(De erfassteDe:erfassteSteuerModuleMitErfasstenDes.get(erfasstesSm)){
-				if(!erfassteDe.isInTime()){	
-					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes.get(erfasstesSm);	
-					if(alleTimeOutDesVonSteuerModul == null){
+		for (Sm erfasstesSm : erfassteSteuerModuleMitErfasstenDes.keySet()) {
+			for (De erfassteDe : erfassteSteuerModuleMitErfasstenDes
+					.get(erfasstesSm)) {
+				if (!erfassteDe.isInTime()) {
+					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes
+							.get(erfasstesSm);
+					if (alleTimeOutDesVonSteuerModul == null) {
 						alleTimeOutDesVonSteuerModul = new HashSet<De>();
-						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm, alleTimeOutDesVonSteuerModul);
+						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm,
+								alleTimeOutDesVonSteuerModul);
 					}
 					alleTimeOutDesVonSteuerModul.add(erfassteDe);
 				}
@@ -228,68 +247,89 @@ extends AbstraktGeraet{
 		}
 
 		/**
-		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen sind
+		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen
+		 * sind
 		 */
 		Set<Sm> totalAusfallSteuerModule = new HashSet<Sm>();
-		for(Sm timeOutSteuerModul:timeOutSteuerModuleMitTimeOutDes.keySet()){
+		for (Sm timeOutSteuerModul : timeOutSteuerModuleMitTimeOutDes.keySet()) {
 			/**
 			 * ist das Steuermodul vollstaendig aufgefallen?
 			 */
-			int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(timeOutSteuerModul).size();
-			int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(timeOutSteuerModul).size();
-			if(erfassteDes == timeoutDes){
+			int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(
+					timeOutSteuerModul).size();
+			int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(
+					timeOutSteuerModul).size();
+			if (erfassteDes == timeoutDes) {
 				totalAusfallSteuerModule.add(timeOutSteuerModul);
-			}			
-		}
-		
-		if(totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes.keySet().size()){
-			MessageSender.getInstance().sendMessage(
-					MessageType.APPLICATION_DOMAIN,
-					DeFaApplikation.getAppName(),
-					MessageGrade.ERROR,
-					this.objekt,
-					new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
-					"Modem am Inselbus " + this.objekt +//$NON-NLS-1$
-			" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");//$NON-NLS-1$
-
-			for(AbstraktGeraet steuerModulOhneDaten:totalAusfallSteuerModule){
-				for(De de:timeOutSteuerModuleMitTimeOutDes.get(steuerModulOhneDaten)){
-					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
-				}					
 			}
-		}else{
+		}
+
+		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
+				.keySet().size()) {
+			MessageSender
+					.getInstance()
+					.sendMessage(
+							MessageType.APPLICATION_DOMAIN,
+							DeFaApplikation.getAppName(),
+							MessageGrade.ERROR,
+							this.objekt,
+							new MessageCauser(sDav.getLocalUser(),
+									Constants.EMPTY_STRING, DeFaApplikation
+											.getAppName()),
+							"Modem am Inselbus " + this.objekt + //$NON-NLS-1$
+									" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
+
+			for (AbstraktGeraet steuerModulOhneDaten : totalAusfallSteuerModule) {
+				for (De de : timeOutSteuerModuleMitTimeOutDes
+						.get(steuerModulOhneDaten)) {
+					de
+							.publiziereFehlerUrsache(
+									zeitStempel,
+									TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
+				}
+			}
+		} else {
 			/**
-			 * Nach Pid und Name sortierte Ausgabe der Steuermodule wegen JUnit-Tests
+			 * Nach Pid und Name sortierte Ausgabe der Steuermodule wegen
+			 * JUnit-Tests
 			 */
 			SortedSet<AbstraktGeraet> totalAusfallSteuerModuleSortiert = new TreeSet<AbstraktGeraet>(
-					new Comparator<AbstraktGeraet>(){
+					new Comparator<AbstraktGeraet>() {
 
 						public int compare(AbstraktGeraet o1, AbstraktGeraet o2) {
-							return o1.getObjekt().toString().compareTo(o2.getObjekt().toString());
+							return o1.getObjekt().toString().compareTo(
+									o2.getObjekt().toString());
 						}
-						
+
 					});
 			totalAusfallSteuerModuleSortiert.addAll(totalAusfallSteuerModule);
-			AbstraktGeraet[] steuerModulArray = totalAusfallSteuerModuleSortiert.toArray(new AbstraktGeraet[0]);
+			AbstraktGeraet[] steuerModulArray = totalAusfallSteuerModuleSortiert
+					.toArray(new AbstraktGeraet[0]);
 			String steuerModule = steuerModulArray[0].getObjekt().toString();
-			for(int i = 1; i < steuerModulArray.length; i++){
+			for (int i = 1; i < steuerModulArray.length; i++) {
 				steuerModule += ", " + steuerModulArray[i].getObjekt().toString(); //$NON-NLS-1$
 			}
 
-			
-			MessageSender.getInstance().sendMessage(
-					MessageType.APPLICATION_DOMAIN,
-					DeFaApplikation.getAppName(),
-					MessageGrade.ERROR,
-					this.objekt,
-					new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
-					"Inselbus " + this.objekt + " gestört: Für die DE der Steuermodule " //$NON-NLS-1$ //$NON-NLS-2$
-					+ steuerModule + " sind keine Daten verfügbar. Inselbus " + this.objekt + " instand setzen");//$NON-NLS-1$ //$NON-NLS-2$
+			MessageSender
+					.getInstance()
+					.sendMessage(
+							MessageType.APPLICATION_DOMAIN,
+							DeFaApplikation.getAppName(),
+							MessageGrade.ERROR,
+							this.objekt,
+							new MessageCauser(sDav.getLocalUser(),
+									Constants.EMPTY_STRING, DeFaApplikation
+											.getAppName()),
+							"Inselbus " + this.objekt + " gestört: Für die DE der Steuermodule " //$NON-NLS-1$ //$NON-NLS-2$
+									+ steuerModule
+									+ " sind keine Daten verfügbar. Inselbus " + this.objekt + " instand setzen");
 
-			for(AbstraktGeraet steuerModulOhneDaten:totalAusfallSteuerModule){
-				for(De de:timeOutSteuerModuleMitTimeOutDes.get(steuerModulOhneDaten)){
-					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_DEFEKT);
-				}					
+			for (AbstraktGeraet steuerModulOhneDaten : totalAusfallSteuerModule) {
+				for (De de : timeOutSteuerModuleMitTimeOutDes
+						.get(steuerModulOhneDaten)) {
+					de.publiziereFehlerUrsache(zeitStempel,
+							TlsFehlerAnalyse.INSELBUS_DEFEKT);
+				}
 			}
 		}
 	}

@@ -32,81 +32,81 @@ import java.util.Map;
 import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 
 /**
- * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsFehlerAnalyse</code>
+ * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsFehlerAnalyse</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TlsFehlerAnalyse
-extends AbstractDavZustand{
+public final class TlsFehlerAnalyse extends AbstractDavZustand {
 
 	/**
-	 * Der Wertebereich dieses DAV-Enumerationstypen
+	 * Der Wertebereich dieses DAV-Enumerationstypen.
 	 */
-	private static Map<Integer, TlsFehlerAnalyse> WERTE_BEREICH = 
-						new HashMap<Integer, TlsFehlerAnalyse>();
-	
-	/**
-	 * Fehlerursache konnte nicht ermittelt werden
-	 */
-	public static final TlsFehlerAnalyse UNBEKANNT = 
-		new TlsFehlerAnalyse("unbekannte Ursache", 0); //$NON-NLS-1$
+	private static Map<Integer, TlsFehlerAnalyse> werteBereich = new HashMap<Integer, TlsFehlerAnalyse>();
 
 	/**
-	 * Verbindung zum KRI xxx oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen
+	 * Fehlerursache konnte nicht ermittelt werden.
 	 */
-	public static final TlsFehlerAnalyse KRI_DEFEKT = 
-		new TlsFehlerAnalyse("KRI oder Verbindung zum KRI defekt", 1); //$NON-NLS-1$
+	public static final TlsFehlerAnalyse UNBEKANNT = new TlsFehlerAnalyse(
+			"unbekannte Ursache", 0); //$NON-NLS-1$
 
 	/**
-	 * Modem am Inselbus xxx oder Inselbus selbst defekt. Modem oder Inselbus instand setzen
+	 * Verbindung zum KRI xxx oder KRI selbst defekt. Verbindung zum KRI oder
+	 * KRI instand setzen
 	 */
-	public static final TlsFehlerAnalyse INSELBUS_MODEM_ODER_INSELBUS_DEFEKT = 
-		new TlsFehlerAnalyse("Modem-Inselbus oder Inselbus defekt", 2); //$NON-NLS-1$
+	public static final TlsFehlerAnalyse KRI_DEFEKT = new TlsFehlerAnalyse(
+			"KRI oder Verbindung zum KRI defekt", 1); //$NON-NLS-1$
 
 	/**
-	 * Inselbus xxx gestört: Für die DE der Steuermodule x1, x2,.. sind keine Daten verfügbar.
-	 * Inselbus xxx instand setzen
+	 * Modem am Inselbus xxx oder Inselbus selbst defekt. Modem oder Inselbus
+	 * instand setzen
 	 */
-	public static final TlsFehlerAnalyse INSELBUS_DEFEKT = 
-		new TlsFehlerAnalyse("Inselbus defekt", 3); //$NON-NLS-1$
+	public static final TlsFehlerAnalyse INSELBUS_MODEM_ODER_INSELBUS_DEFEKT = new TlsFehlerAnalyse(
+			"Modem-Inselbus oder Inselbus defekt", 2); //$NON-NLS-1$
 
 	/**
-	 * Modem am Steuermodul x oder Steuermodul defekt. Modem am Steuermodul x oder Steuermodul instand setzen
+	 * Inselbus xxx gestört: Für die DE der Steuermodule x1, x2,.. sind keine
+	 * Daten verfügbar. Inselbus xxx instand setzen
 	 */
-	public static final TlsFehlerAnalyse SM_MODEM_ODER_SM_DEFEKT = 
-		new TlsFehlerAnalyse("Modem-Steuermodul oder Steuermodul defekt", 4); //$NON-NLS-1$
+	public static final TlsFehlerAnalyse INSELBUS_DEFEKT = new TlsFehlerAnalyse(
+			"Inselbus defekt", 3); //$NON-NLS-1$
+
+	/**
+	 * Modem am Steuermodul x oder Steuermodul defekt. Modem am Steuermodul x
+	 * oder Steuermodul instand setzen
+	 */
+	public static final TlsFehlerAnalyse SM_MODEM_ODER_SM_DEFEKT = new TlsFehlerAnalyse(
+			"Modem-Steuermodul oder Steuermodul defekt", 4); //$NON-NLS-1$
 
 	/**
 	 * EAK x am Steuermodul y defekt. EAK x am Steuermodul y instand setzen
 	 */
-	public static final TlsFehlerAnalyse EAK_AN_SM_DEFEKT = 
-		new TlsFehlerAnalyse("EAK am Steuermodul defekt", 5); //$NON-NLS-1$
+	public static final TlsFehlerAnalyse EAK_AN_SM_DEFEKT = new TlsFehlerAnalyse(
+			"EAK am Steuermodul defekt", 5); //$NON-NLS-1$
 
-	
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param kode
 	 *            der Kode
 	 * @param name
 	 *            die Bezeichnung
 	 */
-	private TlsFehlerAnalyse(String name, int kode){
+	private TlsFehlerAnalyse(String name, int kode) {
 		super(kode, name);
-		WERTE_BEREICH.put(kode, this);
+		werteBereich.put(kode, this);
 	}
-	
-	
+
 	/**
-	 * Erfragt den Wert dieses DAV-Enumerationstypen 
-	 * mit dem übergebenen Code
-	 *
-	 * @param kode der Kode des Zustands
+	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * 
+	 * @param kode
+	 *            der Kode des Zustands
 	 * @return der Enumerations-Wert
 	 */
-	public static final TlsFehlerAnalyse getZustand(final int kode){
-		return WERTE_BEREICH.get(kode);
+	public static TlsFehlerAnalyse getZustand(final int kode) {
+		return werteBereich.get(kode);
 	}
 
 }

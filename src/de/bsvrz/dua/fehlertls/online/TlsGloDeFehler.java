@@ -43,113 +43,114 @@ import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Korrespondiert mit der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>
- *  
+ * Korrespondiert mit der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TlsGloDeFehler
-implements ClientReceiverInterface{
-	
+public final class TlsGloDeFehler implements ClientReceiverInterface {
+
 	/**
-	 * statische Instanzen dieser Klasse
+	 * statische Instanzen dieser Klasse.
 	 */
-	private static Map<SystemObject, TlsGloDeFehler> INSTANZEN =
-								Collections.synchronizedMap(new HashMap<SystemObject, TlsGloDeFehler>());
-	
+	private static Map<SystemObject, TlsGloDeFehler> instanzen = Collections
+			.synchronizedMap(new HashMap<SystemObject, TlsGloDeFehler>());
+
 	/**
-	 * Menge aller Beobachterobjekte
+	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<ITlsGloDeFehlerListener> listenerMenge = Collections.synchronizedSet(
-			new HashSet<ITlsGloDeFehlerListener>());
-	
+	private Set<ITlsGloDeFehlerListener> listenerMenge = Collections
+			.synchronizedSet(new HashSet<ITlsGloDeFehlerListener>());
+
 	/**
-	 * indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht
+	 * indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht.
 	 */
 	private Boolean aktiv = null;
-	
+
 	/**
-	 * TLS-DE-Fehler-Status
+	 * TLS-DE-Fehler-Status.
 	 */
 	private TlsDeFehlerStatus deFehlerStatus = null;
-	
-	
+
 	/**
-	 * Erfragt eine statische Instanz dieser Klasse
+	 * Erfragt eine statische Instanz dieser Klasse.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static final TlsGloDeFehler getInstanz(ClientDavInterface dav,
-												  SystemObject objekt){
+	public static TlsGloDeFehler getInstanz(ClientDavInterface dav,
+			SystemObject objekt) {
 		TlsGloDeFehler instanz = null;
-		
-		synchronized (INSTANZEN) {
-			instanz= INSTANZEN.get(objekt);	
-		}		
-		
-		if(instanz == null){
-			instanz = new TlsGloDeFehler(dav, objekt);
-			synchronized (INSTANZEN) {
-				INSTANZEN.put(objekt, instanz);	
-			}			
+
+		synchronized (instanzen) {
+			instanz = instanzen.get(objekt);
 		}
-		
+
+		if (instanz == null) {
+			instanz = new TlsGloDeFehler(dav, objekt);
+			synchronized (instanzen) {
+				instanzen.put(objekt, instanz);
+			}
+		}
+
 		return instanz;
 	}
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.de</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private TlsGloDeFehler(ClientDavInterface dav,
-						   SystemObject objekt){
-		dav.subscribeReceiver(this, 
-							  objekt,
-							  new DataDescription(
-									  dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
-									  dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT),
-									  (short)0),
-							  ReceiveOptions.normal(),
-							  ReceiverRole.receiver());
+	private TlsGloDeFehler(ClientDavInterface dav, SystemObject objekt) {
+		dav.subscribeReceiver(this, objekt, new DataDescription(
+				dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT),
+				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
-	
 	/**
-	 * Fuegt diesem Objekt einen Listener hinzu
+	 * Fuegt diesem Objekt einen Listener hinzu.
 	 * 
-	 * @param listener eine neuer Listener
+	 * @param listener
+	 *            eine neuer Listener
 	 */
-	public final synchronized void addListener(final ITlsGloDeFehlerListener listener){
-		if(listenerMenge.add(listener) && this.aktiv != null){
-			listener.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
+	public synchronized void addListener(
+			final ITlsGloDeFehlerListener listener) {
+		if (listenerMenge.add(listener) && this.aktiv != null) {
+			listener
+					.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
 		}
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		if(resultate != null){
-			for(ResultData resultat:resultate){
-				if(resultat != null && resultat.getData() != null){
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						this.aktiv = resultat.getData().getUnscaledValue("DEKanalStatus").intValue() == 0; //$NON-NLS-1$
-						this.deFehlerStatus = TlsDeFehlerStatus.getZustand(
-								resultat.getData().getUnscaledValue("DEFehlerStatus").intValue()); //$NON-NLS-1$
-						for(ITlsGloDeFehlerListener listener:this.listenerMenge){
-							listener.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
+						this.aktiv = resultat.getData().getUnscaledValue(
+								"DEKanalStatus").intValue() == 0; //$NON-NLS-1$
+						this.deFehlerStatus = TlsDeFehlerStatus
+								.getZustand(resultat
+										.getData()
+										.getUnscaledValue("DEFehlerStatus").intValue()); //$NON-NLS-1$
+						for (ITlsGloDeFehlerListener listener : this.listenerMenge) {
+							listener.aktualisiereTlsGloDeFehler(this.aktiv,
+									this.deFehlerStatus);
 						}
-					}					
+					}
 				}
 			}
-		}		
+		}
 	}
-	
-}
 
+}

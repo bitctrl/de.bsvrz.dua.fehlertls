@@ -32,46 +32,44 @@ import java.util.Map;
 import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 
 /**
- * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsDEFehlerStatus</code>
+ * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsDEFehlerStatus</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TlsDeFehlerStatus
-extends AbstractDavZustand{
+public final class TlsDeFehlerStatus extends AbstractDavZustand {
 
 	/**
-	 * Der Wertebereich dieses DAV-Enumerationstypen
+	 * Der Wertebereich dieses DAV-Enumerationstypen.
 	 */
-	private static Map<Integer, TlsDeFehlerStatus> WERTE_BEREICH = 
-						new HashMap<Integer, TlsDeFehlerStatus>();
-	
-	/**
-	 * DE in Ordnung
-	 */
-	public static final TlsDeFehlerStatus OK = 
-		new TlsDeFehlerStatus("ok", 0, "DE in Ordnung"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static Map<Integer, TlsDeFehlerStatus> werteBereich = new HashMap<Integer, TlsDeFehlerStatus>();
 
 	/**
-	 * Störung vom E/A-Konzentrator erkannt
+	 * DE in Ordnung.
 	 */
-	public static final TlsDeFehlerStatus STOER_EAK = 
-		new TlsDeFehlerStatus("StörEAK", 1, "Störung vom E/A-Konzentrator erkannt"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final TlsDeFehlerStatus OK = new TlsDeFehlerStatus(
+			"ok", 0, "DE in Ordnung"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * Störung vom SM erkannt
+	 * Störung vom E/A-Konzentrator erkannt.
 	 */
-	public static final TlsDeFehlerStatus STOER_SM = 
-		new TlsDeFehlerStatus("StörSM", 2, "Störung vom SM erkannt"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final TlsDeFehlerStatus STOER_EAK = new TlsDeFehlerStatus(
+			"StörEAK", 1, "Störung vom E/A-Konzentrator erkannt"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * der Text der die Natur des DE-Fehlers illustriert 
+	 * Störung vom SM erkannt.
+	 */
+	public static final TlsDeFehlerStatus STOER_SM = new TlsDeFehlerStatus(
+			"StörSM", 2, "Störung vom SM erkannt"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	/**
+	 * der Text der die Natur des DE-Fehlers illustriert.
 	 */
 	private String text = null;
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param kode
 	 *            der Kode
@@ -80,32 +78,30 @@ extends AbstractDavZustand{
 	 * @param text
 	 *            der Text der die Natur des DE-Fehlers illustriert
 	 */
-	private TlsDeFehlerStatus(String name, int kode, String text){
+	private TlsDeFehlerStatus(String name, int kode, String text) {
 		super(kode, name);
 		this.text = text;
-		WERTE_BEREICH.put(kode, this);
+		werteBereich.put(kode, this);
 	}
-	
-	
+
 	/**
-	 * Erfragt den Text der die Natur des DE-Fehlers illustriert
+	 * Erfragt den Text der die Natur des DE-Fehlers illustriert.
 	 * 
 	 * @return der Text der die Natur des DE-Fehlers illustriert
 	 */
-	public final String getText(){
+	public String getText() {
 		return this.text;
 	}
-	
-	
+
 	/**
-	 * Erfragt den Wert dieses DAV-Enumerationstypen 
-	 * mit dem übergebenen Code
-	 *
-	 * @param kode der Kode des Zustands
+	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * 
+	 * @param kode
+	 *            der Kode des Zustands
 	 * @return der Enumerations-Wert
 	 */
-	public static final TlsDeFehlerStatus getZustand(final int kode){
-		return WERTE_BEREICH.get(kode);
+	public static TlsDeFehlerStatus getZustand(final int kode) {
+		return werteBereich.get(kode);
 	}
-	
+
 }

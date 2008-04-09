@@ -40,70 +40,79 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TLS-Hierarchieelement EAK
+ * TLS-Hierarchieelement EAK.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class Eak
-extends AbstraktGeraet{
-	
+public class Eak extends AbstraktGeraet {
+
 	/**
-	 * Debug-Logger
+	 * Debug-Logger.
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.eak</code>
-	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
-	 * Geraet 
+	 * @param dav
+	 *            Datenverteiler-Verbindund
+	 * @param objekt
+	 *            ein Systemobjekt vom Typ <code>typ.eak</code>
+	 * @param vater
+	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
 	protected Eak(ClientDavInterface dav, SystemObject objekt,
 			AbstraktGeraet vater) {
-		super(dav, objekt, vater);		
-		for(SystemObject deObj:this.objekt.getNonMutableSet("De").getElements()){ //$NON-NLS-1$
-			if(deObj.isValid()){
+		super(dav, objekt, vater);
+		for (SystemObject deObj : this.objekt
+				.getNonMutableSet("De").getElements()) { //$NON-NLS-1$
+			if (deObj.isValid()) {
 				try {
 					De de = new De(dav, deObj, this);
 					this.kinder.add(de);
 				} catch (DeFaException e) {
 					e.printStackTrace();
-					LOGGER.warning("De " + deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+					LOGGER
+							.warning(
+									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
 	}
-	
 
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.EAK;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		MessageSender.getInstance().sendMessage(
-				MessageType.APPLICATION_DOMAIN,
-				DeFaApplikation.getAppName(),
-				MessageGrade.ERROR,
-				this.objekt,
-				new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
-				"EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " defekt." + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						" EAK " + this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " instand setzen");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		
-		for(De de:this.getErfassteDes()){
-			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.EAK_AN_SM_DEFEKT);
+		MessageSender
+				.getInstance()
+				.sendMessage(
+						MessageType.APPLICATION_DOMAIN,
+						DeFaApplikation.getAppName(),
+						MessageGrade.ERROR,
+						this.objekt,
+						new MessageCauser(sDav.getLocalUser(),
+								Constants.EMPTY_STRING, DeFaApplikation
+										.getAppName()),
+						"EAK "	+ this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " defekt." + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								" EAK "
+								+ this.objekt
+								+ " am Steuermodul " + this.getVater().getObjekt() + " instand setzen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+
+		for (De de : this.getErfassteDes()) {
+			de.publiziereFehlerUrsache(zeitStempel,
+					TlsFehlerAnalyse.EAK_AN_SM_DEFEKT);
 		}
 	}
 

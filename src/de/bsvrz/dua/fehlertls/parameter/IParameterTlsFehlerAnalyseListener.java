@@ -27,24 +27,29 @@
 package de.bsvrz.dua.fehlertls.parameter;
 
 /**
- * Hoert auf Veraenderungen der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
- * (Parameter für die TLS Fehleranalyse)
- *  
+ * Hoert auf Veraenderungen der Attributgruppe
+ * <code>atg.parameterTlsFehlerAnalyse</code> (Parameter für die TLS
+ * Fehleranalyse).
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IParameterTlsFehlerAnalyseListener {
 
 	/**
-	 * Informiert ueber neue Parameter der Attributgruppe <code>atg.parameterTlsFehlerAnalyse</code>
+	 * Informiert ueber neue Parameter der Attributgruppe
+	 * <code>atg.parameterTlsFehlerAnalyse</code>.
 	 * 
-	 * @param zeitverzugFehlerErkennung Der zusätzliche Zeitverzug, der nach dem erwarteten 
-	 * Empfangszeitpunkt noch bis zur Erkennung eines nicht gelieferten Messwertes abgewartet 
-	 * werden muss
-	 * @param zeitverzugFehlerErmittlung Der zusätzliche Zeitverzug, der nach der Fehlererkennung
-	 * bis zur Fehlerermittlung abgewartet werden muss
+	 * @param zeitverzugFehlerErkennung
+	 *            Der zusätzliche Zeitverzug, der nach dem erwarteten
+	 *            Empfangszeitpunkt noch bis zur Erkennung eines nicht
+	 *            gelieferten Messwertes abgewartet werden muss
+	 * @param zeitverzugFehlerErmittlung
+	 *            Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis
+	 *            zur Fehlerermittlung abgewartet werden muss
 	 */
-	public void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung,
-													  long zeitverzugFehlerErmittlung);
+	void aktualisiereParameterTlsFehlerAnalyse(
+			long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung);
 
 }

@@ -38,58 +38,65 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TLS-Hierarchieelement Steuermodul
+ * TLS-Hierarchieelement Steuermodul.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class Sm
-extends AbstraktGeraet{
+public class Sm extends AbstraktGeraet {
 
-		
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.steuerModul</code>
-	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
-	 * Geraet 
+	 * @param dav
+	 *            Datenverteiler-Verbindund
+	 * @param objekt
+	 *            ein Systemobjekt vom Typ <code>typ.steuerModul</code>
+	 * @param vater
+	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Sm(ClientDavInterface dav, SystemObject objekt, AbstraktGeraet vater) {
+	protected Sm(ClientDavInterface dav, SystemObject objekt,
+			AbstraktGeraet vater) {
 		super(dav, objekt, vater);
-		for(SystemObject eak:this.objekt.getNonMutableSet("Eak").getElements()){ //$NON-NLS-1$
-			if(eak.isValid()){
+		for (SystemObject eak : this.objekt
+				.getNonMutableSet("Eak").getElements()) { //$NON-NLS-1$
+			if (eak.isValid()) {
 				this.kinder.add(new Eak(dav, eak, this));
 			}
 		}
 	}
 
-	
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.SM;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		MessageSender.getInstance().sendMessage(
-				MessageType.APPLICATION_DOMAIN,
-				DeFaApplikation.getAppName(),
-				MessageGrade.ERROR,
-				this.objekt,
-				new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
-				"Modem am Steuermodul " + this.objekt + " oder Steuermodul defekt. " + //$NON-NLS-1$ //$NON-NLS-2$
-					"Modem am Steuermodul " + this.objekt + " oder Steuermodul instand setzen");//$NON-NLS-1$ //$NON-NLS-2$
-		
-		for(De de:this.getErfassteDes()){
-			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT);
+		MessageSender
+				.getInstance()
+				.sendMessage(
+						MessageType.APPLICATION_DOMAIN,
+						DeFaApplikation.getAppName(),
+						MessageGrade.ERROR,
+						this.objekt,
+						new MessageCauser(sDav.getLocalUser(),
+								Constants.EMPTY_STRING, DeFaApplikation
+										.getAppName()),
+						"Modem am Steuermodul " + this.objekt + " oder Steuermodul defekt. " + //$NON-NLS-1$ //$NON-NLS-2$
+								"Modem am Steuermodul " + this.objekt
+								+ " oder Steuermodul instand setzen");
+
+		for (De de : this.getErfassteDes()) {
+			de.publiziereFehlerUrsache(zeitStempel,
+					TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT);
 		}
 	}
 

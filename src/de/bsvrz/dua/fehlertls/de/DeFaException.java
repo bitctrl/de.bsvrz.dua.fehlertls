@@ -27,32 +27,34 @@
 package de.bsvrz.dua.fehlertls.de;
 
 /**
- * Diese Exception wird geworfen, wenn es Probleme bei Abläufen innerhalb
- * einer einen DE-Typ beschreibenden Klasse gibt. Oder insbesondere auch,
- * wenn diese Klasse nicht ermittelt oder instanziiert werden konnte.
+ * Diese Exception wird geworfen, wenn es Probleme bei Abläufen innerhalb einer
+ * einen DE-Typ beschreibenden Klasse gibt. Oder insbesondere auch, wenn diese
+ * Klasse nicht ermittelt oder instanziiert werden konnte.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class DeFaException
-extends Exception{
+public class DeFaException extends Exception {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param ex die Exception, die in diese DeFaException umgewandelt werden soll
+	 * @param ex
+	 *            die Exception, die in diese DeFaException umgewandelt werden
+	 *            soll
 	 */
-	public DeFaException(final Throwable ex){
+	public DeFaException(final Throwable ex) {
 		super(ex);
 	}
-	
 
 	/**
-	 * Konstruktor
+	 * Konstruktor.
 	 * 
-	 * @param nachricht die Nachricht, die diese Ausnahme flankiert
+	 * @param nachricht
+	 *            die Nachricht, die diese Ausnahme flankiert
 	 */
-	public DeFaException(final String nachricht){
+	public DeFaException(final String nachricht) {
 		super(nachricht);
 	}
 

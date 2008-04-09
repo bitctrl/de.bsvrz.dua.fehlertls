@@ -38,62 +38,69 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * TLS-Hierarchieelement KRI
+ * TLS-Hierarchieelement KRI.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class Kri
-extends AbstraktGeraet{
+public class Kri extends AbstraktGeraet {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindund
-	 * @param objekt ein Systemobjekt vom Typ <code>typ.kri</code>
-	 * @param vater das in der TLS-Hierarchie ueber diesem Geraet liegende
-	 * Geraet  
+	 * @param dav
+	 *            Datenverteiler-Verbindund
+	 * @param objekt
+	 *            ein Systemobjekt vom Typ <code>typ.kri</code>
+	 * @param vater
+	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Kri(ClientDavInterface dav, SystemObject objekt, AbstraktGeraet vater) {
+	protected Kri(ClientDavInterface dav, SystemObject objekt,
+			AbstraktGeraet vater) {
 		super(dav, objekt, vater);
-		
+
 		/**
 		 * Initialisiere Inselbusse
 		 */
-		for(SystemObject inselBus:
-				this.objekt.getNonMutableSet("AnschlussPunkteGerät").getElements()){ //$NON-NLS-1$
-			if(inselBus.isValid()){
-				this.kinder.add(new Inselbus(dav, inselBus, this));	
+		for (SystemObject inselBus : this.objekt.getNonMutableSet(
+				"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
+			if (inselBus.isValid()) {
+				this.kinder.add(new Inselbus(dav, inselBus, this));
 			}
 		}
 	}
 
-	
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.KRI;
 	}
 
-	
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		MessageSender.getInstance().sendMessage(
-				MessageType.APPLICATION_DOMAIN,
-				DeFaApplikation.getAppName(),
-				MessageGrade.ERROR,
-				this.objekt,
-				new MessageCauser(DAV.getLocalUser(), Constants.EMPTY_STRING, DeFaApplikation.getAppName()),
-				"Verbindung zum KRI " + this.objekt + " oder KRI selbst defekt." + //$NON-NLS-1$ //$NON-NLS-2$
-						" Verbindung zum KRI oder KRI instand setzen"); //$NON-NLS-1$
-		
-		for(De de:this.getErfassteDes()){
-			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.KRI_DEFEKT);
+		MessageSender
+				.getInstance()
+				.sendMessage(
+						MessageType.APPLICATION_DOMAIN,
+						DeFaApplikation.getAppName(),
+						MessageGrade.ERROR,
+						this.objekt,
+						new MessageCauser(sDav.getLocalUser(),
+								Constants.EMPTY_STRING, DeFaApplikation
+										.getAppName()),
+						"Verbindung zum KRI " + this.objekt + " oder KRI selbst defekt." + //$NON-NLS-1$ //$NON-NLS-2$
+								" Verbindung zum KRI oder KRI instand setzen"); //$NON-NLS-1$
+
+		for (De de : this.getErfassteDes()) {
+			de
+					.publiziereFehlerUrsache(zeitStempel,
+							TlsFehlerAnalyse.KRI_DEFEKT);
 		}
 	}
 

@@ -32,21 +32,21 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung<br>
- * (PID: typ.deLve)
+ * (PID: typ.deLve).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class TypDeLve
-extends AbstraktDeTyp{
+public class TypDeLve extends AbstraktDeTyp {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public long getErfassungsIntervall(Data parameter){
-		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
+	public long getErfassungsIntervall(Data parameter) {
+		return parameter
+				.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -56,17 +56,16 @@ extends AbstraktDeTyp{
 		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected DataDescriptionPid[] getDataIdentifikations() {
 
-		return new DataDescriptionPid[]{
-				new DataDescriptionPid("atg.tlsLveErgebnisMeldungVersion0Bis4", DUAKonstanten.ASP_TLS_ANTWORT, (short)0) //$NON-NLS-1$
-			};
+		return new DataDescriptionPid[] { new DataDescriptionPid(
+				"atg.tlsLveErgebnisMeldungVersion0Bis4", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0) //$NON-NLS-1$
+		};
 
 	}
-	
+
 }
