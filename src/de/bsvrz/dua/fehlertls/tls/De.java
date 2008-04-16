@@ -78,11 +78,6 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	private static final long STANDARD_ZEIT_ABSTAND = 1000L;
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * weckt alle Objekte dieser Art, wenn fuer sie ein Fehler detektiert wurde.
 	 */
 	private static ObjektWecker fehlerWecker = new ObjektWecker();
@@ -165,7 +160,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
-			LOGGER
+			Debug.getLogger()
 					.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
@@ -229,11 +224,11 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 					fehlerZeit, datum));
 		} catch (DataNotSubscribedException e) {
 			e.printStackTrace();
-			LOGGER.error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+			Debug.getLogger().error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
 		} catch (SendSubscriptionNotConfirmed e) {
 			e.printStackTrace();
-			LOGGER.error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
+			Debug.getLogger().error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
 					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
 		}
 
@@ -321,13 +316,13 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 								.getGrund());
 					}
 				} else {
-					LOGGER
+					Debug.getLogger()
 							.warning("DE " + De.this.objekt + " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$//$NON-NLS-2$
 				}
 			}
 
 		} else {
-			LOGGER.warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
+			Debug.getLogger().warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
 					" erwarten, da noch keine (sinnvollen) " + //$NON-NLS-1$
 					"Parameter zur TLS-Fehleranalyse empfangen wurden"); //$NON-NLS-1$
 		}
@@ -377,7 +372,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			if (zustand.isInitialisiert()) {
 				De.this.einzelPublikator.publiziere(zustand.getGrund());
 			} else {
-				LOGGER.warning(De.this.objekt
+				Debug.getLogger().warning(De.this.objekt
 						+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
 			}
 		}
@@ -457,9 +452,9 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 							new MessageCauser(sDav.getLocalUser(),
 									Constants.EMPTY_STRING, DeFaApplikation
 											.getAppName()), text);
-					LOGGER.info(De.this.objekt + ", " + text); //$NON-NLS-1$
+					Debug.getLogger().info(De.this.objekt + ", " + text); //$NON-NLS-1$
 				} else {
-					LOGGER.info(De.this.objekt
+					Debug.getLogger().info(De.this.objekt
 							+ ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
 				}
 			}

@@ -56,10 +56,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  */
 public class Inselbus extends AbstraktGeraet {
 
-	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Standardkonstruktor.
@@ -91,7 +87,7 @@ public class Inselbus extends AbstraktGeraet {
 						if (steuerModul.isOfType("typ.steuerModul")) { //$NON-NLS-1$
 							this.kinder.add(new Sm(dav, steuerModul, this));
 						} else {
-							LOGGER.warning("An " + komPartner + //$NON-NLS-1$
+							Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
 									" (Inselbus: "
 									+ this.objekt
 									+ //$NON-NLS-1$
@@ -102,12 +98,12 @@ public class Inselbus extends AbstraktGeraet {
 									")"); //$NON-NLS-1$				
 						}
 					} else {
-						LOGGER.warning("An " + komPartner + //$NON-NLS-1$
+						Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
 								" (Inselbus: " + this.objekt + //$NON-NLS-1$
 								") ist kein Steuermodul definiert"); //$NON-NLS-1$				
 					}
 				} else {
-					LOGGER.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+					Debug.getLogger().warning("Konfiguration von " + komPartner + //$NON-NLS-1$
 							" (Inselbus: " + this.objekt + //$NON-NLS-1$
 							") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
 							"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$

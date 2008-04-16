@@ -46,10 +46,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public final class TlsHierarchie extends AbstraktGeraet {
 
-	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Datenverteiler-Verbindung.
@@ -146,12 +142,12 @@ public final class TlsHierarchie extends AbstraktGeraet {
 							if (unterGeraet != null) {
 								unterGeraete.add(unterGeraet);
 							} else {
-								LOGGER.warning("An " + komPartner + //$NON-NLS-1$
+								Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
 										" (Geraet: " + geraet + //$NON-NLS-1$
 										") ist kein Geraet definiert"); //$NON-NLS-1$				
 							}
 						} else {
-							LOGGER.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+							Debug.getLogger().warning("Konfiguration von " + komPartner + //$NON-NLS-1$
 									" (an Geraet: " + geraet + //$NON-NLS-1$
 									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
 									"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$

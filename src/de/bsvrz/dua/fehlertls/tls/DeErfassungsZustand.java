@@ -56,11 +56,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		IZyklusSteuerungsParameterListener {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * GRUND_PRAEFIX.
 	 */
 	protected static final String GRUND_PRAEFIX = "Keine TLS-Fehleranalyse moeglich. "; //$NON-NLS-1$
@@ -114,7 +109,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		this.aktuellerZustand = new Zustand();
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
-		LOGGER
+		Debug.getLogger()
 				.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
@@ -250,7 +245,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 				}
 			}
 
-			LOGGER
+			Debug.getLogger()
 					.info("Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj.getPid() + "):\n" + this); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 

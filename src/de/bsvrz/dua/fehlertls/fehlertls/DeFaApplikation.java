@@ -57,11 +57,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DeFaApplikation implements StandardApplication {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
 	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
 	 */
@@ -110,11 +105,11 @@ public class DeFaApplikation implements StandardApplication {
 				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
-					LOGGER
+					Debug.getLogger()
 							.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				LOGGER
+				Debug.getLogger()
 						.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
@@ -123,7 +118,7 @@ public class DeFaApplikation implements StandardApplication {
 				"typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
 			if (obj.isValid()) {
 				if (tlsFehlerAnalyseObjekte != null) {
-					LOGGER
+					Debug.getLogger()
 							.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 					break;
 				}
@@ -141,13 +136,13 @@ public class DeFaApplikation implements StandardApplication {
 		} else {
 			ParameterTlsFehlerAnalyse
 					.getInstanz(dav, tlsFehlerAnalyseObjekte);
-			LOGGER
+			Debug.getLogger()
 					.config("Es werden die Parameter von " + tlsFehlerAnalyseObjekte //$NON-NLS-1$
 							+ " verwendet"); //$NON-NLS-1$
 		}
 
 		if (this.geraete.isEmpty()) {
-			LOGGER.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
+			Debug.getLogger().warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		} else {
 			TlsHierarchie.initialisiere(dav, geraete);
 		}

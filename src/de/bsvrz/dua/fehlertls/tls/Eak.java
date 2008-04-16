@@ -49,11 +49,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 public class Eak extends AbstraktGeraet {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * Standardkonstruktor.
 	 * 
 	 * @param dav
@@ -74,7 +69,7 @@ public class Eak extends AbstraktGeraet {
 					this.kinder.add(de);
 				} catch (DeFaException e) {
 					e.printStackTrace();
-					LOGGER
+					Debug.getLogger()
 							.warning(
 									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
