@@ -32,6 +32,12 @@ Versionsgeschichte
 1.1.1
 
   - Bash-Startskript hinzu 
+
+1.2.0
+
+  - Startparameter "-param" hinzu. Hier kann das Objekt (dessen Pid) vom Typ
+    typ.tlsFehlerAnalyse uebergebene werden, ueber dessen Parameter eine
+    Instanz gesteuert wird
   
 
 Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
@@ -45,6 +51,9 @@ werden kann (zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applika
 	 (Steuermodul, KRI, UZ, VRZ, VIZ; i. d. R. eine UZ). Ab diesem Gerät wird 
 	 die komplette TLS-Hierarchie bis hinunter zu den DE ermittelt. Der Zusammenhang
 	 zwischen den einzelnen Ebenen wird zur Fehleranalyse verwendet)
+	-param=pid 
+	(PID eines Objekts vom Typ "typ.tlsFehlerAnalyse", ueber dessen Parameter diese
+    Instanz gesteuert werden soll)
 	
 	
 - Tests:

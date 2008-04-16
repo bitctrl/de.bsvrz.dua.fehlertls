@@ -41,6 +41,11 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 public final class TlsDeFehlerStatus extends AbstractDavZustand {
 
 	/**
+	 * serialVersionUID.
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Der Wertebereich dieses DAV-Enumerationstypen.
 	 */
 	private static Map<Integer, TlsDeFehlerStatus> werteBereich = new HashMap<Integer, TlsDeFehlerStatus>();

@@ -55,7 +55,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
-
+	
 	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
 	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
@@ -71,6 +71,14 @@ public class DeFaApplikation implements StandardApplication {
 	 * die PIDs der Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
 	private String[] geraetePids = null;
+	
+	/**
+	 * die Pid des Objektes vom Typ <code>typ.tlsFehlerAnalyse</code>
+	 * mit dem diese Applikation assoziiert ist (aus der sie ihre Parameter
+	 * bezieht).
+	 */
+	private String parameterModulPid = null; 
+
 
 	/**
 	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>,
@@ -105,44 +113,59 @@ public class DeFaApplikation implements StandardApplication {
 				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
-					Debug.getLogger()
-							.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
+					Debug
+							.getLogger()
+							.warning(
+									"Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				Debug.getLogger()
-						.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
+				Debug
+						.getLogger()
+						.warning(
+								"Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
-		for (SystemObject obj : dav.getDataModel().getType(
-				"typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
-			if (obj.isValid()) {
-				if (tlsFehlerAnalyseObjekte != null) {
-					Debug.getLogger()
-							.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
-					break;
-				}
-				tlsFehlerAnalyseObjekte = obj;
-				if (obj.getConfigurationArea().equals(
-						dav.getDataModel().getConfigurationAuthority()
-								.getConfigurationArea())) {
-					break;
+		if (this.parameterModulPid == null) {
+			for (SystemObject obj : dav.getDataModel().getType(
+					"typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
+				if (obj.isValid()) {
+					if (tlsFehlerAnalyseObjekte != null) {
+						Debug
+								.getLogger()
+								.warning(
+										"Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+						break;
+					}
+					tlsFehlerAnalyseObjekte = obj;
+					if (obj.getConfigurationArea().equals(
+							dav.getDataModel().getConfigurationAuthority()
+									.getConfigurationArea())) {
+						break;
+					}
 				}
 			}
+		} else {
+			SystemObject dummy = dav.getDataModel().getObject(
+					this.parameterModulPid);
+			if (dummy != null && dummy.isValid()) {
+				tlsFehlerAnalyseObjekte = dummy;
+			}
 		}
+
 		if (tlsFehlerAnalyseObjekte == null) {
 			throw new RuntimeException(
 					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 		} else {
-			ParameterTlsFehlerAnalyse
-					.getInstanz(dav, tlsFehlerAnalyseObjekte);
-			Debug.getLogger()
-					.config("Es werden die Parameter von " + tlsFehlerAnalyseObjekte //$NON-NLS-1$
+			ParameterTlsFehlerAnalyse.getInstanz(dav, tlsFehlerAnalyseObjekte);
+			Debug.getLogger().config(
+					"Es werden die Parameter von " + tlsFehlerAnalyseObjekte //$NON-NLS-1$
 							+ " verwendet"); //$NON-NLS-1$
 		}
 
 		if (this.geraete.isEmpty()) {
-			Debug.getLogger().warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
+			Debug.getLogger().warning(
+					"Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		} else {
 			TlsHierarchie.initialisiere(dav, geraete);
 		}
@@ -152,22 +175,33 @@ public class DeFaApplikation implements StandardApplication {
 	 * {@inheritDoc}
 	 */
 	public void parseArguments(ArgumentList argumente) throws Exception {
-		
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.
-				UncaughtExceptionHandler() {
-			public void uncaughtException(@SuppressWarnings("unused")
+
+		Thread
+				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+					public void uncaughtException(@SuppressWarnings("unused")
 					Thread t, Throwable e) {
-				Debug.getLogger().error("Applikation wird wegen" +  //$NON-NLS-1$
-						" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
-				e.printStackTrace();
-				Runtime.getRuntime().exit(-1);
-			}
-		});
-		
+						Debug.getLogger().error("Applikation wird wegen" + //$NON-NLS-1$
+								" unerwartetem Fehler beendet", e); //$NON-NLS-1$
+						e.printStackTrace();
+						Runtime.getRuntime().exit(-1);
+					}
+				});
+
 		Debug.init("DE Fehleranalyse fehlende Messdaten", argumente); //$NON-NLS-1$
 
+		
+		if (argumente.hasArgument("-param")) {
+			this.parameterModulPid = argumente.fetchArgument("-param")
+					.asNonEmptyString();
+		} else {
+			Debug
+					.getLogger()
+					.warning(
+							"Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+		}
+
 		this.geraetePids = argumente
-				.fetchArgument("-geraet").asString().split(","); //$NON-NLS-1$ //$NON-NLS-2$
+				.fetchArgument("-geraet").asNonEmptyString().split(","); //$NON-NLS-1$ //$NON-NLS-2$
 
 		argumente.fetchUnusedArguments();
 	}
