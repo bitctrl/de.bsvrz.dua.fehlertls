@@ -47,9 +47,8 @@ public class TypDeTest extends AbstraktDeTyp {
 	public long getErfassungsIntervall(Data parameter) {
 		long erfassungsIntervallDauer = -1;
 
-		if (parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1) { //$NON-NLS-1$
-			erfassungsIntervallDauer = parameter.getUnscaledValue(
-					"Erfassungsperiodendauer").longValue() * 1000L; //$NON-NLS-1$
+		if (parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1) {
+			erfassungsIntervallDauer = parameter.getTimeValue("Erfassungsperiodendauer").getMillis();
 		}
 
 		return erfassungsIntervallDauer;
@@ -60,7 +59,7 @@ public class TypDeTest extends AbstraktDeTyp {
 	 */
 	@Override
 	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsUfdBetriebsParameter"; //$NON-NLS-1$
+		return "atg.testBetriebsParameter";
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class TypDeTest extends AbstraktDeTyp {
 	 */
 	public DataDescriptionPid[] getDataIdentifikations() {
 		return new DataDescriptionPid[] { new DataDescriptionPid(
-				"atg.test", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0), //$NON-NLS-1$
+				"atg.test", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
 		};
 	}
 

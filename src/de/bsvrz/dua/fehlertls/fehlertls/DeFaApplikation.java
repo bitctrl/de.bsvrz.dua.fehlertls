@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.DavConnectionListener;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.tls.TlsHierarchie;
@@ -106,6 +107,16 @@ public class DeFaApplikation implements StandardApplication {
 	 * {@inheritDoc}
 	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
+		dav.addConnectionListener(new DavConnectionListener() {
+
+			public void connectionClosed(ClientDavInterface connection) {
+				System.out.println("HAAAAAAAAAAAALLLLLLLLLLLLLLLLLOOOOOOOOOOOOO");
+				
+				tlsFehlerAnalyseObjekte = null;
+			}
+
+		});
+		
 		for (String pidVonGeraet : this.geraetePids) {
 			SystemObject geraeteObjekt = dav.getDataModel().getObject(
 					pidVonGeraet);

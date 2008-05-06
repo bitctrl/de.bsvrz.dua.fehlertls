@@ -79,6 +79,7 @@ public class DeFaApplikationTest implements IBmListener {
 	 */
 	public static final boolean SHOW_ZEITPUNKT = true;
 
+	
 	/**
 	 * Testet analog Beschreibung in "LiesMich.txt".
 	 * 
@@ -87,6 +88,11 @@ public class DeFaApplikationTest implements IBmListener {
 	 */
 	@Test
 	public void test() throws Exception {
+		DAVTest.setTestParameter("kri1");
+		ClientDavInterface dav = DAVTest.getDav();
+		System.out.println(dav);
+		init();
+
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.SECOND, 0);
@@ -96,8 +102,6 @@ public class DeFaApplikationTest implements IBmListener {
 			theoretischerEmpfangsZeitStempel += 60L * 1000L;
 		}
 		warteBis(theoretischerEmpfangsZeitStempel + 1000L);
-
-		ClientDavInterface dav = DAVTest.getDav();
 
 		BmClient.getInstanz(dav).addListener(this);
 
@@ -494,7 +498,7 @@ public class DeFaApplikationTest implements IBmListener {
 		kex.setDe(TestKEx.iB1SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
 				DeStatus.NUTZ_DATEN);
 
-		warteBis(System.currentTimeMillis() + 10L * 1000L);
+		warteBis(System.currentTimeMillis() + 10L * 1000L);		
 	}
 
 	/**
@@ -507,84 +511,96 @@ public class DeFaApplikationTest implements IBmListener {
 	 * nach Meldungszeitpunkt und den dazu erwarteten Meldungen (innerhalb eines
 	 * Meldungszeitpunktes ist die Reihenfolge der Meldungen egal)).
 	 */
-	private final MeldungsZeitpunkt[] meldungen = new MeldungsZeitpunkt[] {
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.0
-					new ErwarteteMeldung[] {
-							new ErwarteteMeldung(
-									"kri1.ib1.sm1.eaklve1.de1", "Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib2.sm3.eaklve1.de1", "Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib1.sm1.eakufd1.de1", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib1.sm1.eakufd1.de2", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib2.sm1.eakufd1.de1", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib2.sm1.eakufd1.de2", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }), //$NON-NLS-1$ //$NON-NLS-2$		
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.1
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.3
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.2
-					new ErwarteteMeldung[] {
-							new ErwarteteMeldung(
-									"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib2", "Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.3
-					new ErwarteteMeldung[] {
-							new ErwarteteMeldung(
-									"kri1.ib2.sm2", "Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
-							new ErwarteteMeldung(
-									"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 2.0
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							null,
-							"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 2.1
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							null,
-							"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.0
-					new ErwarteteMeldung[] {
-							new ErwarteteMeldung(
-									null,
-									"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"), //$NON-NLS-1$
-							new ErwarteteMeldung(
-									null,
-									"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.1
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							"kri1.ib2.sm1.eaklve1.de1", "Keine TLS-Fehleranalyse moeglich. DE-Fehler(StörEAK): Störung vom E/A-Konzentrator erkannt") }), //$NON-NLS-1$ //$NON-NLS-2$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.3
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							null,
-							"Modem am Steuermodul kri1.ib2.sm3 (kri1.ib2.sm3) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm3 (kri1.ib2.sm3) oder Steuermodul instand setzen") }), //$NON-NLS-1$
-			new MeldungsZeitpunkt(// Zeitpunkt Nr. 4.0
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							null,
-							"Modem am Inselbus kri1.ib2 (kri1.ib2) oder Inselbus selbst defekt. Modem oder Inselbus instand setzen") }), //$NON-NLS-1$				
+	private MeldungsZeitpunkt[] meldungen = null;
+	
+	/**
+	 * Initialisiert die erwarteten Meldungen.
+	 */
+	private void init() {
+		/**
+		 * Die Meldungen die der Reihe nach erwartet werden (aufgeteilt und sortiert
+		 * nach Meldungszeitpunkt und den dazu erwarteten Meldungen (innerhalb eines
+		 * Meldungszeitpunktes ist die Reihenfolge der Meldungen egal)).
+		 */
+		this.meldungen = new MeldungsZeitpunkt[] {
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.0
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eaklve1.de1", "Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm3.eaklve1.de1", "Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de1", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de2", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de1", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de2", "TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }), //$NON-NLS-1$ //$NON-NLS-2$		
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.3
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.2
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2", "Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.3
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib2.sm2", "Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 2.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 2.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.0
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										null,
+										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"), //$NON-NLS-1$
+								new ErwarteteMeldung(
+										null,
+										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1.eaklve1.de1", "Keine TLS-Fehleranalyse moeglich. DE-Fehler(StörEAK): Störung vom E/A-Konzentrator erkannt") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.3
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"Modem am Steuermodul kri1.ib2.sm3 (kri1.ib2.sm3) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm3 (kri1.ib2.sm3) oder Steuermodul instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 4.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"Modem am Inselbus kri1.ib2 (kri1.ib2) oder Inselbus selbst defekt. Modem oder Inselbus instand setzen") }), //$NON-NLS-1$				
 
-			/**
-			 * Ende
-			 */
-			new MeldungsZeitpunkt(// Zeitpunkt Nr.7
-					new ErwarteteMeldung[] { new ErwarteteMeldung(
-							Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
+				/**
+				 * Ende
+				 */
+				new MeldungsZeitpunkt(// Zeitpunkt Nr.7
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
 
-	};
+		};
+	}
 
 	/**
 	 * {@inheritDoc}

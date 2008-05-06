@@ -43,27 +43,32 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
  * @version $Id$
  */
 public final class DAVTest {
+//TODO
+//	/**
+//	 * Verbindungsdaten.
+//	 */
+//	private static final String[] CON_DATA = new String[] {
+//			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
+//			"-benutzer=Tester", //$NON-NLS-1$
+//			"-authentifizierung=passwd", //$NON-NLS-1$
+//			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
+//			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
 
-	/**
+	 /**
 	 * Verbindungsdaten.
 	 */
-	private static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
-			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=passwd", //$NON-NLS-1$
-			"-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
-			"-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
+	 private static final String[] CON_DATA = new String[] {
+	 "-datenverteiler=localhost:8083", //$NON-NLS-1$
+	 "-benutzer=Tester", //$NON-NLS-1$
+	 "-authentifizierung=c:\\passwd", //$NON-NLS-1$
+	 "-debugLevelStdErrText=ERROR", //$NON-NLS-1$
+	 "-debugLevelFileText=OFF" }; //$NON-NLS-1$
 
-	// /**
-	// * Verbindungsdaten
-	// */
-	// private static final String[] CON_DATA = new String[] {
-	// "-datenverteiler=localhost:8083", //$NON-NLS-1$
-	// "-benutzer=Tester", //$NON-NLS-1$
-	// "-authentifizierung=c:\\passwd", //$NON-NLS-1$
-	// "-debugLevelStdErrText=CONFIG", //$NON-NLS-1$
-	// "-debugLevelFileText=CONFIG" }; //$NON-NLS-1$
-
+	/**
+	 * Verbindung zum Datenverteiler.
+	 */
+	protected static String geraet = null;
+	 
 	/**
 	 * Verbindung zum Datenverteiler.
 	 */
@@ -86,9 +91,34 @@ public final class DAVTest {
 	private DAVTest() {
 		
 	}
+
 	
 	/**
-	 * Erfragt bzw. initialisiert eine Datenverteiler-Verbindung.
+	 * Setzt das zu ueberwachende Geraet.
+	 * 
+	 * @param geraet1 eine PID eines Geraetes.
+	 */
+	public static void setTestParameter(final String geraet1) {
+		DAVTest.geraet = geraet1;
+	}
+	
+	/**
+	 * Schlieﬂt die aktuelle Datenverteiler-Verbindung.
+	 * 
+	 * @param nachricht die Nachricht
+	 * @throws Exception
+	 *             wird weitergereicht
+	 */
+	public static void disconnect(final String nachricht) throws Exception {
+		if (verbindung != null) {
+			verbindung.disconnect(true, nachricht);
+			verbindung = null;
+		}
+	}
+
+	/**
+	 * Erfragt bzw. initialisiert eine Datenverteiler-Verbindung 
+	 * fuer den Extra-Test.
 	 * 
 	 * @return die Datenverteiler-Verbindung
 	 * @throws Exception
@@ -100,10 +130,10 @@ public final class DAVTest {
 
 			String[] conDataApp = new String[CON_DATA.length + 1];
 			int i = 0;
-			for (String str : CON_DATA) {
+			for (String str : CON_DATA.clone()) {
 				conDataApp[i++] = new String(str.getBytes());
 			}
-			conDataApp[i] = "-geraet=kri1"; //$NON-NLS-1$
+			conDataApp[i] = "-geraet=" + DAVTest.geraet; //$NON-NLS-1$
 
 			StandardApplicationRunner.run(new StandardApplication() {
 
@@ -111,7 +141,7 @@ public final class DAVTest {
 						throws Exception {
 					DAVTest.verbindung = connection;
 					UmfeldDatenArt.initialisiere(verbindung);
-					TestKEx.getInstanz(verbindung);
+//					TestKEx.getInstanz(verbindung);
 				}
 
 				public void parseArguments(ArgumentList argumentList)
@@ -119,7 +149,7 @@ public final class DAVTest {
 					//
 				}
 
-			}, CON_DATA);
+			}, CON_DATA.clone());
 			StandardApplicationRunner.run(new DeFaApplikation(), conDataApp);
 		}
 

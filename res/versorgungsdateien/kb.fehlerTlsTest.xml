@@ -10,7 +10,7 @@
 			</info>
 			<erweitert pid="typ.de"/>
 			<attributgruppe pid="atg.test"/>
-			<attributgruppe pid="atg.tlsUfdBetriebsParameter"/>
+			<attributgruppe pid="atg.testBetriebsParameter"/>
 		</typDefinition>
 		
 		<attributgruppenDefinition pid="atg.test" name="Test">
@@ -21,7 +21,22 @@
 			<attribut pid="att.tlsLveNegativeQuittung" name="Code"/>
 		</attributgruppenDefinition>	    
     
+    	<attributgruppenDefinition pid="atg.testBetriebsParameter" name="TestBetriebsParameter" parametrierend="ja">
+			<info>
+				<kurzinfo>Info.</kurzinfo>
+				<beschreibung>
+					Info.
+				</beschreibung>
+			</info>
+			<attributliste pid="atl.urlasser" anzahl="1" anzahlIst="fest" name="Urlasser">
+			</attributliste>
+			<attribut pid="att.zeit" anzahl="1" anzahlIst="fest" name="Erfassungsperiodendauer">
+			</attribut>
+			<attribut pid="att.tlsUfdÜbertragungsverfahren" anzahl="1" anzahlIst="fest" name="Übertragungsverfahren">
+			</attribut>
+		</attributgruppenDefinition>
     </modell>
+    
     <objekte>
 
 		<konfigurationsObjekt pid="vrz" name="vrz" typ="typ.vrz">

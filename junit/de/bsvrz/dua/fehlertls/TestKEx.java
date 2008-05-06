@@ -155,23 +155,25 @@ public final class TestKEx implements ClientSenderInterface {
 
 		for (SystemObject de : dav.getDataModel()
 				.getType("typ.de").getElements()) { //$NON-NLS-1$
-			IDeTyp deTyp = DeTypLader.getDeTyp(de.getType());
-			for (DataDescription datenBeschreibung : deTyp
-					.getDeFaMesswertDataDescriptions(dav)) {
-				dav.subscribeSender(this, de, datenBeschreibung, SenderRole
-						.source());
-			}
-
-			dav.subscribeSender(this, de, new DataDescription(deTyp
-					.getDeFaIntervallParameterDataDescription(dav)
-					.getAttributeGroup(), sDav.getDataModel().getAspect(
-					DaVKonstanten.ASP_PARAMETER_VORGABE)), SenderRole.sender());
-			dav.subscribeSender(this, de,
-					new DataDescription(dav.getDataModel().getAttributeGroup(
-							"atg.tlsGloDeFehler"), //$NON-NLS-1$
-							dav.getDataModel().getAspect(
-									DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole
+			if (!de.getType().getPid().equals("typ.deTest")) {
+				IDeTyp deTyp = DeTypLader.getDeTyp(de.getType());
+				for (DataDescription datenBeschreibung : deTyp
+						.getDeFaMesswertDataDescriptions(dav)) {
+					dav.subscribeSender(this, de, datenBeschreibung, SenderRole
 							.source());
+				}
+	
+				dav.subscribeSender(this, de, new DataDescription(deTyp
+						.getDeFaIntervallParameterDataDescription(dav)
+						.getAttributeGroup(), sDav.getDataModel().getAspect(
+						DaVKonstanten.ASP_PARAMETER_VORGABE)), SenderRole.sender());
+				dav.subscribeSender(this, de,
+						new DataDescription(dav.getDataModel().getAttributeGroup(
+								"atg.tlsGloDeFehler"), //$NON-NLS-1$
+								dav.getDataModel().getAspect(
+										DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole
+								.source());
+			}
 		}
 		dav.subscribeSender(this,
 				dav.getDataModel().getObject("DeFa"), //$NON-NLS-1$

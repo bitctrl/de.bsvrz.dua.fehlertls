@@ -451,7 +451,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 							De.this.objekt,
 							new MessageCauser(sDav.getLocalUser(),
 									Constants.EMPTY_STRING, DeFaApplikation
-											.getAppName()), text);
+											.getAppName()), De.this.objekt + ": " + text);
 					Debug.getLogger().info(De.this.objekt + ", " + text); //$NON-NLS-1$
 				} else {
 					Debug.getLogger().info(De.this.objekt
