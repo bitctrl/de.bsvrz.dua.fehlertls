@@ -34,18 +34,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.bitctrl.Constants;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
-import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * TLS-Hierarchieelement Inselbus.
@@ -55,7 +49,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  * @version $Id$
  */
 public class Inselbus extends AbstraktGeraet {
-
 
 	/**
 	 * Standardkonstruktor.
@@ -87,15 +80,18 @@ public class Inselbus extends AbstraktGeraet {
 						if (steuerModul.isOfType("typ.steuerModul")) { //$NON-NLS-1$
 							this.kinder.add(new Sm(dav, steuerModul, this));
 						} else {
-							Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
-									" (Inselbus: "
-									+ this.objekt
-									+ //$NON-NLS-1$
-									") duerfen nur Steuermodule definiert sein. Aber: "
-									+ //$NON-NLS-1$
-									steuerModul
-									+ " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
-									")"); //$NON-NLS-1$				
+							Debug
+									.getLogger()
+									.warning(
+											"An "	+ komPartner + //$NON-NLS-1$
+													" (Inselbus: "
+													+ this.objekt
+													+ //$NON-NLS-1$
+													") duerfen nur Steuermodule definiert sein. Aber: "
+													+ //$NON-NLS-1$
+													steuerModul
+													+ " (Typ: " + steuerModul.getType() + //$NON-NLS-1$ 
+													")"); //$NON-NLS-1$				
 						}
 					} else {
 						Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
@@ -103,10 +99,12 @@ public class Inselbus extends AbstraktGeraet {
 								") ist kein Steuermodul definiert"); //$NON-NLS-1$				
 					}
 				} else {
-					Debug.getLogger().warning("Konfiguration von " + komPartner + //$NON-NLS-1$
-							" (Inselbus: " + this.objekt + //$NON-NLS-1$
-							") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
-							"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
+					Debug
+							.getLogger()
+							.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+									" (Inselbus: " + this.objekt + //$NON-NLS-1$
+									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
+									"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -262,18 +260,13 @@ public class Inselbus extends AbstraktGeraet {
 
 		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
 				.keySet().size()) {
-			MessageSender
-					.getInstance()
-					.sendMessage(
-							MessageType.APPLICATION_DOMAIN,
-							DeFaApplikation.getAppName(),
+			this.einzelPublikator
+					.publiziere(
 							MessageGrade.ERROR,
 							this.objekt,
-							new MessageCauser(sDav.getLocalUser(),
-									Constants.EMPTY_STRING, DeFaApplikation
-											.getAppName()),
-							"Modem am Inselbus " + this.objekt + //$NON-NLS-1$
-									" oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
+							"Modem am Inselbus "
+									+ this.objekt
+									+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
 
 			for (AbstraktGeraet steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (De de : timeOutSteuerModuleMitTimeOutDes
@@ -306,19 +299,12 @@ public class Inselbus extends AbstraktGeraet {
 				steuerModule += ", " + steuerModulArray[i].getObjekt().toString(); //$NON-NLS-1$
 			}
 
-			MessageSender
-					.getInstance()
-					.sendMessage(
-							MessageType.APPLICATION_DOMAIN,
-							DeFaApplikation.getAppName(),
-							MessageGrade.ERROR,
-							this.objekt,
-							new MessageCauser(sDav.getLocalUser(),
-									Constants.EMPTY_STRING, DeFaApplikation
-											.getAppName()),
-							"Inselbus " + this.objekt + " gestört: Für die DE der Steuermodule " //$NON-NLS-1$ //$NON-NLS-2$
-									+ steuerModule
-									+ " sind keine Daten verfügbar. Inselbus " + this.objekt + " instand setzen");
+			this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
+					"Inselbus " + this.objekt
+							+ " gestört: Für die DE der Steuermodule "
+							+ steuerModule
+							+ " sind keine Daten verfügbar. Inselbus "
+							+ this.objekt + " instand setzen");
 
 			for (AbstraktGeraet steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (De de : timeOutSteuerModuleMitTimeOutDes

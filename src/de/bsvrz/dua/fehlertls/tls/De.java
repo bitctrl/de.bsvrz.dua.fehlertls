@@ -54,10 +54,7 @@ import de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand.Zustand;
 import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * Repraesentiert ein DE fuer die DeFa. Liest alle generischen DE-Parameter und
@@ -83,8 +80,8 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	private static ObjektWecker fehlerWecker = new ObjektWecker();
 
 	/**
-	 * weckt alle Objekte dieser Art, wenn fuer sie ein Fehler analysiert werden.
-	 * soll.
+	 * weckt alle Objekte dieser Art, wenn fuer sie ein Fehler analysiert
+	 * werden. soll.
 	 */
 	private static ObjektWecker analyseWecker = new ObjektWecker();
 
@@ -128,11 +125,6 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	private DeErfassungsZustand.Zustand aktuellerZustand = null;
 
 	/**
-	 * zur einmaligen Publikation von Fehlermeldungen.
-	 */
-	private EinmaligeNachrichtenPublikator einzelPublikator = new EinmaligeNachrichtenPublikator();
-
-	/**
 	 * Standardkonstruktor.
 	 * 
 	 * @param dav
@@ -141,7 +133,8 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	 *            ein Systemobjekt vom Typ <code>typ.de</code>
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
-	 * @throws DeFaException wird nach oben weitergereicht
+	 * @throws DeFaException
+	 *             wird nach oben weitergereicht
 	 */
 	protected De(ClientDavInterface dav, SystemObject objekt,
 			AbstraktGeraet vater) throws DeFaException {
@@ -160,8 +153,10 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
-			Debug.getLogger()
-					.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
+			Debug
+					.getLogger()
+					.info(
+							"Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		try {
@@ -312,12 +307,14 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 						&& this.aktuellerZustand.isInitialisiert()) {
 					if (this.aktuellerZustand.getErfassungsIntervallDauer() <= 0) {
 						fehlerWecker.setWecker(this, ObjektWecker.AUS);
-						this.einzelPublikator.publiziere(this.aktuellerZustand
-								.getGrund());
+						this.einzelPublikator.publiziere(MessageGrade.WARNING,
+								this.objekt, this.objekt + ": " + this.aktuellerZustand.getGrund());
 					}
 				} else {
-					Debug.getLogger()
-							.warning("DE " + De.this.objekt + " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$//$NON-NLS-2$
+					Debug
+							.getLogger()
+							.warning(
+									"DE "	+ De.this.objekt + " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$//$NON-NLS-2$
 				}
 			}
 
@@ -370,10 +367,14 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 					+ zeitVerzugFehlerErmittlung + 2 * STANDARD_ZEIT_ABSTAND);
 		} else {
 			if (zustand.isInitialisiert()) {
-				De.this.einzelPublikator.publiziere(zustand.getGrund());
+				De.this.einzelPublikator.publiziere(MessageGrade.WARNING,
+						this.objekt, this.objekt + ": " + zustand.getGrund());
 			} else {
-				Debug.getLogger().warning(De.this.objekt
-						+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
+				Debug
+						.getLogger()
+						.warning(
+								De.this.objekt
+										+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
 			}
 		}
 	}
@@ -391,8 +392,8 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	 *         <code>jetzt</code> befindet und der zur uebergebenen
 	 *         Erfassungsintervalllange passt (in ms)
 	 */
-	private static long getNaechstenIntervallZeitstempel(
-			final long jetzt, final long intervallLaenge) {
+	private static long getNaechstenIntervallZeitstempel(final long jetzt,
+			final long intervallLaenge) {
 		final long jetztPlus = jetzt + 500L;
 		GregorianCalendar stundenAnfang = new GregorianCalendar();
 		stundenAnfang.setTimeInMillis(jetztPlus);
@@ -421,43 +422,4 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		return naechsterIntervallZeitstempel;
 	}
 
-	/**
-	 * Klasse zur einmaligen Publikation von Fehlermeldungen.
-	 * 
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
-	 */
-	private class EinmaligeNachrichtenPublikator {
-
-		/**
-		 * letzte fuer dieses DE publizierte einmalige Betriebsmeldung.
-		 */
-		private String letzteEinmaligeNachricht = Constants.EMPTY_STRING;
-
-		/**
-		 * Publiziert eine Fehlermeldung einmalig.
-		 * 
-		 * @param text
-		 *            der Text der Fehlermeldung
-		 */
-		protected final void publiziere(final String text) {
-			synchronized (De.this) {
-				if (!this.letzteEinmaligeNachricht.equals(text)) {
-					this.letzteEinmaligeNachricht = text;
-					MessageSender.getInstance().sendMessage(
-							MessageType.APPLICATION_DOMAIN,
-							DeFaApplikation.getAppName(),
-							MessageGrade.ERROR,
-							De.this.objekt,
-							new MessageCauser(sDav.getLocalUser(),
-									Constants.EMPTY_STRING, DeFaApplikation
-											.getAppName()), De.this.objekt + ": " + text);
-					Debug.getLogger().info(De.this.objekt + ", " + text); //$NON-NLS-1$
-				} else {
-					Debug.getLogger().info(De.this.objekt
-							+ ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
-				}
-			}
-		}
-	}
 }

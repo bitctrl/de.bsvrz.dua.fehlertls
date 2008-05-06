@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.DavConnectionListener;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.tls.TlsHierarchie;
@@ -56,7 +55,12 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
-	
+
+	/**
+	 * Statische Verbindung zum Datenverteiler.
+	 */
+	private static ClientDavInterface sDav = null;
+
 	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
 	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
@@ -72,14 +76,12 @@ public class DeFaApplikation implements StandardApplication {
 	 * die PIDs der Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
 	private String[] geraetePids = null;
-	
-	/**
-	 * die Pid des Objektes vom Typ <code>typ.tlsFehlerAnalyse</code>
-	 * mit dem diese Applikation assoziiert ist (aus der sie ihre Parameter
-	 * bezieht).
-	 */
-	private String parameterModulPid = null; 
 
+	/**
+	 * die Pid des Objektes vom Typ <code>typ.tlsFehlerAnalyse</code> mit dem
+	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
+	 */
+	private String parameterModulPid = null;
 
 	/**
 	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>,
@@ -107,16 +109,8 @@ public class DeFaApplikation implements StandardApplication {
 	 * {@inheritDoc}
 	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
-		dav.addConnectionListener(new DavConnectionListener() {
+		sDav = dav;
 
-			public void connectionClosed(ClientDavInterface connection) {
-				System.out.println("HAAAAAAAAAAAALLLLLLLLLLLLLLLLLOOOOOOOOOOOOO");
-				
-				tlsFehlerAnalyseObjekte = null;
-			}
-
-		});
-		
 		for (String pidVonGeraet : this.geraetePids) {
 			SystemObject geraeteObjekt = dav.getDataModel().getObject(
 					pidVonGeraet);
@@ -200,7 +194,6 @@ public class DeFaApplikation implements StandardApplication {
 
 		Debug.init("DE Fehleranalyse fehlende Messdaten", argumente); //$NON-NLS-1$
 
-		
 		if (argumente.hasArgument("-param")) {
 			this.parameterModulPid = argumente.fetchArgument("-param")
 					.asNonEmptyString();
@@ -215,6 +208,15 @@ public class DeFaApplikation implements StandardApplication {
 				.fetchArgument("-geraet").asNonEmptyString().split(","); //$NON-NLS-1$ //$NON-NLS-2$
 
 		argumente.fetchUnusedArguments();
+	}
+
+	/**
+	 * Erfragt die statische Verbindung zum Datenverteiler.
+	 * 
+	 * @return die statische Verbindung zum Datenverteiler.
+	 */
+	public static final ClientDavInterface getDav() {
+		return sDav;
 	}
 
 	/**

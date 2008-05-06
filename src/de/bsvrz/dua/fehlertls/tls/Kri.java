@@ -26,16 +26,10 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
-import com.bitctrl.Constants;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
-import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * TLS-Hierarchieelement KRI.
@@ -84,18 +78,10 @@ public class Kri extends AbstraktGeraet {
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		MessageSender
-				.getInstance()
-				.sendMessage(
-						MessageType.APPLICATION_DOMAIN,
-						DeFaApplikation.getAppName(),
-						MessageGrade.ERROR,
-						this.objekt,
-						new MessageCauser(sDav.getLocalUser(),
-								Constants.EMPTY_STRING, DeFaApplikation
-										.getAppName()),
-						"Verbindung zum KRI " + this.objekt + " oder KRI selbst defekt." + //$NON-NLS-1$ //$NON-NLS-2$
-								" Verbindung zum KRI oder KRI instand setzen"); //$NON-NLS-1$
+		this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
+				"Verbindung zum KRI " + this.objekt
+						+ " oder KRI selbst defekt."
+						+ " Verbindung zum KRI oder KRI instand setzen");
 
 		for (De de : this.getErfassteDes()) {
 			de

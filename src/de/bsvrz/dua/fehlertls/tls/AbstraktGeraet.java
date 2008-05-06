@@ -34,6 +34,7 @@ import com.bitctrl.Constants;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.fehlertls.fehlertls.SingleMessageSender;
 
 /**
  * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.gerät</code>.
@@ -83,6 +84,11 @@ public abstract class AbstraktGeraet {
 	 * statische Datenverteiler-Verbindund.
 	 */
 	protected static ClientDavInterface sDav = null;
+
+	/**
+	 * zur einmaligen Publikation von Fehlermeldungen.
+	 */
+	protected SingleMessageSender einzelPublikator = null;
 
 	/**
 	 * das Konfigurationsobjekt vom Typ <code>typ.gerät</code>.
@@ -166,6 +172,7 @@ public abstract class AbstraktGeraet {
 		if (sDav == null) {
 			sDav = dav;
 		}
+		this.einzelPublikator = new SingleMessageSender();
 		this.objekt = (ConfigurationObject) objekt;
 		this.vater = vater;
 	}

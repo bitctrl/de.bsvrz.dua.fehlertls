@@ -26,18 +26,12 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
-import com.bitctrl.Constants;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
-import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * TLS-Hierarchieelement EAK.
@@ -69,7 +63,8 @@ public class Eak extends AbstraktGeraet {
 					this.kinder.add(de);
 				} catch (DeFaException e) {
 					e.printStackTrace();
-					Debug.getLogger()
+					Debug
+							.getLogger()
 							.warning(
 									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -90,20 +85,11 @@ public class Eak extends AbstraktGeraet {
 	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
-		MessageSender
-				.getInstance()
-				.sendMessage(
-						MessageType.APPLICATION_DOMAIN,
-						DeFaApplikation.getAppName(),
-						MessageGrade.ERROR,
-						this.objekt,
-						new MessageCauser(sDav.getLocalUser(),
-								Constants.EMPTY_STRING, DeFaApplikation
-										.getAppName()),
-						"EAK "	+ this.objekt + " am Steuermodul " + this.getVater().getObjekt() + " defekt." + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								" EAK "
-								+ this.objekt
-								+ " am Steuermodul " + this.getVater().getObjekt() + " instand setzen"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
+				"EAK " + this.objekt + " am Steuermodul "
+						+ this.getVater().getObjekt() + " defekt." + " EAK "
+						+ this.objekt + " am Steuermodul "
+						+ this.getVater().getObjekt() + " instand setzen");
 
 		for (De de : this.getErfassteDes()) {
 			de.publiziereFehlerUrsache(zeitStempel,

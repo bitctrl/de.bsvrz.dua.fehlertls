@@ -40,7 +40,7 @@ import de.bsvrz.dua.fehlertls.TypTlsFehlerAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Stellt eine Datenverteiler-Verbindung zur Verfügung.
+ * Testet die Applikation nach PruefSpez (erster Teil - UZ).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -81,7 +81,7 @@ public class DeFaApplikationTest2 {
 	public static final boolean SHOW_ZEITPUNKT = true;
 
 	/**
-	 * Testet analog Beschreibung in "LiesMich.txt".
+	 * Testet analog PrüfSpez. (1.Teil).
 	 * 
 	 * @throws Exception
 	 *             wird weitergereicht
