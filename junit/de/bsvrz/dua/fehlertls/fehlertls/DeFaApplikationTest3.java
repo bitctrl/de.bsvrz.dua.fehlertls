@@ -244,7 +244,7 @@ public class DeFaApplikationTest3 {
 									.format(new Date(System.currentTimeMillis()))
 							+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
 		}
-		for (int r = 0; r < 10; r++) {
+		for (int r = 0; r < 20; r++) {
 			long jetzt = System.currentTimeMillis();
 			for (int i = 1; i < 17; i++) {
 				TypDeTestWrapper de = TypDeTestWrapper.getInstanz("DE" + i);

@@ -21,9 +21,18 @@ appname=fehlertls
 #     Testroutinen     #
 ########################
 
+testTexts[$index]="Automatischer JUnit-Test (Test Kurzzeitintervall)"
+tests[$index]="fehlertls.DeFaApplikationTest2"
+index=$(($index+1))
+
+testTexts[$index]="Automatischer JUnit-Test (Test Langzeitintervall)"
+tests[$index]="fehlertls.DeFaApplikationTest3"
+index=$(($index+1))
+
 testTexts[$index]="Automatischer JUnit-Test (Extra)"
 tests[$index]="fehlertls.DeFaApplikationTest"
 index=$(($index+1))
+
 
 ########################
 #      ClassPath       #
