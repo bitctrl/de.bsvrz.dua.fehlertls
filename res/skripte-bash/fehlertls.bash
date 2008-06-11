@@ -29,7 +29,7 @@ fi
 ################################################################################
 
 # Applikation starten
-java $jvmArgs -jar ../de.bsvrz.dua.fehlertls-runtime.jar \
+$java $jvmArgs -jar ../de.bsvrz.dua.fehlertls-runtime.jar \
 	$dav1 \
 	-geraet=$ger \
 	-debugLevelFileText=all \
