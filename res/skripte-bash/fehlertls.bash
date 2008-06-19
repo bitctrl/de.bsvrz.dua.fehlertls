@@ -1,12 +1,14 @@
 #!/bin/bash
 
+cd `dirname $0`
+
 source ../../../skripte-bash/einstellungen.sh
 
 ################################################################################
 # SWE-Spezifische Parameter	(überprüfen und anpassen)                          #
 ################################################################################
 
-ger=""
+ger="B27KR1,EfrKR1,EngKR1,FreKR1,HdhKR1,HeiKR1,HerKR1,KarKR1,KirKR1,LudKR1,LudKR2,ManKR1,NeuKR1,OffKR1,RotKR1,SinKR1,UlmKR1,UlmKR2,WalKR1,WalKR2,WanKR1"
 
 ################################################################################
 # Folgende Parameter müssen überprüft und evtl. angepasst werden               #
