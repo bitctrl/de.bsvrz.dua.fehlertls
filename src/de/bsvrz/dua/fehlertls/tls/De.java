@@ -218,13 +218,11 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			sDav.sendData(new ResultData(this.objekt, fehlerDatenBeschreibung,
 					fehlerZeit, datum));
 		} catch (DataNotSubscribedException e) {
-			e.printStackTrace();
 			Debug.getLogger().error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
+					this.objekt + " nicht publiziert werden. Grund:\n" + e.getLocalizedMessage()); //$NON-NLS-1$
 		} catch (SendSubscriptionNotConfirmed e) {
-			e.printStackTrace();
 			Debug.getLogger().error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-					this.objekt + " nicht publiziert werden"); //$NON-NLS-1$
+					this.objekt + " nicht publiziert werden. Grund:\n" + e.getLocalizedMessage()); //$NON-NLS-1$
 		}
 
 		this.versucheErwartung();

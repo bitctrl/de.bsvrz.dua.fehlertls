@@ -62,7 +62,6 @@ public class Eak extends AbstraktGeraet {
 					De de = new De(dav, deObj, this);
 					this.kinder.add(de);
 				} catch (DeFaException e) {
-					e.printStackTrace();
 					Debug
 							.getLogger()
 							.warning(
