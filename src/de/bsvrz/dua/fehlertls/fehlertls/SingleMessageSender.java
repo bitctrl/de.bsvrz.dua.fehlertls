@@ -63,7 +63,7 @@ public class SingleMessageSender {
 			this.letzteEinmaligeNachricht = text;
 			MessageSender.getInstance().sendMessage(
 					MessageType.APPLICATION_DOMAIN,
-					DeFaApplikation.getAppName(),
+					null,
 					grade,
 					obj,
 					new MessageCauser(DeFaApplikation.getDav().getLocalUser(),
