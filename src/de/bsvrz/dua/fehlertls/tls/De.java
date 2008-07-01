@@ -27,6 +27,7 @@
 package de.bsvrz.dua.fehlertls.tls;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import com.bitctrl.Constants;
@@ -51,6 +52,7 @@ import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation;
 import de.bsvrz.dua.fehlertls.parameter.IParameterTlsFehlerAnalyseListener;
 import de.bsvrz.dua.fehlertls.parameter.ParameterTlsFehlerAnalyse;
 import de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand.Zustand;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.ObjektWecker;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IObjektWeckerListener;
 import de.bsvrz.sys.funclib.debug.Debug;
@@ -298,21 +300,39 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 				long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt
 						+ zeitVerzugFehlerErkennung;
 
+				Debug.getLogger().info(
+						"Plane Erwartung fuer "
+								+ De.this.getObjekt()
+								+ ": "
+								+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+										nachsterErwarteterZeitpunkt
+										+ STANDARD_ZEIT_ABSTAND)));
 				fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
 						+ STANDARD_ZEIT_ABSTAND);
 			} else {
 				if (this.aktuellerZustand != null
 						&& this.aktuellerZustand.isInitialisiert()) {
 					if (this.aktuellerZustand.getErfassungsIntervallDauer() <= 0) {
+						Debug.getLogger().info(
+								"Erwartung fuer "
+										+ De.this.getObjekt()
+										+ " ausgeplant.");
 						fehlerWecker.setWecker(this, ObjektWecker.AUS);
 						this.einzelPublikator.publiziere(MessageGrade.WARNING,
 								this.objekt, this.objekt + ": " + this.aktuellerZustand.getGrund());
 					}
 				} else {
-					Debug
-							.getLogger()
-							.warning(
-									"DE "	+ De.this.objekt + " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$//$NON-NLS-2$
+					if(this.aktuellerZustand == null) {
+						Debug
+						.getLogger()
+						.warning(
+								"Aktueller Erfassungszustand von " + De.this.objekt + " ist (noch) nicht bekannt"); //$NON-NLS-1$//$NON-NLS-2$						
+					} else {
+						Debug
+						.getLogger()
+						.warning(
+								"DE "	+ De.this.objekt + " ist (noch) nicht vollstaendig initialisiert:\n" + this.aktuellerZustand); //$NON-NLS-1$//$NON-NLS-2$						
+					}
 				}
 			}
 
@@ -353,6 +373,22 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
+			Debug.getLogger().info(
+					"Plane Fehlerpublikation fuer "
+							+ De.this.getObjekt()
+							+ ": "
+							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+									fehlerZeit + zeitVerzugFehlerErkennung
+											+ zeitVerzugFehlerErmittlung + 2
+											* STANDARD_ZEIT_ABSTAND))
+							+ "\nFehlerzeit: "
+							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+									fehlerZeit)) + "\nVerzug (Erkennung): "
+							+ zeitVerzugFehlerErkennung
+							+ "\nVerzug (Ermittlung): "
+							+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
+							+ (2 * STANDARD_ZEIT_ABSTAND));
+			
 			analyseWecker.setWecker(new IObjektWeckerListener() {
 
 				public void alarm() {

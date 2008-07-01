@@ -27,9 +27,11 @@
 package de.bsvrz.dua.fehlertls.tls;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 
@@ -59,8 +61,27 @@ public class Eak extends AbstraktGeraet {
 				.getNonMutableSet("De").getElements()) { //$NON-NLS-1$
 			if (deObj.isValid()) {
 				try {
-					De de = new De(dav, deObj, this);
-					this.kinder.add(de);
+					Data deKonfig = deObj.getConfigurationData(dav.getDataModel().getAttributeGroup("atg.de"));
+					if(deKonfig != null) {
+						if(deKonfig.getUnscaledValue("Cluster").intValue() == DUAKonstanten.NEIN){
+							De de = new De(dav, deObj, this);
+							this.kinder.add(de);
+						} else {
+							Debug
+							.getLogger()
+							.info(
+									"DE "
+											+ deObj
+											+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");							
+						}
+					} else {
+						Debug
+								.getLogger()
+								.warning(
+										"DE "
+												+ deObj
+												+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
+					}
 				} catch (DeFaException e) {
 					Debug
 							.getLogger()

@@ -209,29 +209,42 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		 * Standardkonstruktor.
 		 */
 		protected Zustand() {
+			String debug = Constants.EMPTY_STRING;
 			synchronized (DeErfassungsZustand.this) {
 				if (DeErfassungsZustand.this.deFehlerStatus != null) {
+					debug += "DE-Fehlerstatus != <<null>>\n";
 					if (DeErfassungsZustand.this.deFehlerStatus == TlsDeFehlerStatus.OK) {
+						debug += "DE-Fehlerstatus == TlsDeFehlerStatus.OK\n";
 						if (DeErfassungsZustand.this.aktiv != null) {
+							debug += "DE-Kanalzustand ist != <<null>>\n";
 							if (DeErfassungsZustand.this.aktiv) {
+								debug += "DE-Kanal ist aktiviert\n";
 								if (DeErfassungsZustand.this.erfassungsIntervallDauer != null) {
+									debug += "T != <<null>>\n";
 									if (DeErfassungsZustand.this.erfassungsIntervallDauer >= 0) {
+										debug += "T >= 0 (" + DeErfassungsZustand.this.erfassungsIntervallDauer + "s)\n";
 										this.erfassungsIntervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
 									} else {
+										debug += "T < 0 (" + DeErfassungsZustand.this.erfassungsIntervallDauer + "s)\n";
 										this.grund = "TLS-Fehlerueberwachung nicht moeglich, da keine " + //$NON-NLS-1$
 												"zyklische Abgabe von Meldungen eingestellt"; //$NON-NLS-1$
 									}
 								} else {
+									debug += "T == <<null>>\n";
 									this.initialisiert = false;
 								}
 							} else {
+								debug += "DE-Kanal ist passiviert\n";
 								this.grund = GRUND_PRAEFIX
 										+ "DE-Kanal ist passiviert"; //$NON-NLS-1$
 							}
 						} else {
+							debug += "DE-Kanalzustand ist == <<null>>\n";
 							this.initialisiert = false;
 						}
 					} else {
+						debug += "DE-Fehlerstatus != TlsDeFehlerStatus.OK (" + DeErfassungsZustand.this.deFehlerStatus
+						.toString() + ")\n";
 						this.grund = GRUND_PRAEFIX
 								+ "DE-Fehler(" + //$NON-NLS-1$
 								DeErfassungsZustand.this.deFehlerStatus
@@ -241,12 +254,15 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 										.getText();
 					}
 				} else {
+					debug += "DE-Fehlerstatus == <<null>>\n";
 					this.initialisiert = false;
 				}
 			}
 
-			Debug.getLogger()
-					.info("Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj.getPid() + "):\n" + this); //$NON-NLS-1$ //$NON-NLS-2$
+			Debug
+					.getLogger()
+					.info(
+							"Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj + "):\n" + this + "\nGrund:\n" + debug); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		/**
@@ -339,7 +355,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 					s += this.grund;
 				}
 			} else {
-				s += "nicht initialisiert"; //$NON-NLS-1$
+				s += "nicht initialisiert (T = " + erfassungsIntervallDauer + ", Grund: " + this.grund + ")";
 			}
 
 			return s;
