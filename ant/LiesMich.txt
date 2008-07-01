@@ -21,17 +21,9 @@ zu machen.
 Versionsgeschichte
 ==================
 
-1.0.0
+1.2.1
 
-  - Erste Auslieferung
-  
-1.1.0
-
-  - Anpassung der Tests 
-  
-1.1.1
-
-  - Bash-Startskript hinzu 
+  - Cluster-DE aus der Ueberwachung ausgeschlossen.
 
 1.2.0
 
@@ -39,7 +31,19 @@ Versionsgeschichte
     typ.tlsFehlerAnalyse uebergebene werden, ueber dessen Parameter eine
     Instanz gesteuert wird
   
+1.1.1
 
+  - Bash-Startskript hinzu 
+
+1.1.0
+
+  - Anpassung der Tests 
+
+1.0.0
+
+  - Erste Auslieferung
+
+ 
 Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
 de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation mit folgenden Parametern gestartet
 werden kann (zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applikation):
