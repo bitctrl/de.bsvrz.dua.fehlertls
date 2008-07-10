@@ -192,8 +192,6 @@ public class DeFaApplikation implements StandardApplication {
 					}
 				});
 
-		Debug.init("DE Fehleranalyse fehlende Messdaten", argumente); //$NON-NLS-1$
-
 		if (argumente.hasArgument("-param")) {
 			this.parameterModulPid = argumente.fetchArgument("-param")
 					.asNonEmptyString();
