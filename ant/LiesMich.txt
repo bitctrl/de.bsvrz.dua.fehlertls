@@ -21,18 +21,12 @@ zu machen.
 Versionsgeschichte
 ==================
 
-1.2.1
-
-  - Cluster-DE aus der Ueberwachung ausgeschlossen.
-
 1.2.0
 
+  - Cluster-DE aus der Ueberwachung ausgeschlossen.
   - Startparameter "-param" hinzu. Hier kann das Objekt (dessen Pid) vom Typ
     typ.tlsFehlerAnalyse uebergebene werden, ueber dessen Parameter eine
     Instanz gesteuert wird
-  
-1.1.1
-
   - Bash-Startskript hinzu 
 
 1.1.0
