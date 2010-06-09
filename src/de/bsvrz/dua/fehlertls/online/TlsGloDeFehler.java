@@ -111,8 +111,8 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	private TlsGloDeFehler(ClientDavInterface dav, SystemObject objekt) {
 		dav.subscribeReceiver(this, objekt, new DataDescription(
 				dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

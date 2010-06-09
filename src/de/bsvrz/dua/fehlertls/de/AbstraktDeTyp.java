@@ -109,7 +109,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 		}
 
 		return new DataDescription(atg, dav.getDataModel().getAspect(
-				DaVKonstanten.ASP_PARAMETER_SOLL), (short) 0);
+				DaVKonstanten.ASP_PARAMETER_SOLL));
 	}
 
 	/**
