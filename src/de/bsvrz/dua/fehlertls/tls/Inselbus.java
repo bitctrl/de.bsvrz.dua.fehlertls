@@ -294,9 +294,13 @@ public class Inselbus extends AbstraktGeraet {
 			totalAusfallSteuerModuleSortiert.addAll(totalAusfallSteuerModule);
 			AbstraktGeraet[] steuerModulArray = totalAusfallSteuerModuleSortiert
 					.toArray(new AbstraktGeraet[0]);
-			String steuerModule = steuerModulArray[0].getObjekt().toString();
-			for (int i = 1; i < steuerModulArray.length; i++) {
-				steuerModule += ", " + steuerModulArray[i].getObjekt().toString(); //$NON-NLS-1$
+			
+			String steuerModule = "/";
+			if(steuerModulArray.length > 0) {
+				steuerModule = steuerModulArray[0].getObjekt().toString();
+				for (int i = 1; i < steuerModulArray.length; i++) {
+					steuerModule += ", " + steuerModulArray[i].getObjekt().toString(); //$NON-NLS-1$
+				}
 			}
 
 			this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
