@@ -20,6 +20,14 @@ zu machen.
 
 Versionsgeschichte
 ==================
+
+1.2.3
+
+  - FIX: SWE Fehleranalyse abgestuerzt mit java.lang.ArrayIndexOutOfBoundsException 
+         innerhalb von Inselbus.java. Die fragliche Stelle im Code wurde identifiziert
+         und angepasst. Der Fehler sollte nicht mehr auftreten. 
+  
+
 1.2.2
 
   - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
