@@ -37,6 +37,7 @@ import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 
 /**
  * Diese SWE dient zur Ermittlung der Fehlerursache bei fehlenden Messwerten an
@@ -62,8 +63,8 @@ public class DeFaApplikation implements StandardApplication {
 	private static ClientDavInterface sDav = null;
 
 	/**
-	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem
-	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
+	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem diese
+	 * Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
 	 */
 	private static SystemObject tlsFehlerAnalyseObjekte = null;
 
@@ -84,13 +85,13 @@ public class DeFaApplikation implements StandardApplication {
 	private String parameterModulPid = null;
 
 	/**
-	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>,
-	 * mit dem diese Applikation assoziiert ist (aus der sie ihre Parameter
+	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
+	 * dem diese Applikation assoziiert ist (aus der sie ihre Parameter
 	 * bezieht).
 	 * 
-	 * @return das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>,
-	 *         mit dem diese Applikation assoziiert ist (aus der sie ihre
-	 *         Parameter bezieht)
+	 * @return das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
+	 *         dem diese Applikation assoziiert ist (aus der sie ihre Parameter
+	 *         bezieht)
 	 */
 	public static final SystemObject getTlsFehlerAnalyseObjekt() {
 		return tlsFehlerAnalyseObjekte;
@@ -111,6 +112,9 @@ public class DeFaApplikation implements StandardApplication {
 	public void initialize(ClientDavInterface dav) throws Exception {
 		sDav = dav;
 
+		MessageSender.getInstance().setApplicationLabel(
+				"Ueberpruefung fehlende Messdaten TLS-LVE");
+
 		for (String pidVonGeraet : this.geraetePids) {
 			SystemObject geraeteObjekt = dav.getDataModel().getObject(
 					pidVonGeraet);
@@ -118,26 +122,23 @@ public class DeFaApplikation implements StandardApplication {
 				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
-					Debug
-							.getLogger()
+					Debug.getLogger()
 							.warning(
 									"Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				Debug
-						.getLogger()
+				Debug.getLogger()
 						.warning(
 								"Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		if (this.parameterModulPid == null) {
-			for (SystemObject obj : dav.getDataModel().getType(
-					"typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
+			for (SystemObject obj : dav.getDataModel()
+					.getType("typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
 				if (obj.isValid()) {
 					if (tlsFehlerAnalyseObjekte != null) {
-						Debug
-								.getLogger()
+						Debug.getLogger()
 								.warning(
 										"Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 						break;
@@ -181,23 +182,21 @@ public class DeFaApplikation implements StandardApplication {
 	 */
 	public void parseArguments(ArgumentList argumente) throws Exception {
 
-		Thread
-				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-					public void uncaughtException(@SuppressWarnings("unused")
-					Thread t, Throwable e) {
-						Debug.getLogger().error("Applikation wird wegen" + //$NON-NLS-1$
-								" unerwartetem Fehler beendet", e); //$NON-NLS-1$
-						e.printStackTrace();
-						Runtime.getRuntime().exit(-1);
-					}
-				});
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(@SuppressWarnings("unused") Thread t,
+					Throwable e) {
+				Debug.getLogger().error("Applikation wird wegen" + //$NON-NLS-1$
+						" unerwartetem Fehler beendet", e); //$NON-NLS-1$
+				e.printStackTrace();
+				Runtime.getRuntime().exit(-1);
+			}
+		});
 
 		if (argumente.hasArgument("-param")) {
 			this.parameterModulPid = argumente.fetchArgument("-param")
 					.asNonEmptyString();
 		} else {
-			Debug
-					.getLogger()
+			Debug.getLogger()
 					.warning(
 							"Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
