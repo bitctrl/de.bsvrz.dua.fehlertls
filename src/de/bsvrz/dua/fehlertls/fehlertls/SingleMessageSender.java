@@ -29,10 +29,13 @@ package de.bsvrz.dua.fehlertls.fehlertls;
 import com.bitctrl.Constants;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.bitctrl.daf.BetriebsmeldungDaten;
+import de.bsvrz.sys.funclib.bitctrl.daf.DefaultBetriebsMeldungsIdKonverter;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+import de.bsvrz.sys.funclib.operatingMessage.MessageState;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
@@ -44,6 +47,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  */
 public class SingleMessageSender {
 
+	private static DefaultBetriebsMeldungsIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
+
 	/**
 	 * letzte fuer dieses DE publizierte einmalige Betriebsmeldung.
 	 */
@@ -52,8 +57,10 @@ public class SingleMessageSender {
 	/**
 	 * Publiziert eine Fehlermeldung einmalig.
 	 * 
-	 * @param grade die Meldungsklasse fuer die Betriebsmeldungen
-	 * @param obj das mit der Nachricht assoziierte Systemobjekt
+	 * @param grade
+	 *            die Meldungsklasse fuer die Betriebsmeldungen
+	 * @param obj
+	 *            das mit der Nachricht assoziierte Systemobjekt
 	 * @param text
 	 *            der Text der Fehlermeldung
 	 */
@@ -61,19 +68,34 @@ public class SingleMessageSender {
 			final SystemObject obj, final String text) {
 		if (!this.letzteEinmaligeNachricht.equals(text)) {
 			this.letzteEinmaligeNachricht = text;
-			MessageSender.getInstance().sendMessage(
-					MessageType.APPLICATION_DOMAIN,
-					null,
-					grade,
-					obj,
-					new MessageCauser(DeFaApplikation.getDav().getLocalUser(),
-							Constants.EMPTY_STRING, DeFaApplikation
-									.getAppName()), text);
+
+			if (obj != null) {
+				MessageSender.getInstance().sendMessage(
+						KONVERTER.konvertiere(new BetriebsmeldungDaten(obj),
+								null, new Object[0]),
+						MessageType.APPLICATION_DOMAIN,
+						null,
+						grade,
+						obj,
+						MessageState.MESSAGE,
+						new MessageCauser(DeFaApplikation.getDav()
+								.getLocalUser(), Constants.EMPTY_STRING,
+								DeFaApplikation.getAppName()), text);
+			} else {
+				MessageSender.getInstance().sendMessage(
+						MessageType.APPLICATION_DOMAIN,
+						null,
+						grade,
+						obj,
+						new MessageCauser(DeFaApplikation.getDav()
+								.getLocalUser(), Constants.EMPTY_STRING,
+								DeFaApplikation.getAppName()), text);
+			}
 			Debug.getLogger().info(text); //$NON-NLS-1$
 		} else {
 			Debug.getLogger().info(
 					obj + ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
 		}
 	}
-	
+
 }
