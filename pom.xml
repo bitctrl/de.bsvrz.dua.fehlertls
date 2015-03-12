@@ -53,26 +53,6 @@
 			<version>3.6.2</version>
 		</dependency>
 		<dependency>
-			<groupId>de.bsvrz.sys.funclib</groupId>
-			<artifactId>de.bsvrz.sys.funclib.application</artifactId>
-			<version>3.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>de.bsvrz.sys.funclib</groupId>
-			<artifactId>de.bsvrz.sys.funclib.dataSerializer</artifactId>
-			<version>3.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>de.bsvrz.sys.funclib</groupId>
-			<artifactId>de.bsvrz.sys.funclib.dataIdentificationSettings</artifactId>
-			<version>3.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>de.bsvrz.puk</groupId>
-			<artifactId>de.bsvrz.puk.param.lib</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>de.bsvrz.sys</groupId>
 			<artifactId>de.bsvrz.sys.funclib.bitctrl</artifactId>
 			<version>1.2.3-SNAPSHOT</version>
