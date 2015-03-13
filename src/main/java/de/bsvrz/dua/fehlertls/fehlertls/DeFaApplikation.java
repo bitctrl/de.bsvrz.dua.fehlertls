@@ -57,6 +57,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  */
 public class DeFaApplikation implements StandardApplication {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Statische Verbindung zum Datenverteiler.
 	 */
@@ -122,12 +124,12 @@ public class DeFaApplikation implements StandardApplication {
 				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
-					Debug.getLogger()
+					LOGGER
 							.warning(
 									"Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				Debug.getLogger()
+				LOGGER
 						.warning(
 								"Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -138,7 +140,7 @@ public class DeFaApplikation implements StandardApplication {
 					.getType("typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
 				if (obj.isValid()) {
 					if (tlsFehlerAnalyseObjekte != null) {
-						Debug.getLogger()
+						LOGGER
 								.warning(
 										"Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 						break;
@@ -164,13 +166,13 @@ public class DeFaApplikation implements StandardApplication {
 					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 		} else {
 			ParameterTlsFehlerAnalyse.getInstanz(dav, tlsFehlerAnalyseObjekte);
-			Debug.getLogger().config(
+			LOGGER.config(
 					"Es werden die Parameter von " + tlsFehlerAnalyseObjekte //$NON-NLS-1$
 							+ " verwendet"); //$NON-NLS-1$
 		}
 
 		if (this.geraete.isEmpty()) {
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		} else {
 			TlsHierarchie.initialisiere(dav, geraete);
@@ -185,7 +187,7 @@ public class DeFaApplikation implements StandardApplication {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			public void uncaughtException(@SuppressWarnings("unused") Thread t,
 					Throwable e) {
-				Debug.getLogger().error("Applikation wird wegen" + //$NON-NLS-1$
+				LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
 						" unerwartetem Fehler beendet", e); //$NON-NLS-1$
 				e.printStackTrace();
 				Runtime.getRuntime().exit(-1);
@@ -196,7 +198,7 @@ public class DeFaApplikation implements StandardApplication {
 			this.parameterModulPid = argumente.fetchArgument("-param")
 					.asNonEmptyString();
 		} else {
-			Debug.getLogger()
+			LOGGER
 					.warning(
 							"Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}

@@ -55,6 +55,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		IZyklusSteuerungsParameterListener {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * GRUND_PRAEFIX.
 	 */
@@ -109,7 +111,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		this.aktuellerZustand = new Zustand();
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
-		Debug.getLogger()
+		LOGGER
 				.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
@@ -259,8 +261,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 				}
 			}
 
-			Debug
-					.getLogger()
+			LOGGER
 					.info(
 							"Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj + "):\n" + this + "\nGrund:\n" + debug); //$NON-NLS-1$ //$NON-NLS-2$
 		}

@@ -48,7 +48,9 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * 
  * @version $Id$
  */
-public class Inselbus extends AbstraktGeraet {
+public class AnschlussPunkt extends TlsHierarchieElement {
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Standardkonstruktor.
@@ -61,8 +63,8 @@ public class Inselbus extends AbstraktGeraet {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Inselbus(ClientDavInterface dav, SystemObject objekt,
-			AbstraktGeraet vater) {
+	protected AnschlussPunkt(ClientDavInterface dav, SystemObject objekt,
+			TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 
 		/**
@@ -78,10 +80,9 @@ public class Inselbus extends AbstraktGeraet {
 							"KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
 					if (steuerModul != null) {
 						if (steuerModul.isOfType("typ.steuerModul")) { //$NON-NLS-1$
-							this.kinder.add(new Sm(dav, steuerModul, this));
+							addKind(new Sm(dav, steuerModul, this));
 						} else {
-							Debug
-									.getLogger()
+							LOGGER
 									.warning(
 											"An "	+ komPartner + //$NON-NLS-1$
 													" (Inselbus: "
@@ -94,13 +95,12 @@ public class Inselbus extends AbstraktGeraet {
 													")"); //$NON-NLS-1$				
 						}
 					} else {
-						Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
+						LOGGER.warning("An " + komPartner + //$NON-NLS-1$
 								" (Inselbus: " + this.objekt + //$NON-NLS-1$
 								") ist kein Steuermodul definiert"); //$NON-NLS-1$				
 					}
 				} else {
-					Debug
-							.getLogger()
+					LOGGER
 							.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
 									" (Inselbus: " + this.objekt + //$NON-NLS-1$
 									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
@@ -268,7 +268,7 @@ public class Inselbus extends AbstraktGeraet {
 									+ this.objekt
 									+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
 
-			for (AbstraktGeraet steuerModulOhneDaten : totalAusfallSteuerModule) {
+			for (TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (De de : timeOutSteuerModuleMitTimeOutDes
 						.get(steuerModulOhneDaten)) {
 					de
@@ -282,18 +282,18 @@ public class Inselbus extends AbstraktGeraet {
 			 * Nach Pid und Name sortierte Ausgabe der Steuermodule wegen
 			 * JUnit-Tests
 			 */
-			SortedSet<AbstraktGeraet> totalAusfallSteuerModuleSortiert = new TreeSet<AbstraktGeraet>(
-					new Comparator<AbstraktGeraet>() {
+			SortedSet<TlsHierarchieElement> totalAusfallSteuerModuleSortiert = new TreeSet<TlsHierarchieElement>(
+					new Comparator<TlsHierarchieElement>() {
 
-						public int compare(AbstraktGeraet o1, AbstraktGeraet o2) {
+						public int compare(TlsHierarchieElement o1, TlsHierarchieElement o2) {
 							return o1.getObjekt().toString().compareTo(
 									o2.getObjekt().toString());
 						}
 
 					});
 			totalAusfallSteuerModuleSortiert.addAll(totalAusfallSteuerModule);
-			AbstraktGeraet[] steuerModulArray = totalAusfallSteuerModuleSortiert
-					.toArray(new AbstraktGeraet[0]);
+			TlsHierarchieElement[] steuerModulArray = totalAusfallSteuerModuleSortiert
+					.toArray(new TlsHierarchieElement[0]);
 			
 			String steuerModule = "/";
 			if(steuerModulArray.length > 0) {
@@ -310,7 +310,7 @@ public class Inselbus extends AbstraktGeraet {
 							+ " sind keine Daten verfügbar. Inselbus "
 							+ this.objekt + " instand setzen");
 
-			for (AbstraktGeraet steuerModulOhneDaten : totalAusfallSteuerModule) {
+			for (TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (De de : timeOutSteuerModuleMitTimeOutDes
 						.get(steuerModulOhneDaten)) {
 					de.publiziereFehlerUrsache(zeitStempel,

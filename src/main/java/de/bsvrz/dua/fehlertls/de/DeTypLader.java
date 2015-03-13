@@ -101,7 +101,7 @@ public final class DeTypLader {
 					deTyp = (IDeTyp) klasse.newInstance();
 					typen.put(deTypObj, deTyp);
 				} catch (Throwable e) {
-					throw new DeFaException(e);
+					throw new DeTypUnsupportedException(deTypObj.getPid());
 				}
 			}
 		}

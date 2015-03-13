@@ -104,10 +104,13 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
 	private TlsGloKanalSteuerung(ClientDavInterface dav, SystemObject objekt) {
-		dav.subscribeReceiver(this, objekt, new DataDescription(
-				dav.getDataModel()
-						.getAttributeGroup("atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+		dav.subscribeReceiver(
+				this,
+				objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup(
+						"atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
+						dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
@@ -124,24 +127,19 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
 				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						this.aktiv = resultat.getData().getUnscaledValue(
-								"DEKanalStatus").intValue() == 0; //$NON-NLS-1$
+						this.aktiv = resultat.getData()
+								.getUnscaledValue("DEKanalStatus").intValue() == 0;
 						for (ITlsGloKanalSteuerungsListener listener : this.listenerMenge) {
-							listener
-									.aktualisiereTlsGloKanalSteuerung(this.aktiv);
+							listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 						}
 					}
 				}
 			}
 		}
 	}
-
 }

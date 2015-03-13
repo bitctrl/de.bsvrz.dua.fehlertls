@@ -66,9 +66,11 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * 
  * @version $Id$
  */
-public class De extends AbstraktGeraet implements ClientReceiverInterface,
-		ClientSenderInterface, IObjektWeckerListener,
+public class De extends TlsHierarchieElement implements
+		ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
 		IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Die Zeit, die mindestens zwischen Daten, Fehlererkennung und
@@ -126,11 +128,13 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	 */
 	private DeErfassungsZustand.Zustand aktuellerZustand = null;
 
+	private boolean initialisiert;
+
 	/**
 	 * Standardkonstruktor.
 	 * 
 	 * @param dav
-	 *            Datenverteiler-Verbindund
+	 *            Datenverteiler-Verbindung
 	 * @param objekt
 	 *            ein Systemobjekt vom Typ <code>typ.de</code>
 	 * @param vater
@@ -139,7 +143,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	 *             wird nach oben weitergereicht
 	 */
 	protected De(ClientDavInterface dav, SystemObject objekt,
-			AbstraktGeraet vater) throws DeFaException {
+			TlsHierarchieElement vater) throws DeFaException {
 		super(dav, objekt, vater);
 
 		if (fehlerDatenBeschreibung == null) {
@@ -148,53 +152,39 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 					dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 		}
 
-		ParameterTlsFehlerAnalyse.getInstanz(dav,
-				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
-
 		for (DataDescription messWertBeschreibung : DeTypLader.getDeTyp(
 				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
-			Debug
-					.getLogger()
-					.info(
-							"Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
+			LOGGER.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		try {
 			dav.subscribeSender(this, objekt, fehlerDatenBeschreibung,
 					SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
-			throw new DeFaException(e);
+			throw new IllegalStateException("Quellenanmeldung für DE" + objekt
+					+ " nicht möglich", e);
 		}
 
 		new DeErfassungsZustand(sDav, this.getObjekt()).addListener(this);
+		ParameterTlsFehlerAnalyse.getInstanz(dav,
+				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
+		initialisiert = true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void update(ResultData[] erwarteteResultate) {
-		if (erwarteteResultate != null) {
-			for (ResultData erwartetesResultat : erwarteteResultate) {
-				if (erwartetesResultat != null) {
-
-					/**
-					 * Nutzdatum empfangen
-					 */
-					if (erwartetesResultat.getData() != null) {
-						this.inTime = true;
-
-						this.versucheErwartung();
-					}
+	public void update(ResultData[] resultate) {
+		if (resultate != null) {
+			for (ResultData resultat : resultate) {
+				if ((resultat != null)
+						&& (resultat.getData() != null)) {
+					this.inTime = true;
+					this.versucheErwartung();
 				}
 			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.DE;
@@ -215,16 +205,18 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 
 		Data datum = sDav.createData(fehlerDatenBeschreibung
 				.getAttributeGroup());
-		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode()); //$NON-NLS-1$
+		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode());
 		try {
 			sDav.sendData(new ResultData(this.objekt, fehlerDatenBeschreibung,
 					fehlerZeit, datum));
 		} catch (DataNotSubscribedException e) {
-			Debug.getLogger().error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-					this.objekt + " nicht publiziert werden. Grund:\n" + e.getLocalizedMessage()); //$NON-NLS-1$
+			LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
+					+ " nicht publiziert werden. Grund:\n"
+					+ e.getLocalizedMessage());
 		} catch (SendSubscriptionNotConfirmed e) {
-			Debug.getLogger().error("Datum " + datum + " konnte fuer " + //$NON-NLS-1$ //$NON-NLS-2$
-					this.objekt + " nicht publiziert werden. Grund:\n" + e.getLocalizedMessage()); //$NON-NLS-1$
+			LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
+					+ " nicht publiziert werden. Grund:\n"
+					+ e.getLocalizedMessage());
 		}
 
 		this.versucheErwartung();
@@ -272,6 +264,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung) {
 		this.zeitVerzugFehlerErkennung = zeitverzugFehlerErkennung;
 		this.zeitVerzugFehlerErmittlung = zeitverzugFehlerErmittlung;
+
 		this.versucheErwartung();
 	}
 
@@ -289,23 +282,27 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	 * ist.
 	 */
 	private synchronized void versucheErwartung() {
+
+		if (!initialisiert) {
+			return;
+		}
+
 		if (this.zeitVerzugFehlerErkennung >= 0) {
 
 			if (this.aktuellerZustand != null
 					&& this.aktuellerZustand.getErfassungsIntervallDauer() > 0) {
 
 				this.letzterErwarteterDatenZeitpunkt = getNaechstenIntervallZeitstempel(
-						System.currentTimeMillis(), this.aktuellerZustand
-								.getErfassungsIntervallDauer());
+						System.currentTimeMillis(),
+						this.aktuellerZustand.getErfassungsIntervallDauer());
 				long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt
 						+ zeitVerzugFehlerErkennung;
 
-				Debug.getLogger().info(
-						"Plane Erwartung fuer "
-								+ De.this.getObjekt()
-								+ ": "
-								+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-										nachsterErwarteterZeitpunkt
+				LOGGER.info("Plane Erwartung fuer "
+						+ De.this.getObjekt()
+						+ ": "
+						+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+								nachsterErwarteterZeitpunkt
 										+ STANDARD_ZEIT_ABSTAND)));
 				fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
 						+ STANDARD_ZEIT_ABSTAND);
@@ -313,31 +310,28 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 				if (this.aktuellerZustand != null
 						&& this.aktuellerZustand.isInitialisiert()) {
 					if (this.aktuellerZustand.getErfassungsIntervallDauer() <= 0) {
-						Debug.getLogger().info(
-								"Erwartung fuer "
-										+ De.this.getObjekt()
-										+ " ausgeplant.");
+						LOGGER.info("Erwartung fuer " + De.this.getObjekt()
+								+ " ausgeplant.");
 						fehlerWecker.setWecker(this, ObjektWecker.AUS);
 						this.einzelPublikator.publiziere(MessageGrade.WARNING,
-								this.objekt, this.objekt + ": " + this.aktuellerZustand.getGrund());
+								this.objekt, this.objekt + ": "
+										+ this.aktuellerZustand.getGrund());
 					}
 				} else {
-					if(this.aktuellerZustand == null) {
-						Debug
-						.getLogger()
-						.warning(
-								"Aktueller Erfassungszustand von " + De.this.objekt + " ist (noch) nicht bekannt"); //$NON-NLS-1$//$NON-NLS-2$						
+					if (this.aktuellerZustand == null) {
+						LOGGER.info("Aktueller Erfassungszustand von "
+								+ De.this.objekt + " ist (noch) nicht bekannt");
 					} else {
-						Debug
-						.getLogger()
-						.warning(
-								"DE "	+ De.this.objekt + " ist (noch) nicht vollstaendig initialisiert:\n" + this.aktuellerZustand); //$NON-NLS-1$//$NON-NLS-2$						
+						LOGGER.info("DE "
+								+ De.this.objekt
+								+ " ist (noch) nicht vollstaendig initialisiert:\n"
+								+ this.aktuellerZustand);
 					}
 				}
 			}
 
 		} else {
-			Debug.getLogger().warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
+			LOGGER.warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
 					" erwarten, da noch keine (sinnvollen) " + //$NON-NLS-1$
 					"Parameter zur TLS-Fehleranalyse empfangen wurden"); //$NON-NLS-1$
 		}
@@ -348,7 +342,15 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
-		// wird ignoriert (Anmeldung als Quelle)
+		if (state == ClientSenderInterface.STOP_SENDING_NOT_A_VALID_SUBSCRIPTION) {
+			LOGGER.error("SWE wird beendet, weil die Quellenanmeldung für "
+					+ object + ": " + dataDescription + " ungültig ist");
+			System.exit(-1);
+		} else if (state == ClientSenderInterface.STOP_SENDING_NO_RIGHTS) {
+			LOGGER.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
+					+ object + ": " + dataDescription + " hat");
+			System.exit(-1);
+		}
 	}
 
 	/**
@@ -373,22 +375,20 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
-			Debug.getLogger().info(
-					"Plane Fehlerpublikation fuer "
-							+ De.this.getObjekt()
-							+ ": "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-									fehlerZeit + zeitVerzugFehlerErkennung
-											+ zeitVerzugFehlerErmittlung + 2
-											* STANDARD_ZEIT_ABSTAND))
-							+ "\nFehlerzeit: "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-									fehlerZeit)) + "\nVerzug (Erkennung): "
-							+ zeitVerzugFehlerErkennung
-							+ "\nVerzug (Ermittlung): "
-							+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
-							+ (2 * STANDARD_ZEIT_ABSTAND));
-			
+			LOGGER.info("Plane Fehlerpublikation fuer "
+					+ De.this.getObjekt()
+					+ ": "
+					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							fehlerZeit + zeitVerzugFehlerErkennung
+									+ zeitVerzugFehlerErmittlung + 2
+									* STANDARD_ZEIT_ABSTAND))
+					+ "\nFehlerzeit: "
+					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							fehlerZeit)) + "\nVerzug (Erkennung): "
+					+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): "
+					+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
+					+ (2 * STANDARD_ZEIT_ABSTAND));
+
 			analyseWecker.setWecker(new IObjektWeckerListener() {
 
 				public void alarm() {
@@ -404,19 +404,16 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 				De.this.einzelPublikator.publiziere(MessageGrade.WARNING,
 						this.objekt, this.objekt + ": " + zustand.getGrund());
 			} else {
-				Debug
-						.getLogger()
-						.warning(
-								De.this.objekt
-										+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
+				LOGGER.warning(De.this.objekt
+						+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
 			}
 		}
 	}
 
 	/**
 	 * Erfragt den ersten Zeitstempel, der sich echt (> 500ms) nach dem
-	 * Zeitstempel <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet
-	 * und der zur uebergebenen Erfassungsintervalllange passt.
+	 * Zeitstempel <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet und
+	 * der zur uebergebenen Erfassungsintervalllange passt.
 	 * 
 	 * @param jetzt
 	 *            angenommener Jetzt-Zeitpunkt (in ms)

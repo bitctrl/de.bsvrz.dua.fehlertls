@@ -43,7 +43,7 @@ import de.bsvrz.dua.fehlertls.fehlertls.SingleMessageSender;
  * 
  * @version $Id$
  */
-public abstract class AbstraktGeraet {
+public abstract class TlsHierarchieElement {
 
 	/**
 	 * ob die TLS-Hierarchie in einem Baum dargestellt werden soll.
@@ -98,12 +98,12 @@ public abstract class AbstraktGeraet {
 	/**
 	 * die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete.
 	 */
-	protected Set<AbstraktGeraet> kinder = new HashSet<AbstraktGeraet>();
+	private Set<TlsHierarchieElement> kinder = new HashSet<TlsHierarchieElement>();
 
 	/**
 	 * das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet.
 	 */
-	protected AbstraktGeraet vater = null;
+	protected TlsHierarchieElement vater = null;
 
 	/**
 	 * alle DEs, die sich unterhalb von diesem Element befinden.
@@ -167,14 +167,28 @@ public abstract class AbstraktGeraet {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected AbstraktGeraet(ClientDavInterface dav, SystemObject objekt,
-			AbstraktGeraet vater) {
+	protected TlsHierarchieElement(ClientDavInterface dav, SystemObject objekt,
+			TlsHierarchieElement vater) {
 		if (sDav == null) {
 			sDav = dav;
 		}
 		this.einzelPublikator = new SingleMessageSender();
 		this.objekt = (ConfigurationObject) objekt;
 		this.vater = vater;
+
+		if ((objekt != null) && objekt.isOfType("typ.gerät")) {
+			/** Initialisiere Anschlusspunkte. */
+			for (SystemObject ap : this.objekt.getNonMutableSet(
+					"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
+				if (ap.isValid()) {
+					addKind(new AnschlussPunkt(dav, ap, this));
+				}
+			}
+		}
+	}
+
+	protected void addKind(TlsHierarchieElement kind) {
+		kinder.add(kind);
 	}
 
 	/**
@@ -203,7 +217,7 @@ public abstract class AbstraktGeraet {
 	 * @return die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete
 	 *         (ggf. leere Liste)
 	 */
-	public final Set<AbstraktGeraet> getKinder() {
+	public final Set<TlsHierarchieElement> getKinder() {
 		return this.kinder;
 	}
 
@@ -214,7 +228,7 @@ public abstract class AbstraktGeraet {
 	 *         bzw. <code>null</code>, wenn dieses Geraet die Spitze der
 	 *         Hierarchie sein sollte
 	 */
-	public final AbstraktGeraet getVater() {
+	public final TlsHierarchieElement getVater() {
 		return this.vater;
 	}
 
@@ -234,8 +248,8 @@ public abstract class AbstraktGeraet {
 	public boolean equals(Object obj) {
 		boolean ergebnis = false;
 
-		if (obj != null && obj instanceof AbstraktGeraet) {
-			AbstraktGeraet that = (AbstraktGeraet) obj;
+		if (obj != null && obj instanceof TlsHierarchieElement) {
+			TlsHierarchieElement that = (TlsHierarchieElement) obj;
 			ergebnis = this.objekt.getId() == that.objekt.getId();
 		}
 
@@ -250,13 +264,13 @@ public abstract class AbstraktGeraet {
 		if (TLS_BAUM) {
 			String baum = Constants.EMPTY_STRING;
 
-			AbstraktGeraet dummy = this;
+			TlsHierarchieElement dummy = this;
 			while (dummy.getVater() != null) {
 				baum += "   "; //$NON-NLS-1$
 				dummy = dummy.getVater();
 			}
 			baum += this.objekt == null ? "WURZEL" : this.objekt.getPid(); //$NON-NLS-1$
-			for (AbstraktGeraet kind : this.kinder) {
+			for (TlsHierarchieElement kind : this.kinder) {
 				baum += "\n" + kind.toString(); //$NON-NLS-1$
 			}
 
@@ -269,8 +283,8 @@ public abstract class AbstraktGeraet {
 				v = this.vater.getObjekt() == null ? "WURZEL" : this.vater.getObjekt().getPid(); //$NON-NLS-1$
 			}
 			if (!this.kinder.isEmpty()) {
-				AbstraktGeraet[] dummy = this.kinder
-						.toArray(new AbstraktGeraet[0]);
+				TlsHierarchieElement[] dummy = this.kinder
+						.toArray(new TlsHierarchieElement[0]);
 				k = dummy[0].getObjekt().getPid();
 				for (int i = 1; i < dummy.length; i++) {
 					k += ", " + dummy[i].getObjekt().getPid(); //$NON-NLS-1$
@@ -338,7 +352,7 @@ public abstract class AbstraktGeraet {
 		if (this.getGeraeteArt() == Art.DE) {
 			des1.add((De) this);
 		} else {
-			for (AbstraktGeraet kind : this.kinder) {
+			for (TlsHierarchieElement kind : this.kinder) {
 				kind.sammleDes(des1);
 			}
 		}

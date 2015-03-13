@@ -44,8 +44,10 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @version $Id$
  */
-public final class TlsHierarchie extends AbstraktGeraet {
+public final class TlsHierarchie extends TlsHierarchieElement {
 
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Datenverteiler-Verbindung.
@@ -63,6 +65,8 @@ public final class TlsHierarchie extends AbstraktGeraet {
 	 * Geraete, mit der diese TLS-Hierarchie initialisiert wurde.
 	 */
 	private static TlsHierarchie wurzel = null;
+
+	private boolean initialisiert;
 
 	/**
 	 * Standardkonstruktor.
@@ -108,6 +112,8 @@ public final class TlsHierarchie extends AbstraktGeraet {
 				initialisiere((ConfigurationObject) geraet);
 			}
 		}
+
+		LOGGER.config("TlsHierarchie wurde initialisiert");
 	}
 
 	/**
@@ -118,9 +124,9 @@ public final class TlsHierarchie extends AbstraktGeraet {
 	 */
 	private static void initialisiere(ConfigurationObject geraet) {
 		if (geraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
-			wurzel.kinder.add(new Sm(sDav, geraet, wurzel));
+			wurzel.addKind(new Sm(sDav, geraet, wurzel));
 		} else if (geraet.isOfType("typ.kri")) { //$NON-NLS-1$
-			wurzel.kinder.add(new Kri(sDav, geraet, wurzel));
+			wurzel.addKind(new Kri(sDav, geraet, wurzel));
 		} else if (geraet.isOfType("typ.uz") || //$NON-NLS-1$
 				geraet.isOfType("typ.viz") || //$NON-NLS-1$
 				geraet.isOfType("typ.vrz")) { //$NON-NLS-1$
@@ -142,12 +148,12 @@ public final class TlsHierarchie extends AbstraktGeraet {
 							if (unterGeraet != null) {
 								unterGeraete.add(unterGeraet);
 							} else {
-								Debug.getLogger().warning("An " + komPartner + //$NON-NLS-1$
+								LOGGER.warning("An " + komPartner + //$NON-NLS-1$
 										" (Geraet: " + geraet + //$NON-NLS-1$
 										") ist kein Geraet definiert"); //$NON-NLS-1$				
 							}
 						} else {
-							Debug.getLogger().warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+							LOGGER.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
 									" (an Geraet: " + geraet + //$NON-NLS-1$
 									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
 									"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
@@ -169,7 +175,7 @@ public final class TlsHierarchie extends AbstraktGeraet {
 
 					if (unterGeraete.size() > 0) {
 						if (unterGeraete.size() == steuerModulZaehler) {
-							wurzel.kinder.add(new Inselbus(sDav,
+							wurzel.addKind(new AnschlussPunkt(sDav,
 									anschlussPunktSysObj, wurzel));
 						} else {
 							for (SystemObject unterGeraet : unterGeraete) {
@@ -197,5 +203,4 @@ public final class TlsHierarchie extends AbstraktGeraet {
 	public void publiziereFehler(long zeitStempel) {
 		assert (false);
 	}
-
 }

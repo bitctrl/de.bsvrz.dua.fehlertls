@@ -109,8 +109,8 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
 	private TlsGloDeFehler(ClientDavInterface dav, SystemObject objekt) {
-		dav.subscribeReceiver(this, objekt, new DataDescription(
-				dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
+		dav.subscribeReceiver(this, objekt, new DataDescription(dav
+				.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
 				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
@@ -121,11 +121,9 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public synchronized void addListener(
-			final ITlsGloDeFehlerListener listener) {
+	public synchronized void addListener(final ITlsGloDeFehlerListener listener) {
 		if (listenerMenge.add(listener) && this.aktiv != null) {
-			listener
-					.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
+			listener.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
 		}
 	}
 
@@ -137,12 +135,12 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 			for (ResultData resultat : resultate) {
 				if (resultat != null && resultat.getData() != null) {
 					synchronized (this) {
-						this.aktiv = resultat.getData().getUnscaledValue(
-								"DEKanalStatus").intValue() == 0; //$NON-NLS-1$
+						this.aktiv = resultat.getData()
+								.getUnscaledValue("DEKanalStatus").intValue() == 0;
 						this.deFehlerStatus = TlsDeFehlerStatus
-								.getZustand(resultat
-										.getData()
-										.getUnscaledValue("DEFehlerStatus").intValue()); //$NON-NLS-1$
+								.getZustand(resultat.getData()
+										.getUnscaledValue("DEFehlerStatus")
+										.intValue());
 						for (ITlsGloDeFehlerListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsGloDeFehler(this.aktiv,
 									this.deFehlerStatus);

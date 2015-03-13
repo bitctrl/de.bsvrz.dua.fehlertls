@@ -26,10 +26,16 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.hamcrest.Condition.Step;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.de.DeFaException;
+import de.bsvrz.dua.fehlertls.de.DeTypUnsupportedException;
 import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
@@ -42,9 +48,16 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * 
  * @version $Id$
  */
-public class Eak extends AbstraktGeraet {
+public class Eak extends TlsHierarchieElement {
 
-	/**
+	private static final Debug LOGGER = Debug.getLogger();
+	/*
+	 * lokale Liste der PID von DE, die nicht berücksichtigt werden, weil keine
+	 * Plugin verfügbar ist.
+	 */
+	private static Set<String> unsupportedDeTypes = new LinkedHashSet<String>();
+
+	/** 
 	 * Standardkonstruktor.
 	 * 
 	 * @param dav
@@ -55,36 +68,36 @@ public class Eak extends AbstraktGeraet {
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
 	protected Eak(ClientDavInterface dav, SystemObject objekt,
-			AbstraktGeraet vater) {
+			TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 		for (SystemObject deObj : this.objekt
 				.getNonMutableSet("De").getElements()) { //$NON-NLS-1$
-			if (deObj.isValid()) {
+			if (deObj.isValid() && ( !unsupportedDeTypes.contains(deObj.getType().getPid()))) {
 				try {
-					Data deKonfig = deObj.getConfigurationData(dav.getDataModel().getAttributeGroup("atg.de"));
-					if(deKonfig != null) {
-						if(deKonfig.getUnscaledValue("Cluster").intValue() == DUAKonstanten.NEIN){
+					Data deKonfig = deObj.getConfigurationData(dav
+							.getDataModel().getAttributeGroup("atg.de"));
+					if (deKonfig != null) {
+						if (deKonfig.getUnscaledValue("Cluster").intValue() == DUAKonstanten.NEIN) {
 							De de = new De(dav, deObj, this);
-							this.kinder.add(de);
+							addKind(de);
 						} else {
-							Debug
-							.getLogger()
-							.info(
-									"DE "
+							LOGGER
+									.info("DE "
 											+ deObj
-											+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");							
+											+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
 						}
 					} else {
-						Debug
-								.getLogger()
+						LOGGER
 								.warning(
 										"DE "
 												+ deObj
 												+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
 					}
+				} catch (DeTypUnsupportedException e) {
+					LOGGER.warning(e.getMessage(), deObj);
+					unsupportedDeTypes.add(e.getDeTypPid());
 				} catch (DeFaException e) {
-					Debug
-							.getLogger()
+					LOGGER
 							.warning(
 									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}

@@ -38,7 +38,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * 
  * @version $Id$
  */
-public class Kri extends AbstraktGeraet {
+public class Kri extends TlsHierarchieElement {
 
 	/**
 	 * Standardkonstruktor.
@@ -51,18 +51,9 @@ public class Kri extends AbstraktGeraet {
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
 	protected Kri(ClientDavInterface dav, SystemObject objekt,
-			AbstraktGeraet vater) {
+			TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 
-		/**
-		 * Initialisiere Inselbusse
-		 */
-		for (SystemObject inselBus : this.objekt.getNonMutableSet(
-				"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
-			if (inselBus.isValid()) {
-				this.kinder.add(new Inselbus(dav, inselBus, this));
-			}
-		}
 	}
 
 	/**
@@ -84,8 +75,7 @@ public class Kri extends AbstraktGeraet {
 						+ " Verbindung zum KRI oder KRI instand setzen");
 
 		for (De de : this.getErfassteDes()) {
-			de
-					.publiziereFehlerUrsache(zeitStempel,
+			de.publiziereFehlerUrsache(zeitStempel,
 							TlsFehlerAnalyse.KRI_DEFEKT);
 		}
 	}

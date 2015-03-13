@@ -38,7 +38,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * 
  * @version $Id$
  */
-public class Sm extends AbstraktGeraet {
+public class Sm extends TlsHierarchieElement {
 
 	/**
 	 * Standardkonstruktor.
@@ -51,12 +51,12 @@ public class Sm extends AbstraktGeraet {
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
 	protected Sm(ClientDavInterface dav, SystemObject objekt,
-			AbstraktGeraet vater) {
+			TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 		for (SystemObject eak : this.objekt
 				.getNonMutableSet("Eak").getElements()) { //$NON-NLS-1$
 			if (eak.isValid()) {
-				this.kinder.add(new Eak(dav, eak, this));
+				addKind(new Eak(dav, eak, this));
 			}
 		}
 	}

@@ -47,6 +47,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  */
 public class SingleMessageSender {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	private static DefaultBetriebsMeldungsIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
 
 	/**
@@ -91,9 +93,9 @@ public class SingleMessageSender {
 								.getLocalUser(), Constants.EMPTY_STRING,
 								DeFaApplikation.getAppName()), text);
 			}
-			Debug.getLogger().info(text); //$NON-NLS-1$
+			LOGGER.info(text); //$NON-NLS-1$
 		} else {
-			Debug.getLogger().info(
+			LOGGER.info(
 					obj + ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
 		}
 	}
