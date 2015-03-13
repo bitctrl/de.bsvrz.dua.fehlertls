@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.bitctrl.Constants;
@@ -84,6 +85,7 @@ public class DeFaApplikationTest implements IBmListener {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
+	@Ignore("Test nach entsprechender Vorbereitung nur manuell ausführbar")
 	@Test
 	public void test() throws Exception {
 		DAVTest.setTestParameter("kri1");

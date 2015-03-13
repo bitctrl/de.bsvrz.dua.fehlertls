@@ -24,6 +24,7 @@
 			</includes>
 			<excludes>
 				<exclude>de.bsvrz.*</exclude>
+				<exclude>com.bitctrl*</exclude>
 			</excludes>
 		</fileSet>
 	</fileSets>

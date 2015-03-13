@@ -31,6 +31,8 @@
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
 		<java.version>6</java.version>
+		<project.status>BETA</project.status>
+		<project.standDatum>2015-03-13</project.standDatum>
 	</properties>
 
 	<repositories>
@@ -91,7 +93,7 @@
 					<execution>
 						<id>runtime-jar</id>
 						<configuration>
-							<finalName>${project.artifactId}-runtime</finalName>
+							<finalName>${project.artifactId}</finalName>
 							<archive>
 								<manifest>
 									<addClasspath>true</addClasspath>
@@ -107,6 +109,7 @@
 							<excludes>
 								<exclude>**</exclude>
 							</excludes>
+							<classifier>runtime</classifier>
 						</configuration>
 						<goals>
 							<goal>jar</goal>
@@ -153,6 +156,7 @@
 						<configuration>
 							<show>private</show>
 							<finalName>${project.artifactId}-${project.version}-doc-design</finalName>
+							<classifier>design</classifier>
 						</configuration>
 					</execution>
 				</executions>
