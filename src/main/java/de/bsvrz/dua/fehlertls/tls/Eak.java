@@ -29,8 +29,6 @@ package de.bsvrz.dua.fehlertls.tls;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.hamcrest.Condition.Step;
-
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.config.SystemObject;
