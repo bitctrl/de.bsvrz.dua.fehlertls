@@ -200,5 +200,13 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
+	<distributionManagement>
+		<repository>
+			<id>bitctrl.nexus.snapshots</id>
+			<name>BitCtrl Nexus Snapshots Repository</name>
+			<url>http://bitctrlbuildserver:8081/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</distributionManagement>
+	
 </project>
