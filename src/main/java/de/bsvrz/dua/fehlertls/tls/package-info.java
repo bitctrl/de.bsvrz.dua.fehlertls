@@ -1,6 +1,6 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -26,7 +26,7 @@
 
 /**
  * Klassen zum Auslesen aller fuer die DeFa relevanten Konfigurations-Daten
- * (TLS-Hierarchie)
+ * (TLS-Hierarchie).
  */
 
 package de.bsvrz.dua.fehlertls.tls;

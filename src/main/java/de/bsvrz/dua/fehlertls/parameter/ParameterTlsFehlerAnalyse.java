@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -48,8 +48,7 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
- * @version $Id: ParameterTlsFehlerAnalyse.java 53669 2015-03-16 09:10:22Z
- *          peuker $
+ * @version $Id$
  */
 public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface {
 
@@ -76,7 +75,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	 * Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis zur
 	 * Fehlerermittlung abgewartet werden muss.
 	 */
-	private long zeitverzugFehlerErmittlung = Long.MIN_VALUE;;
+	private long zeitverzugFehlerErmittlung = Long.MIN_VALUE;
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
@@ -119,10 +118,9 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 				this,
 				objekt,
 				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(
-								DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
+						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+								ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -140,21 +138,18 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						this.zeitverzugFehlerErkennung = resultat
-								.getData()
-								.getTimeValue("ZeitverzugFehlerErkennung").getMillis(); //$NON-NLS-1$
-						this.zeitverzugFehlerErmittlung = resultat
-								.getData()
-								.getTimeValue("ZeitverzugFehlerErmittlung").getMillis(); //$NON-NLS-1$
+						this.zeitverzugFehlerErkennung = resultat.getData()
+								.getTimeValue("ZeitverzugFehlerErkennung")
+								.getMillis();
+						this.zeitverzugFehlerErmittlung = resultat.getData()
+								.getTimeValue("ZeitverzugFehlerErmittlung")
+								.getMillis();
 						for (final IParameterTlsFehlerAnalyseListener listener : this.listenerMenge) {
 							listener.aktualisiereParameterTlsFehlerAnalyse(
 									this.zeitverzugFehlerErkennung,

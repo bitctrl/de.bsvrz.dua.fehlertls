@@ -5,15 +5,14 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: VRZ3 Los E
+    Checkstyle-Configuration: FehlerTls Checkstyle
     Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <module name="JavadocMethod">
-      <property name="scope" value="protected"/>
-      <property name="logLoadErrors" value="true"/>
+      <property name="scope" value="public"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
     <module name="JavadocType">

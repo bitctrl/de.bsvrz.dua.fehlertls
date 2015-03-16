@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -105,12 +105,9 @@ public class DeFaApplikation implements StandardApplication {
 	 * @return der Name dieser Applikation
 	 */
 	public static final String getAppName() {
-		return "DeFa"; //$NON-NLS-1$
+		return "DeFa";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialize(final ClientDavInterface dav) throws Exception {
 		DeFaApplikation.sDav = dav;
@@ -122,25 +119,25 @@ public class DeFaApplikation implements StandardApplication {
 			final SystemObject geraeteObjekt = dav.getDataModel().getObject(
 					pidVonGeraet);
 			if (geraeteObjekt != null) {
-				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
+				if (geraeteObjekt.isOfType("typ.gerät")) {
 					this.geraete.add(geraeteObjekt);
 				} else {
-					DeFaApplikation.LOGGER
-							.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
+					DeFaApplikation.LOGGER.warning("Das uebergebene Objekt "
+							+ pidVonGeraet + " ist nicht vom Typ Geraet");
 				}
 			} else {
-				DeFaApplikation.LOGGER
-						.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
+				DeFaApplikation.LOGGER.warning("Das uebergebene Geraet "
+						+ pidVonGeraet + " existiert nicht");
 			}
 		}
 
 		if (this.parameterModulPid == null) {
 			for (final SystemObject obj : dav.getDataModel()
-					.getType("typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
+					.getType("typ.tlsFehlerAnalyse").getElements()) {
 				if (obj.isValid()) {
 					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
 						DeFaApplikation.LOGGER
-								.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+								.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
 						break;
 					}
 					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
@@ -161,34 +158,29 @@ public class DeFaApplikation implements StandardApplication {
 
 		if (DeFaApplikation.tlsFehlerAnalyseObjekte == null) {
 			throw new RuntimeException(
-					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
-		} else {
-			ParameterTlsFehlerAnalyse.getInstanz(dav,
-					DeFaApplikation.tlsFehlerAnalyseObjekte);
-			DeFaApplikation.LOGGER
-			.config("Es werden die Parameter von " + DeFaApplikation.tlsFehlerAnalyseObjekte //$NON-NLS-1$
-							+ " verwendet"); //$NON-NLS-1$
+					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\"");
 		}
+		ParameterTlsFehlerAnalyse.getInstanz(dav,
+				DeFaApplikation.tlsFehlerAnalyseObjekte);
+		DeFaApplikation.LOGGER.config("Es werden die Parameter von "
+				+ DeFaApplikation.tlsFehlerAnalyseObjekte + " verwendet");
 
 		if (this.geraete.isEmpty()) {
 			DeFaApplikation.LOGGER
-			.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
+			.warning("Es wurden keine gueltigen Geraete uebergeben");
 		} else {
 			TlsHierarchie.initialisiere(dav, geraete);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void parseArguments(final ArgumentList argumente) throws Exception {
 
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(final Thread t, final Throwable e) {
-				DeFaApplikation.LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
-						" unerwartetem Fehler beendet", e); //$NON-NLS-1$
+				DeFaApplikation.LOGGER.error("Applikation wird wegen"
+						+ " unerwartetem Fehler beendet", e);
 				e.printStackTrace();
 				Runtime.getRuntime().exit(-1);
 			}
@@ -202,8 +194,8 @@ public class DeFaApplikation implements StandardApplication {
 					.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
-		this.geraetePids = argumente
-				.fetchArgument("-geraet").asNonEmptyString().split(","); //$NON-NLS-1$ //$NON-NLS-2$
+		this.geraetePids = argumente.fetchArgument("-geraet")
+				.asNonEmptyString().split(",");
 
 		argumente.fetchUnusedArguments();
 	}

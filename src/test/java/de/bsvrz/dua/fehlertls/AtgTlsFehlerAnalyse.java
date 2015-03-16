@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -98,8 +98,8 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	private AtgTlsFehlerAnalyse(final SystemObject obj) throws Exception {
 		final DataDescription datenBeschreibung = new DataDescription(DAVTest
 				.getDav().getDataModel()
-				.getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
-				DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
+				.getAttributeGroup("atg.tlsFehlerAnalyse"), DAVTest.getDav()
+				.getDataModel().getAspect("asp.analyse"));
 		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung,
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
@@ -117,9 +117,6 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] results) {
 		if (results != null) {
@@ -127,9 +124,9 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 				if ((result != null) && (result.getData() != null)) {
 					synchronized (this) {
 						this.aktuellerFehler = TlsFehlerAnalyse
-								.getZustand(result
-										.getData()
-										.getUnscaledValue("TlsFehlerAnalyse").intValue()); //$NON-NLS-1$
+								.getZustand(result.getData()
+										.getUnscaledValue("TlsFehlerAnalyse")
+										.intValue());
 						for (final IAtgTlsFehlerAnalyseListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 						}

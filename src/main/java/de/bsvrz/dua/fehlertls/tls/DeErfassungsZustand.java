@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -52,36 +52,36 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
-		IZyklusSteuerungsParameterListener {
+IZyklusSteuerungsParameterListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * GRUND_PRAEFIX.
 	 */
-	protected static final String GRUND_PRAEFIX = "Keine TLS-Fehleranalyse moeglich. "; //$NON-NLS-1$
+	protected static final String GRUND_PRAEFIX = "Keine TLS-Fehleranalyse moeglich. ";
 
 	/**
 	 * indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht.
 	 */
-	protected Boolean aktiv;
+	private Boolean aktiv;
 
 	/**
 	 * TLS-DE-Fehler-Status.
 	 */
-	protected TlsDeFehlerStatus deFehlerStatus;
+	private TlsDeFehlerStatus deFehlerStatus;
 
 	/**
 	 * die entsprechende Erassungsintervalldauer (in ms), wenn das DE auf
 	 * zyklischen Abruf parametriert ist und -1 sonst.
 	 */
-	protected Long erfassungsIntervallDauer;
+	private Long erfassungsIntervallDauer;
 
 	/**
 	 * aktueller Erfassungszustand bzgl. der DeFa des mit dieser Instanz
 	 * assoziierten DE.
 	 */
-	protected Zustand aktuellerZustand;
+	private Zustand aktuellerZustand;
 
 	/**
 	 * Menge aller Listener dieses Objektes.
@@ -91,7 +91,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 	/**
 	 * das erfasste DE.
 	 */
-	private SystemObject obj;
+	private final SystemObject obj;
 
 	/**
 	 * Standardkonstruktor.
@@ -110,13 +110,10 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		this.aktuellerZustand = new Zustand();
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
-		DeErfassungsZustand.LOGGER
-				.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
+		DeErfassungsZustand.LOGGER.info("DeFa-Zustand von " + objekt
+				+ " wird ab sofort ueberwacht");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void aktualisiereTlsGloDeFehler(final boolean aktiv1,
 			final TlsDeFehlerStatus deFehlerStatus1) {
@@ -127,9 +124,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void aktualisiereZyklusSteuerungsParameter(
 			final long erfassungsIntervallDauer1) {
@@ -199,7 +193,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		 * die entsprechende Erassungsintervalldauer (in ms), wenn das DE auf
 		 * zyklischen Abruf parametriert ist und -1 sonst.
 		 */
-		private long erfassungsIntervallDauer = -1;
+		private long intervallDauer = -1;
 
 		/**
 		 * Grund fuer die Tatsache, dass dieser Zustand den Wert nicht
@@ -227,13 +221,13 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 										debug += "T >= 0 ("
 												+ DeErfassungsZustand.this.erfassungsIntervallDauer
 												+ "s)\n";
-										this.erfassungsIntervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
+										this.intervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
 									} else {
 										debug += "T < 0 ("
 												+ DeErfassungsZustand.this.erfassungsIntervallDauer
 												+ "s)\n";
-										this.grund = "TLS-Fehlerueberwachung nicht moeglich, da keine " + //$NON-NLS-1$
-												"zyklische Abgabe von Meldungen eingestellt"; //$NON-NLS-1$
+										this.grund = "TLS-Fehlerueberwachung nicht moeglich, da keine "
+												+ "zyklische Abgabe von Meldungen eingestellt";
 									}
 								} else {
 									debug += "T == <<null>>\n";
@@ -242,7 +236,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 							} else {
 								debug += "DE-Kanal ist passiviert\n";
 								this.grund = DeErfassungsZustand.GRUND_PRAEFIX
-										+ "DE-Kanal ist passiviert"; //$NON-NLS-1$
+										+ "DE-Kanal ist passiviert";
 							}
 						} else {
 							debug += "DE-Kanalzustand ist == <<null>>\n";
@@ -251,14 +245,14 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 					} else {
 						debug += "DE-Fehlerstatus != TlsDeFehlerStatus.OK ("
 								+ DeErfassungsZustand.this.deFehlerStatus
-								.toString() + ")\n";
+										.toString() + ")\n";
 						this.grund = DeErfassungsZustand.GRUND_PRAEFIX
-								+ "DE-Fehler(" + //$NON-NLS-1$
-								DeErfassungsZustand.this.deFehlerStatus
-										.toString()
-								+ "): " //$NON-NLS-1$
+								+ "DE-Fehler("
 								+ DeErfassungsZustand.this.deFehlerStatus
-										.getText();
+								.toString()
+								+ "): "
+								+ DeErfassungsZustand.this.deFehlerStatus
+								.getText();
 					}
 				} else {
 					debug += "DE-Fehlerstatus == <<null>>\n";
@@ -266,8 +260,9 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 				}
 			}
 
-			DeErfassungsZustand.LOGGER
-					.info("Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj + "):\n" + this + "\nGrund:\n" + debug); //$NON-NLS-1$ //$NON-NLS-2$
+			DeErfassungsZustand.LOGGER.info("Neuer Erfassungszusstand ("
+					+ DeErfassungsZustand.this.obj + "):\n" + this
+					+ "\nGrund:\n" + debug);
 		}
 
 		/**
@@ -301,7 +296,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		 * @return die aktuelle Erfassungsintervalldauer
 		 */
 		public final long getErfassungsIntervallDauer() {
-			return this.erfassungsIntervallDauer;
+			return this.intervallDauer;
 		}
 
 		/**
@@ -318,12 +313,9 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		 * @return ob dieses DE im Sinne der DeFa als <code>erfasst</code> gilt
 		 */
 		public final boolean isErfasst() {
-			return this.erfassungsIntervallDauer >= 0;
+			return this.intervallDauer >= 0;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean equals(final Object obj1) {
 			boolean gleich = false;
@@ -331,7 +323,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 			if ((obj1 != null) && (obj1 instanceof Zustand)) {
 				final Zustand that = (Zustand) obj1;
 				gleich = (this.initialisiert == that.initialisiert)
-						&& (this.erfassungsIntervallDauer == that.erfassungsIntervallDauer);
+						&& (this.intervallDauer == that.intervallDauer);
 				if (gleich) {
 					if ((this.grund != null) && (that.grund != null)) {
 						gleich &= this.grund.equals(that.grund);
@@ -344,27 +336,41 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 			return gleich;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public String toString() {
 			String s = Constants.EMPTY_STRING;
 
 			if (initialisiert) {
-				if (this.erfassungsIntervallDauer >= 0) {
-					s += "erfasst (Intervalldauer: " + //$NON-NLS-1$
-							DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-									this.erfassungsIntervallDauer)) + ")"; //$NON-NLS-1$
+				if (this.intervallDauer >= 0) {
+					s += "erfasst (Intervalldauer: "
+							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+									this.intervallDauer)) + ")";
 				} else {
 					s += this.grund;
 				}
 			} else {
-				s += "nicht initialisiert (T = " + erfassungsIntervallDauer
-						+ ", Grund: " + this.grund + ")";
+				s += "nicht initialisiert (T = " + intervallDauer + ", Grund: "
+						+ this.grund + ")";
 			}
 
 			return s;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = (prime * result) + getOuterType().hashCode();
+			result = (prime * result)
+					+ ((grund == null) ? 0 : grund.hashCode());
+			result = (prime * result) + (initialisiert ? 1231 : 1237);
+			result = (prime * result)
+					+ (int) (intervallDauer ^ (intervallDauer >>> 32));
+			return result;
+		}
+
+		private DeErfassungsZustand getOuterType() {
+			return DeErfassungsZustand.this;
 		}
 
 	}

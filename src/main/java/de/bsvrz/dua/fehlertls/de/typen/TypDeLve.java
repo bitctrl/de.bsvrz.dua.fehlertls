@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -40,32 +40,23 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  */
 public class TypDeLve extends AbstraktDeTyp {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public long getErfassungsIntervall(final Data parameter) {
-		return parameter
-				.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
+		return parameter.getUnscaledValue("IntervallDauerKurzZeitDaten")
+				.longValue() * 15L * 1000L;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getBetriebsParameterAtgPid() {
-		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
+		return "atg.tlsLveBetriebsParameter";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected DataDescriptionPid[] getDataIdentifikations() {
 
 		return new DataDescriptionPid[] { new DataDescriptionPid(
-				"atg.tlsLveErgebnisMeldungVersion0Bis4", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0) //$NON-NLS-1$
-		};
+				"atg.tlsLveErgebnisMeldungVersion0Bis4",
+				DUAKonstanten.ASP_TLS_ANTWORT, (short) 0) };
 
 	}
 

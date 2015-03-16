@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -70,55 +70,51 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		/**
 		 * Initialisiere Steuermodule
 		 */
-		for (final SystemObject komPartner : this.objekt.getNonMutableSet(
-				"AnschlussPunkteKommunikationsPartner").getElements()) { //$NON-NLS-1$
+		for (final SystemObject komPartner : getObjekt().getNonMutableSet(
+				"AnschlussPunkteKommunikationsPartner").getElements()) {
 			if (komPartner.isValid()) {
 				final Data konfigDatum = komPartner
-						.getConfigurationData(TlsHierarchie.konfigAtg);
+						.getConfigurationData(TlsHierarchie.getWurzel()
+								.getApKonfigAtg());
 				if (konfigDatum != null) {
 					final SystemObject steuerModul = konfigDatum
-							.getReferenceValue("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+							.getReferenceValue("KommunikationsPartner")
+							.getSystemObject();
 					if (steuerModul != null) {
-						if (steuerModul.isOfType("typ.steuerModul")) { //$NON-NLS-1$
+						if (steuerModul.isOfType("typ.steuerModul")) {
 							addKind(new Sm(dav, steuerModul, this));
 						} else {
 							AnschlussPunkt.LOGGER
-									.warning("An " + komPartner + //$NON-NLS-1$
-									" (Inselbus: "
-									+ this.objekt
-									+ ") duerfen nur Steuermodule definiert sein. Aber: "
-									+ steuerModul
-									+ " (Typ: " + steuerModul.getType() + //$NON-NLS-1$
-									")"); //$NON-NLS-1$
+							.warning("An "
+											+ komPartner
+											+ " (Inselbus: "
+											+ getObjekt()
+											+ ") duerfen nur Steuermodule definiert sein. Aber: "
+											+ steuerModul + " (Typ: "
+											+ steuerModul.getType() + ")");
 						}
 					} else {
-						AnschlussPunkt.LOGGER.warning("An " + komPartner + //$NON-NLS-1$
-								" (Inselbus: " + this.objekt + //$NON-NLS-1$
-								") ist kein Steuermodul definiert"); //$NON-NLS-1$
+						AnschlussPunkt.LOGGER.warning("An " + komPartner
+								+ " (Inselbus: " + getObjekt()
+								+ ") ist kein Steuermodul definiert");
 					}
 				} else {
-					AnschlussPunkt.LOGGER
-							.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
-									" (Inselbus: " + this.objekt + //$NON-NLS-1$
-									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
-									"Das assoziierte Steuermodul wird ignoriert"); //$NON-NLS-1$
+					AnschlussPunkt.LOGGER.warning("Konfiguration von "
+							+ komPartner + " (Inselbus: " + getObjekt()
+							+ ") konnte nicht ausgelesen werden. "
+							+ "Das assoziierte Steuermodul wird ignoriert");
 				}
 			}
 		}
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.INSELBUS;
 	}
 
 	/**
-	 * {@inheritDoc}<br>
-	 *
 	 * Gibt <code>true</code> zurueck, wenn:<br>
 	 * 1. mehr als ein (wenigstens teilweise erfasstes) Steuermodul
 	 * angeschlossen ist <b>und</b><br>
@@ -195,9 +191,6 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		return kannHierPublizieren;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(final long zeitStempel) {
 		/**
@@ -260,13 +253,13 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 
 		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
 				.keySet().size()) {
-			this.einzelPublikator
-					.publiziere(
-							MessageGrade.ERROR,
-							this.objekt,
-							"Modem am Inselbus "
-									+ this.objekt
-									+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
+			getEinzelPublikator()
+			.publiziere(
+					MessageGrade.ERROR,
+					getObjekt(),
+					"Modem am Inselbus "
+							+ getObjekt()
+							+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
 
 			for (final TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (final De de : timeOutSteuerModuleMitTimeOutDes
@@ -300,16 +293,19 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 			if (steuerModulArray.length > 0) {
 				steuerModule = steuerModulArray[0].getObjekt().toString();
 				for (int i = 1; i < steuerModulArray.length; i++) {
-					steuerModule += ", " + steuerModulArray[i].getObjekt().toString(); //$NON-NLS-1$
+					steuerModule += ", "
+							+ steuerModulArray[i].getObjekt().toString();
 				}
 			}
 
-			this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
-					"Inselbus " + this.objekt
-							+ " gestört: Für die DE der Steuermodule "
-							+ steuerModule
-							+ " sind keine Daten verfügbar. Inselbus "
-							+ this.objekt + " instand setzen");
+			getEinzelPublikator().publiziere(
+					MessageGrade.ERROR,
+					getObjekt(),
+					"Inselbus " + getObjekt()
+					+ " gestört: Für die DE der Steuermodule "
+					+ steuerModule
+					+ " sind keine Daten verfügbar. Inselbus "
+					+ getObjekt() + " instand setzen");
 
 			for (final TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (final De de : timeOutSteuerModuleMitTimeOutDes

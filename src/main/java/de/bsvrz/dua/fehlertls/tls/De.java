@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -148,16 +148,16 @@ public class De extends TlsHierarchieElement implements
 
 		if (De.fehlerDatenBeschreibung == null) {
 			De.fehlerDatenBeschreibung = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
+					.getAttributeGroup("atg.tlsFehlerAnalyse"), dav
+					.getDataModel().getAspect("asp.analyse"));
 		}
 
 		for (final DataDescription messWertBeschreibung : DeTypLader.getDeTyp(
 				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
-			De.LOGGER
-			.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
+			De.LOGGER.info("Ueberwache " + getObjekt().getPid() + ", "
+					+ messWertBeschreibung);
 		}
 
 		try {
@@ -168,7 +168,7 @@ public class De extends TlsHierarchieElement implements
 					+ " nicht möglich", e);
 		}
 
-		new DeErfassungsZustand(TlsHierarchieElement.sDav, this.getObjekt())
+		new DeErfassungsZustand(TlsHierarchieElement.getDav(), this.getObjekt())
 		.addListener(this);
 		ParameterTlsFehlerAnalyse.getInstanz(dav,
 				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
@@ -205,18 +205,19 @@ public class De extends TlsHierarchieElement implements
 			final TlsFehlerAnalyse tlsFehler) {
 		this.zeitStempelLetzterPublizierterFehler = fehlerZeit;
 
-		final Data datum = TlsHierarchieElement.sDav
-				.createData(De.fehlerDatenBeschreibung.getAttributeGroup());
+		final Data datum = TlsHierarchieElement.getDav().createData(
+				De.fehlerDatenBeschreibung.getAttributeGroup());
 		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode());
 		try {
-			TlsHierarchieElement.sDav.sendData(new ResultData(this.objekt,
-					De.fehlerDatenBeschreibung, fehlerZeit, datum));
+			TlsHierarchieElement.getDav().sendData(
+					new ResultData(getObjekt(), De.fehlerDatenBeschreibung,
+							fehlerZeit, datum));
 		} catch (final DataNotSubscribedException e) {
-			De.LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
+			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt()
 					+ " nicht publiziert werden. Grund:\n"
 					+ e.getLocalizedMessage());
 		} catch (final SendSubscriptionNotConfirmed e) {
-			De.LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
+			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt()
 					+ " nicht publiziert werden. Grund:\n"
 					+ e.getLocalizedMessage());
 		}
@@ -243,25 +244,16 @@ public class De extends TlsHierarchieElement implements
 		return this.inTime;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean kannFehlerHierPublizieren(final long zeitStempel) {
 		return zeitStempel > this.zeitStempelLetzterPublizierterFehler;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(final long zeitStempel) {
 		this.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.UNBEKANNT);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public synchronized void aktualisiereParameterTlsFehlerAnalyse(
 			final long zeitverzugFehlerErkennung,
@@ -272,9 +264,6 @@ public class De extends TlsHierarchieElement implements
 		this.versucheErwartung();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public synchronized void aktualisiereErfassungsZustand(final Zustand zustand) {
 		this.aktuellerZustand = zustand;
@@ -319,18 +308,20 @@ public class De extends TlsHierarchieElement implements
 						De.LOGGER.info("Erwartung fuer " + De.this.getObjekt()
 								+ " ausgeplant.");
 						De.fehlerWecker.setWecker(this, ObjektWecker.AUS);
-						this.einzelPublikator.publiziere(MessageGrade.WARNING,
-								this.objekt, this.objekt + ": "
+						getEinzelPublikator().publiziere(
+								MessageGrade.WARNING,
+								getObjekt(),
+								getObjekt() + ": "
 										+ this.aktuellerZustand.getGrund());
 					}
 				} else {
 					if (this.aktuellerZustand == null) {
 						De.LOGGER.info("Aktueller Erfassungszustand von "
-								+ De.this.objekt + " ist (noch) nicht bekannt");
+								+ getObjekt() + " ist (noch) nicht bekannt");
 					} else {
 						De.LOGGER
 						.info("DE "
-								+ De.this.objekt
+								+ getObjekt()
 								+ " ist (noch) nicht vollstaendig initialisiert:\n"
 								+ this.aktuellerZustand);
 					}
@@ -338,15 +329,12 @@ public class De extends TlsHierarchieElement implements
 			}
 
 		} else {
-			De.LOGGER.warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
-					" erwarten, da noch keine (sinnvollen) " + //$NON-NLS-1$
-					"Parameter zur TLS-Fehleranalyse empfangen wurden"); //$NON-NLS-1$
+			De.LOGGER.warning("Kann keine Daten fuer " + getObjekt()
+					+ " erwarten, da noch keine (sinnvollen) "
+					+ "Parameter zur TLS-Fehleranalyse empfangen wurden");
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object,
 			final DataDescription dataDescription, final byte state) {
@@ -362,18 +350,12 @@ public class De extends TlsHierarchieElement implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void alarm() {
 		/**
@@ -414,11 +396,11 @@ public class De extends TlsHierarchieElement implements
 			+ (2 * De.STANDARD_ZEIT_ABSTAND));
 		} else {
 			if (zustand.isInitialisiert()) {
-				De.this.einzelPublikator.publiziere(MessageGrade.WARNING,
-						this.objekt, this.objekt + ": " + zustand.getGrund());
+				getEinzelPublikator().publiziere(MessageGrade.WARNING,
+						getObjekt(), getObjekt() + ": " + zustand.getGrund());
 			} else {
-				De.LOGGER.warning(De.this.objekt
-						+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
+				De.LOGGER.warning(getObjekt()
+						+ " ist (noch) nicht vollstaendig initialisiert");
 			}
 		}
 	}

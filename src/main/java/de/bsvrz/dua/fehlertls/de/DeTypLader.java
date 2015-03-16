@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -32,6 +32,7 @@ import java.util.Map;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dav.daf.main.config.SystemObjectType;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Dient zum dynamischen Laden der einzelnen DE-Typ-Beschreibungen. Diese
@@ -45,6 +46,8 @@ import de.bsvrz.dav.daf.main.config.SystemObjectType;
  */
 public final class DeTypLader {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Der Name dieses Packages. Hier müssen auch alle anderen Klassen liegen,
 	 * die einen DE-Typ bzgl. der SWE "DE Fehleranalyse fehlende Messdaten"
@@ -52,7 +55,7 @@ public final class DeTypLader {
 	 * unterstützen.
 	 */
 	private static final String PACKAGE = DeTypLader.class.getPackage()
-			.getName() + ".typen"; //$NON-NLS-1$
+			.getName() + ".typen";
 
 	/**
 	 * speichert alle statischen Instanzen von DE-Typen.
@@ -94,12 +97,14 @@ public final class DeTypLader {
 				try {
 					klasse = ClassLoader.getSystemClassLoader().loadClass(
 							DeTypLader.PACKAGE
-							+ "." + //$NON-NLS-1$
-							DeTypLader.getKlassenNameVonPid(deTypObj
+							+ "."
+									+ DeTypLader.getKlassenNameVonPid(deTypObj
 									.getPid()));
 					deTyp = (IDeTyp) klasse.newInstance();
 					DeTypLader.typen.put(deTypObj, deTyp);
-				} catch (final Throwable e) {
+				} catch (final Exception e) {
+					DeTypLader.LOGGER.warning(e.getClass().getName() + ": "
+							+ e.getLocalizedMessage());
 					throw new DeTypUnsupportedException(deTypObj.getPid());
 				}
 			}
@@ -125,20 +130,20 @@ public final class DeTypLader {
 	private static String getKlassenNameVonPid(final String pid) {
 		String dummy = pid;
 
-		dummy = dummy.replaceAll("ü", "ue"); //$NON-NLS-1$ //$NON-NLS-2$
-		dummy = dummy.replaceAll("Ü", "Ue"); //$NON-NLS-1$ //$NON-NLS-2$
-		dummy = dummy.replaceAll("ä", "ae"); //$NON-NLS-1$ //$NON-NLS-2$
-		dummy = dummy.replaceAll("Ä", "Ae"); //$NON-NLS-1$ //$NON-NLS-2$
-		dummy = dummy.replaceAll("ö", "oe"); //$NON-NLS-1$ //$NON-NLS-2$
-		dummy = dummy.replaceAll("Ö", "Oe"); //$NON-NLS-1$ //$NON-NLS-2$
-		dummy = dummy.replaceAll("ß", "ss"); //$NON-NLS-1$ //$NON-NLS-2$
+		dummy = dummy.replaceAll("ü", "ue");
+		dummy = dummy.replaceAll("Ü", "Ue");
+		dummy = dummy.replaceAll("ä", "ae");
+		dummy = dummy.replaceAll("Ä", "Ae");
+		dummy = dummy.replaceAll("ö", "oe");
+		dummy = dummy.replaceAll("Ö", "Oe");
+		dummy = dummy.replaceAll("ß", "ss");
 		dummy = dummy.substring(0, 1).toUpperCase()
 				+ dummy.substring(1, dummy.length());
 
-		String klassenName = ""; //$NON-NLS-1$
+		String klassenName = "";
 		for (int i = 0; i < dummy.length();) {
 			final String zeichen = dummy.substring(i, i + 1);
-			if (zeichen.equals(".")) { //$NON-NLS-1$
+			if (".".equals(zeichen)) {
 				i++;
 				klassenName += dummy.substring(i, i + 1).toUpperCase();
 			} else {

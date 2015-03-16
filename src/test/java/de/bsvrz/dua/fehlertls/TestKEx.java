@@ -26,6 +26,8 @@
 
 package de.bsvrz.dua.fehlertls;
 
+import java.util.Random;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -51,6 +53,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * @version $Id$
  */
 public final class TestKEx implements ClientSenderInterface {
+
+	/**
+	 * Randomizer.
+	 */
+	private static final Random RANDOM = new Random(System.currentTimeMillis());
 
 	/**
 	 * alle DEs.
@@ -136,20 +143,20 @@ public final class TestKEx implements ClientSenderInterface {
 		TestKEx.sDav = dav;
 
 		iB1SM1UFD1DE1 = dav.getDataModel()
-				.getObject("kri1.ib1.sm1.eakufd1.de1"); //$NON-NLS-1$
+				.getObject("kri1.ib1.sm1.eakufd1.de1");
 		iB1SM1UFD1DE2 = dav.getDataModel()
-				.getObject("kri1.ib1.sm1.eakufd1.de2"); //$NON-NLS-1$
+				.getObject("kri1.ib1.sm1.eakufd1.de2");
 		iB1SM1LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib1.sm1.eaklve1.de1"); //$NON-NLS-1$
+				.getObject("kri1.ib1.sm1.eaklve1.de1");
 
 		iB2SM3LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm3.eaklve1.de1"); //$NON-NLS-1$
+				.getObject("kri1.ib2.sm3.eaklve1.de1");
 		iB2SM1LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm1.eaklve1.de1"); //$NON-NLS-1$
+				.getObject("kri1.ib2.sm1.eaklve1.de1");
 		iB2SM1UFD1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm1.eakufd1.de1"); //$NON-NLS-1$
+				.getObject("kri1.ib2.sm1.eakufd1.de1");
 		iB2SM1UFD1DE2 = dav.getDataModel()
-				.getObject("kri1.ib2.sm1.eakufd1.de2"); //$NON-NLS-1$
+				.getObject("kri1.ib2.sm1.eakufd1.de2");
 		iB2SM2LVE1DE1 = dav.getDataModel()
 				.getObject("kri1.ib2.sm2.eaklve1.de1");
 		iB2SM2LVE1DE2 = dav.getDataModel()
@@ -287,7 +294,7 @@ public final class TestKEx implements ClientSenderInterface {
 		AttributeGroup atg = null;
 
 		if (de.isOfType("typ.deUfd")) {
-			switch (DAVTest.r.nextInt(3)) {
+			switch (TestKEx.RANDOM.nextInt(3)) {
 			case 0:
 				atg = TestKEx.sDav.getDataModel().getAttributeGroup(
 						"atg.tlsUfdErgebnisMeldungHelligkeitHK");
@@ -310,20 +317,20 @@ public final class TestKEx implements ClientSenderInterface {
 			}
 		} else {
 			atg = TestKEx.sDav.getDataModel().getAttributeGroup(
-					"atg.tlsLveErgebnisMeldungVersion0Bis4"); //$NON-NLS-1$
+					"atg.tlsLveErgebnisMeldungVersion0Bis4");
 			datum = TestKEx.sDav.createData(atg);
 
-			datum.getTimeValue("T").setMillis(0); //$NON-NLS-1$
-			datum.getUnscaledValue("qKfz").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("qLkwÄ").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("vPkwÄ").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("vLkwÄ").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("tNetto").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("b").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("sKfz").set(0); //$NON-NLS-1$
-			datum.getUnscaledValue("vKfz").set(0); //$NON-NLS-1$
-			datum.getArray("qPkwÄGeschwKlasse").setLength(0); //$NON-NLS-1$
-			datum.getArray("qLkwÄGeschwKlasse").setLength(0); //$NON-NLS-1$
+			datum.getTimeValue("T").setMillis(0);
+			datum.getUnscaledValue("qKfz").set(0);
+			datum.getUnscaledValue("qLkwÄ").set(0);
+			datum.getUnscaledValue("vPkwÄ").set(0);
+			datum.getUnscaledValue("vLkwÄ").set(0);
+			datum.getUnscaledValue("tNetto").set(0);
+			datum.getUnscaledValue("b").set(0);
+			datum.getUnscaledValue("sKfz").set(0);
+			datum.getUnscaledValue("vKfz").set(0);
+			datum.getArray("qPkwÄGeschwKlasse").setLength(0);
+			datum.getArray("qLkwÄGeschwKlasse").setLength(0);
 		}
 
 		final ResultData sendeDatum = new ResultData(de, new DataDescription(
@@ -360,22 +367,22 @@ public final class TestKEx implements ClientSenderInterface {
 			throw new RuntimeException(e1);
 		}
 
-		if (de.isOfType("typ.deLve")) { //$NON-NLS-1$
-			datenSatz.getUnscaledValue("VersionKurzZeitDaten").set(0); //$NON-NLS-1$
-			datenSatz
-					.getUnscaledValue("IntervallDauerKurzZeitDaten").set(zyklus >= 0 ? zyklus / (15L * 1000L) : 15L * 1000L); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("VersionLangZeitDaten").set(10); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("IntervallDauerLangZeit").set(129); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("alpha1").set(1); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("alpha2").set(1); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("LängenGrenzWert").set(400); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("ArtMittelWertBildung").set(0); //$NON-NLS-1$
-			datenSatz.getUnscaledValue("StartMittelWertBildung").set(0); //$NON-NLS-1$
+		if (de.isOfType("typ.deLve")) {
+			datenSatz.getUnscaledValue("VersionKurzZeitDaten").set(0);
+			datenSatz.getUnscaledValue("IntervallDauerKurzZeitDaten").set(
+					zyklus >= 0 ? zyklus / (15L * 1000L) : 15L * 1000L);
+			datenSatz.getUnscaledValue("VersionLangZeitDaten").set(10);
+			datenSatz.getUnscaledValue("IntervallDauerLangZeit").set(129);
+			datenSatz.getUnscaledValue("alpha1").set(1);
+			datenSatz.getUnscaledValue("alpha2").set(1);
+			datenSatz.getUnscaledValue("LängenGrenzWert").set(400);
+			datenSatz.getUnscaledValue("ArtMittelWertBildung").set(0);
+			datenSatz.getUnscaledValue("StartMittelWertBildung").set(0);
 		} else {
-			datenSatz
-					.getUnscaledValue("Erfassungsperiodendauer").set(zyklus >= 0 ? zyklus / 1000L : 60); //$NON-NLS-1$
-			datenSatz
-					.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0); //$NON-NLS-1$
+			datenSatz.getUnscaledValue("Erfassungsperiodendauer").set(
+					zyklus >= 0 ? zyklus / 1000L : 60);
+			datenSatz.getUnscaledValue("Übertragungsverfahren").set(
+					zyklus >= 0 ? 1 : 0);
 		}
 
 		final ResultData neuerParameter = new ResultData(de,
@@ -385,7 +392,7 @@ public final class TestKEx implements ClientSenderInterface {
 						.getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 						System.currentTimeMillis(), datenSatz);
 		TestKEx.sDav.sendData(neuerParameter);
-		System.out.println("Sende Betriebsparameter:\n" + neuerParameter); //$NON-NLS-1$
+		System.out.println("Sende Betriebsparameter:\n" + neuerParameter);
 	}
 
 	/**
@@ -420,7 +427,7 @@ public final class TestKEx implements ClientSenderInterface {
 		} else if (status.equals(DeStatus.NUTZ_DATEN)) {
 			this.sendeDatum(de, zeitStempel);
 		} else if (status.equals(DeStatus.ZYKLISCH_AN)) {
-			if (de.isOfType("typ.deUfd")) { //$NON-NLS-1$
+			if (de.isOfType("typ.deUfd")) {
 				this.setBetriebsParameter(de, 60L * 1000L);
 			} else {
 				this.setBetriebsParameter(de, 15L * 1000L);
@@ -461,18 +468,12 @@ public final class TestKEx implements ClientSenderInterface {
 				iB2SM1UFD1DE1, iB2SM1UFD1DE2 };
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object,
 			final DataDescription dataDescription, final byte state) {
 		// Quellenanmeldung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

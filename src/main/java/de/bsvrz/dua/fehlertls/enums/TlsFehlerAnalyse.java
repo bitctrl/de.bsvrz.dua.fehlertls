@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -54,41 +54,41 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 	 * Fehlerursache konnte nicht ermittelt werden.
 	 */
 	public static final TlsFehlerAnalyse UNBEKANNT = new TlsFehlerAnalyse(
-			"unbekannte Ursache", 0); //$NON-NLS-1$
+			"unbekannte Ursache", 0);
 
 	/**
 	 * Verbindung zum KRI xxx oder KRI selbst defekt. Verbindung zum KRI oder
 	 * KRI instand setzen
 	 */
 	public static final TlsFehlerAnalyse KRI_DEFEKT = new TlsFehlerAnalyse(
-			"KRI oder Verbindung zum KRI defekt", 1); //$NON-NLS-1$
+			"KRI oder Verbindung zum KRI defekt", 1);
 
 	/**
 	 * Modem am Inselbus xxx oder Inselbus selbst defekt. Modem oder Inselbus
 	 * instand setzen
 	 */
 	public static final TlsFehlerAnalyse INSELBUS_MODEM_ODER_INSELBUS_DEFEKT = new TlsFehlerAnalyse(
-			"Modem-Inselbus oder Inselbus defekt", 2); //$NON-NLS-1$
+			"Modem-Inselbus oder Inselbus defekt", 2);
 
 	/**
 	 * Inselbus xxx gestört: Für die DE der Steuermodule x1, x2,.. sind keine
 	 * Daten verfügbar. Inselbus xxx instand setzen
 	 */
 	public static final TlsFehlerAnalyse INSELBUS_DEFEKT = new TlsFehlerAnalyse(
-			"Inselbus defekt", 3); //$NON-NLS-1$
+			"Inselbus defekt", 3);
 
 	/**
 	 * Modem am Steuermodul x oder Steuermodul defekt. Modem am Steuermodul x
 	 * oder Steuermodul instand setzen
 	 */
 	public static final TlsFehlerAnalyse SM_MODEM_ODER_SM_DEFEKT = new TlsFehlerAnalyse(
-			"Modem-Steuermodul oder Steuermodul defekt", 4); //$NON-NLS-1$
+			"Modem-Steuermodul oder Steuermodul defekt", 4);
 
 	/**
 	 * EAK x am Steuermodul y defekt. EAK x am Steuermodul y instand setzen
 	 */
 	public static final TlsFehlerAnalyse EAK_AN_SM_DEFEKT = new TlsFehlerAnalyse(
-			"EAK am Steuermodul defekt", 5); //$NON-NLS-1$
+			"EAK am Steuermodul defekt", 5);
 
 	/**
 	 * Standardkonstruktor.

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -68,8 +68,8 @@ public class Eak extends TlsHierarchieElement {
 	protected Eak(final ClientDavInterface dav, final SystemObject objekt,
 			final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
-		for (final SystemObject deObj : this.objekt
-				.getNonMutableSet("De").getElements()) { //$NON-NLS-1$
+		for (final SystemObject deObj : getObjekt().getNonMutableSet("De")
+				.getElements()) {
 			if (deObj.isValid()
 					&& (!Eak.unsupportedDeTypes.contains(deObj.getType()
 							.getPid()))) {
@@ -96,31 +96,26 @@ public class Eak extends TlsHierarchieElement {
 					Eak.LOGGER.warning(e.getMessage(), deObj);
 					Eak.unsupportedDeTypes.add(e.getDeTypPid());
 				} catch (final DeFaException e) {
-					Eak.LOGGER
-							.warning(
-									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+					Eak.LOGGER.warning("De " + deObj
+							+ " konnte nicht initialisiert werden. ", e);
 				}
 			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.EAK;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(final long zeitStempel) {
-		this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
-				"EAK " + this.objekt + " am Steuermodul "
+		getEinzelPublikator().publiziere(
+				MessageGrade.ERROR,
+				getObjekt(),
+				"EAK " + getObjekt() + " am Steuermodul "
 						+ this.getVater().getObjekt() + " defekt." + " EAK "
-						+ this.objekt + " am Steuermodul "
+						+ getObjekt() + " am Steuermodul "
 						+ this.getVater().getObjekt() + " instand setzen");
 
 		for (final De de : this.getErfassteDes()) {

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -33,83 +33,40 @@ package de.bsvrz.dua.fehlertls;
  *
  * @version $Id$
  */
-public final class DeStatus {
+public enum DeStatus {
 
-	/**
-	 * Sende irgendwelche Nutzdaten.
-	 */
-	public static final DeStatus NUTZ_DATEN = new DeStatus("Nutzdaten"); //$NON-NLS-1$
+	/** Sende irgendwelche Nutzdaten. */
+	NUTZ_DATEN("Nutzdaten"),
 
-	/**
-	 * Sende DE-Kanal aktiviert UND DE-Fehler an.
-	 */
-	public static final DeStatus KANAL_AKTIVIERT_DE_FEHLER_AN = new DeStatus(
-			"DE-Kanal aktiviert UND DE-Fehler an"); //$NON-NLS-1$
+	/** Sende DE-Kanal aktiviert UND DE-Fehler an. */
+	KANAL_AKTIVIERT_DE_FEHLER_AN("DE-Kanal aktiviert UND DE-Fehler an"),
 
-	/**
-	 * Sende DE-Kanal aktiviert UND DE-Fehler aus.
-	 */
-	public static final DeStatus KANAL_AKTIVIERT_DE_FEHLER_AUS = new DeStatus(
-			"DE-Kanal aktiviert UND DE-Fehler aus"); //$NON-NLS-1$
+	/** Sende DE-Kanal aktiviert UND DE-Fehler aus. */
+	KANAL_AKTIVIERT_DE_FEHLER_AUS("DE-Kanal aktiviert UND DE-Fehler aus"),
 
-	/**
-	 * Sende DE-Kanal passiviert UND DE-Fehler an.
-	 */
-	public static final DeStatus KANAL_PASSIVIERT_DE_FEHLER_AN = new DeStatus(
-			"DE-Kanal passiviert UND DE-Fehler an"); //$NON-NLS-1$
+	/** Sende DE-Kanal passiviert UND DE-Fehler an. */
+	KANAL_PASSIVIERT_DE_FEHLER_AN("DE-Kanal passiviert UND DE-Fehler an"),
 
-	/**
-	 * Sende DE-Kanal passiviert UND DE-Fehler AUS.
-	 */
-	public static final DeStatus KANAL_PASSIVIERT_DE_FEHLER_AUS = new DeStatus(
-			"DE-Kanal passiviert UND DE-Fehler aus"); //$NON-NLS-1$
+	/** Sende DE-Kanal passiviert UND DE-Fehler AUS. */
+	KANAL_PASSIVIERT_DE_FEHLER_AUS("DE-Kanal passiviert UND DE-Fehler aus"),
 
-	/**
-	 * Sende zyklisch an.
-	 */
-	public static final DeStatus ZYKLISCH_AN = new DeStatus("Zyklisch an"); //$NON-NLS-1$
+	/** Sende zyklisch an. */
+	ZYKLISCH_AN("Zyklisch an"),
 
-	/**
-	 * Sende zyklisch aus (nur UFD-DE).
-	 */
-	public static final DeStatus ZYKLISCH_AUS = new DeStatus("Zyklisch aus"); //$NON-NLS-1$
+	/** Sende zyklisch aus (nur UFD-DE). */
+	ZYKLISCH_AUS("Zyklisch aus");
 
 	/**
 	 * Name des Status.
 	 */
-	private String name;
+	private final String description;
 
-	/**
-	 * Standardkonstruktor.
-	 *
-	 * @param name
-	 *            der Name des Status
-	 */
-	private DeStatus(final String name) {
-		this.name = name;
+	private DeStatus(final String description) {
+		this.description = description;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		boolean gleich = false;
-
-		if ((obj != null) && (obj instanceof DeStatus)) {
-			final DeStatus that = (DeStatus) obj;
-			gleich = this.name.equals(that.name);
-		}
-
-		return gleich;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
-		return name;
+		return description;
 	}
-
 }

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -52,7 +52,7 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	/**
 	 * ein Systemobjekt.
 	 */
-	private SystemObject objekt;
+	private final SystemObject objekt;
 
 	/**
 	 * Statische Verbindung zum Datenverteiler.
@@ -157,18 +157,12 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object,
 			final DataDescription dataDescription, final byte state) {
 		//
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

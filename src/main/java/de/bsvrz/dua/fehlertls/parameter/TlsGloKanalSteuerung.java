@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -109,9 +109,8 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 				this,
 				objekt,
 				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(
-								DaVKonstanten.ASP_PARAMETER_SOLL)),
+						"atg.tlsGloKanalSteuerung"), dav.getDataModel()
+						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 

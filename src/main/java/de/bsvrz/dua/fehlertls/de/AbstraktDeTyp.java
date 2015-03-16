@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -62,9 +62,6 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	 */
 	protected abstract String getBetriebsParameterAtgPid();
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public DataDescription[] getDeFaMesswertDataDescriptions(
 			final ClientDavInterface dav) throws DeFaException {
@@ -75,17 +72,17 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 			final AttributeGroup atg = dav.getDataModel().getAttributeGroup(
 					dataIdentifikation.getAtgPid());
 			if (atg == null) {
-				throw new DeFaException(
-						"Attributgruppe " + dataIdentifikation.getAtgPid() + //$NON-NLS-1$
-								" existiert nicht im Datenkatalog"); //$NON-NLS-1$
+				throw new DeFaException("Attributgruppe "
+						+ dataIdentifikation.getAtgPid()
+						+ " existiert nicht im Datenkatalog");
 			}
 
 			final Aspect asp = dav.getDataModel().getAspect(
 					dataIdentifikation.getAspPid());
 			if (asp == null) {
-				throw new DeFaException(
-						"Aspekt " + dataIdentifikation.getAspPid() + //$NON-NLS-1$
-								" existiert nicht im Datenkatalog"); //$NON-NLS-1$
+				throw new DeFaException("Aspekt "
+						+ dataIdentifikation.getAspPid()
+						+ " existiert nicht im Datenkatalog");
 			}
 
 			dataDescriptions.add(new DataDescription(atg, asp,
@@ -95,9 +92,6 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 		return dataDescriptions.toArray(new DataDescription[0]);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public DataDescription getDeFaIntervallParameterDataDescription(
 			final ClientDavInterface dav) throws DeFaException {
@@ -105,9 +99,9 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 				this.getBetriebsParameterAtgPid());
 
 		if (atg == null) {
-			throw new DeFaException(
-					"Die Parameter-Attributgruppe " + this.getBetriebsParameterAtgPid() + //$NON-NLS-1$
-							" konnte nicht identifiziert werden"); //$NON-NLS-1$
+			throw new DeFaException("Die Parameter-Attributgruppe "
+					+ this.getBetriebsParameterAtgPid()
+					+ " konnte nicht identifiziert werden");
 		}
 
 		return new DataDescription(atg, dav.getDataModel().getAspect(
@@ -126,12 +120,12 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 		/**
 		 * Pid einer ATG.
 		 */
-		private String atgPid;
+		private final String atgPid;
 
 		/**
 		 * Pid eines ASP.
 		 */
-		private String aspPid;
+		private final String aspPid;
 
 		/**
 		 * Simulationsvariante.

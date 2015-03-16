@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -32,18 +32,29 @@ package de.bsvrz.dua.fehlertls.de;
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
  *
- * @version $Id: DeTypUnsupportedException.java 53669 2015-03-16 09:10:22Z
- *          peuker $
+ * @version $Id$
  */
 public class DeTypUnsupportedException extends DeFaException {
 
 	private final String deTypPid;
 
+	/**
+	 * Exception, die geworfen wird, wenn eine DE eines nicht unterstützten Typs
+	 * initialisiert werden soll.
+	 *
+	 * @param deTypPid
+	 *            die PID des gewünschten Typs
+	 */
 	public DeTypUnsupportedException(final String deTypPid) {
 		super("DE-Typ " + deTypPid + " wird nicht unterstützt");
 		this.deTypPid = deTypPid;
 	}
 
+	/**
+	 * liefert die PID des nicht unterstützen DE-Typs.
+	 * 
+	 * @return die PID
+	 */
 	public String getDeTypPid() {
 		return deTypPid;
 	}

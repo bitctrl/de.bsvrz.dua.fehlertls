@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -83,17 +83,17 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * statische Datenverteiler-Verbindund.
 	 */
-	protected static ClientDavInterface sDav;
+	private static ClientDavInterface dav;
 
 	/**
 	 * zur einmaligen Publikation von Fehlermeldungen.
 	 */
-	protected SingleMessageSender einzelPublikator;
+	private final SingleMessageSender einzelPublikator;
 
 	/**
 	 * das Konfigurationsobjekt vom Typ <code>typ.gerät</code>.
 	 */
-	protected ConfigurationObject objekt;
+	private final ConfigurationObject objekt;
 
 	/**
 	 * die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete.
@@ -103,7 +103,7 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet.
 	 */
-	protected TlsHierarchieElement vater;
+	private final TlsHierarchieElement vater;
 
 	/**
 	 * alle DEs, die sich unterhalb von diesem Element befinden.
@@ -169,8 +169,8 @@ public abstract class TlsHierarchieElement {
 	 */
 	protected TlsHierarchieElement(final ClientDavInterface dav,
 			final SystemObject objekt, final TlsHierarchieElement vater) {
-		if (TlsHierarchieElement.sDav == null) {
-			TlsHierarchieElement.sDav = dav;
+		if (TlsHierarchieElement.dav == null) {
+			TlsHierarchieElement.dav = dav;
 		}
 		this.einzelPublikator = new SingleMessageSender();
 		this.objekt = (ConfigurationObject) objekt;
@@ -179,7 +179,7 @@ public abstract class TlsHierarchieElement {
 		if ((objekt != null) && objekt.isOfType("typ.gerät")) {
 			/** Initialisiere Anschlusspunkte. */
 			for (final SystemObject ap : this.objekt.getNonMutableSet(
-					"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
+					"AnschlussPunkteGerät").getElements()) {
 				if (ap.isValid()) {
 					addKind(new AnschlussPunkt(dav, ap, this));
 				}
@@ -241,9 +241,6 @@ public abstract class TlsHierarchieElement {
 		return (this.vater == null) || (this.vater.getObjekt() == null);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
@@ -256,9 +253,6 @@ public abstract class TlsHierarchieElement {
 		return ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		if (TlsHierarchieElement.TLS_BAUM) {
@@ -266,34 +260,34 @@ public abstract class TlsHierarchieElement {
 
 			TlsHierarchieElement dummy = this;
 			while (dummy.getVater() != null) {
-				baum += "   "; //$NON-NLS-1$
+				baum += "   ";
 				dummy = dummy.getVater();
 			}
-			baum += this.objekt == null ? "WURZEL" : this.objekt.getPid(); //$NON-NLS-1$
+			baum += this.objekt == null ? "WURZEL" : this.objekt.getPid();
 			for (final TlsHierarchieElement kind : this.kinder) {
-				baum += "\n" + kind.toString(); //$NON-NLS-1$
+				baum += "\n" + kind.toString();
 			}
 
 			return baum;
-		} else {
-			String v = "keiner"; //$NON-NLS-1$
-			String k = "keine"; //$NON-NLS-1$
-
-			if (this.vater != null) {
-				v = this.vater.getObjekt() == null ? "WURZEL" : this.vater.getObjekt().getPid(); //$NON-NLS-1$
-			}
-			if (!this.kinder.isEmpty()) {
-				final TlsHierarchieElement[] dummy = this.kinder
-						.toArray(new TlsHierarchieElement[0]);
-				k = dummy[0].getObjekt().getPid();
-				for (int i = 1; i < dummy.length; i++) {
-					k += ", " + dummy[i].getObjekt().getPid(); //$NON-NLS-1$
-				}
-			}
-
-			return this.objekt == null ? "WURZEL" : this.objekt.toString() + " (Vater: " + v + //$NON-NLS-1$ //$NON-NLS-2$
-							", Kinder:[" + k + "])"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		String v = "keiner";
+		String k = "keine";
+
+		if (this.vater != null) {
+			v = this.vater.getObjekt() == null ? "WURZEL" : this.vater
+					.getObjekt().getPid();
+		}
+		if (!this.kinder.isEmpty()) {
+			final TlsHierarchieElement[] dummy = this.kinder
+					.toArray(new TlsHierarchieElement[0]);
+			k = dummy[0].getObjekt().getPid();
+			for (int i = 1; i < dummy.length; i++) {
+				k += ", " + dummy[i].getObjekt().getPid();
+			}
+		}
+
+		return this.objekt == null ? "WURZEL" : this.objekt.toString()
+				+ " (Vater: " + v + ", Kinder:[" + k + "])";
 	}
 
 	/**
@@ -338,7 +332,7 @@ public abstract class TlsHierarchieElement {
 	 *
 	 * @return das mit diesem Objekt assoziierte Systemobjekt
 	 */
-	public final SystemObject getObjekt() {
+	protected final ConfigurationObject getObjekt() {
 		return this.objekt;
 	}
 
@@ -356,6 +350,22 @@ public abstract class TlsHierarchieElement {
 				kind.sammleDes(des1);
 			}
 		}
+	}
+
+	protected SingleMessageSender getEinzelPublikator() {
+		return einzelPublikator;
+	}
+
+	protected static ClientDavInterface getDav() {
+		return TlsHierarchieElement.dav;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((objekt == null) ? 0 : objekt.hashCode());
+		return result;
 	}
 
 }

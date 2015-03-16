@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -72,7 +72,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	/**
 	 * ein Systemobjekt.
 	 */
-	private SystemObject objekt;
+	private final SystemObject objekt;
 
 	/**
 	 * Standardkonstruktor.
@@ -100,10 +100,10 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 				this,
 				obj,
 				new DataDescription(TypDeTestWrapper.dav.getDataModel()
-						.getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
+						.getAttributeGroup("atg.tlsGloDeFehler"),
 						TypDeTestWrapper.dav.getDataModel().getAspect(
 								DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole
-								.source());
+						.source());
 
 		final IDeTyp deTyp = DeTypLader.getDeTyp(this.objekt.getType());
 		TypDeTestWrapper.dav.subscribeSender(
@@ -112,9 +112,9 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 				new DataDescription(deTyp
 						.getDeFaIntervallParameterDataDescription(
 								TypDeTestWrapper.dav).getAttributeGroup(),
-								TypDeTestWrapper.dav.getDataModel().getAspect(
-										DaVKonstanten.ASP_PARAMETER_VORGABE)),
-										SenderRole.sender());
+						TypDeTestWrapper.dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				SenderRole.sender());
 	}
 
 	/**
@@ -198,8 +198,16 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 *
 	 * @param zyklus
 	 *            der Abfragezyklus (in ms) (-1 == nicht zyklusche Abfrage)
+	 * @throws DeFaException
+	 *             allgemeiner Fehler bei der Initialisierung oder Auswertung
+	 *             der Testdaten
+	 * @throws SendSubscriptionNotConfirmed
+	 *             eine erforderliche Sendeanmeldung wurde nicht bestätigt
+	 * @throws DataNotSubscribedException
+	 *             eine erfoderliche Datenanmeldung ist nicht erfolgt
 	 */
-	public void setBetriebsParameter(final long zyklus) {
+	public void setBetriebsParameter(final long zyklus) throws DeFaException,
+	DataNotSubscribedException, SendSubscriptionNotConfirmed {
 		Data datenSatz;
 
 		try {
@@ -211,26 +219,22 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 			throw new RuntimeException(e1);
 		}
 
-		datenSatz
-				.getTimeValue("Erfassungsperiodendauer").setMillis(zyklus >= 0 ? zyklus : 1L); //$NON-NLS-1$
-		datenSatz
-				.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0); //$NON-NLS-1$
+		datenSatz.getTimeValue("Erfassungsperiodendauer").setMillis(
+				zyklus >= 0 ? zyklus : 1L);
+		datenSatz.getUnscaledValue("Übertragungsverfahren").set(
+				zyklus >= 0 ? 1 : 0);
 
 		ResultData neuerParameter = null;
-		try {
-			neuerParameter = new ResultData(this.objekt, new DataDescription(
-					DeTypLader
-					.getDeTyp(this.objekt.getType())
-							.getDeFaIntervallParameterDataDescription(
-							TypDeTestWrapper.dav).getAttributeGroup(),
-							TypDeTestWrapper.dav.getDataModel().getAspect(
-									DaVKonstanten.ASP_PARAMETER_VORGABE)),
-									System.currentTimeMillis(), datenSatz);
-			TypDeTestWrapper.dav.sendData(neuerParameter);
-			System.out.println("Sende Betriebsparameter:\n" + neuerParameter); //$NON-NLS-1$
-		} catch (final Exception e) {
-			throw new RuntimeException(neuerParameter.toString(), e);
-		}
+		neuerParameter = new ResultData(this.objekt, new DataDescription(
+				DeTypLader
+				.getDeTyp(this.objekt.getType())
+				.getDeFaIntervallParameterDataDescription(
+						TypDeTestWrapper.dav).getAttributeGroup(),
+						TypDeTestWrapper.dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_VORGABE)),
+								System.currentTimeMillis(), datenSatz);
+		TypDeTestWrapper.dav.sendData(neuerParameter);
+		System.out.println("Sende Betriebsparameter:\n" + neuerParameter);
 	}
 
 	/**
@@ -244,19 +248,19 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	private void setDeFehlerStatus(final int fehlerStatus,
 			final boolean passiviert) {
 		final AttributeGroup atg = TypDeTestWrapper.dav.getDataModel()
-				.getAttributeGroup("atg.tlsGloDeFehler"); //$NON-NLS-1$
+				.getAttributeGroup("atg.tlsGloDeFehler");
 		final Data datum = TypDeTestWrapper.dav.createData(atg);
-		datum.getUnscaledValue("DEFehlerStatus").set(fehlerStatus); //$NON-NLS-1$
-		datum.getUnscaledValue("DEKanalStatus").set(passiviert ? 1 : 0); //$NON-NLS-1$
-		datum.getUnscaledValue("DEProjektierungsStatus").set(0); //$NON-NLS-1$
-		datum.getUnscaledValue("HerstellerDefinierterCode").set(0); //$NON-NLS-1$
-		datum.getUnscaledValue("Hersteller").set(0); //$NON-NLS-1$
+		datum.getUnscaledValue("DEFehlerStatus").set(fehlerStatus);
+		datum.getUnscaledValue("DEKanalStatus").set(passiviert ? 1 : 0);
+		datum.getUnscaledValue("DEProjektierungsStatus").set(0);
+		datum.getUnscaledValue("HerstellerDefinierterCode").set(0);
+		datum.getUnscaledValue("Hersteller").set(0);
 		final ResultData resultat = new ResultData(this.objekt,
 				new DataDescription(TypDeTestWrapper.dav.getDataModel()
-						.getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
+						.getAttributeGroup("atg.tlsGloDeFehler"),
 						TypDeTestWrapper.dav.getDataModel().getAspect(
 								DUAKonstanten.ASP_TLS_ANTWORT)),
-								System.currentTimeMillis(), datum);
+				System.currentTimeMillis(), datum);
 
 		try {
 			TypDeTestWrapper.dav.sendData(resultat);
@@ -290,18 +294,12 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dataRequest(final SystemObject object,
 			final DataDescription dataDescription, final byte state) {
 		//
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isRequestSupported(final SystemObject object,
 			final DataDescription dataDescription) {

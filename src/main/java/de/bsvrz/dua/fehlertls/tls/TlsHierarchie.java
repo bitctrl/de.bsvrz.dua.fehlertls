@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -57,7 +57,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	 * Konfigurierende Eigenschaften eines Kommunikationspartners an einem
 	 * Anschlusspunkt.
 	 */
-	public static AttributeGroup konfigAtg;
+	private static AttributeGroup apKonfigAtg;
 
 	/**
 	 * statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die
@@ -84,7 +84,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	public static TlsHierarchie getWurzel() {
 		if (TlsHierarchie.wurzel == null) {
 			throw new RuntimeException(
-					"TLS-Hierarchie wurde noch nicht initialisiert"); //$NON-NLS-1$
+					"TLS-Hierarchie wurde noch nicht initialisiert");
 		}
 		return TlsHierarchie.wurzel;
 	}
@@ -102,8 +102,8 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 		if (TlsHierarchie.wurzel == null) {
 			TlsHierarchie.wurzel = new TlsHierarchie(dav);
 			TlsHierarchie.sDav = dav;
-			TlsHierarchie.konfigAtg = dav.getDataModel().getAttributeGroup(
-					"atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
+			TlsHierarchie.apKonfigAtg = dav.getDataModel().getAttributeGroup(
+					"atg.anschlussPunktKommunikationsPartner");
 
 			for (final SystemObject geraet : geraete) {
 				TlsHierarchie.initialisiere((ConfigurationObject) geraet);
@@ -120,45 +120,43 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	 *            ein Objekt vom Typ <code>typ.gerät</code>
 	 */
 	private static void initialisiere(final ConfigurationObject geraet) {
-		if (geraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
+		if (geraet.isOfType("typ.steuerModul")) {
 			TlsHierarchie.wurzel.addKind(new Sm(TlsHierarchie.sDav, geraet,
 					TlsHierarchie.wurzel));
-		} else if (geraet.isOfType("typ.kri")) { //$NON-NLS-1$
+		} else if (geraet.isOfType("typ.kri")) {
 			TlsHierarchie.wurzel.addKind(new Kri(TlsHierarchie.sDav, geraet,
 					TlsHierarchie.wurzel));
-		} else if (geraet.isOfType("typ.uz") || //$NON-NLS-1$
-				geraet.isOfType("typ.viz") || //$NON-NLS-1$
-				geraet.isOfType("typ.vrz")) { //$NON-NLS-1$
+		} else if (geraet.isOfType("typ.uz") || geraet.isOfType("typ.viz")
+				|| geraet.isOfType("typ.vrz")) {
 			for (final SystemObject anschlussPunktSysObj : geraet
-					.getNonMutableSet("AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
+					.getNonMutableSet("AnschlussPunkteGerät").getElements()) {
 				if (anschlussPunktSysObj.isValid()) {
 					final ConfigurationObject anschlussPunktKonObj = (ConfigurationObject) anschlussPunktSysObj;
 
 					final Set<SystemObject> unterGeraete = new HashSet<SystemObject>();
 					for (final SystemObject komPartner : anschlussPunktKonObj
 							.getNonMutableSet(
-									"AnschlussPunkteKommunikationsPartner").getElements()) { //$NON-NLS-1$
+									"AnschlussPunkteKommunikationsPartner")
+							.getElements()) {
 
 						final Data konfigDatum = komPartner
-								.getConfigurationData(TlsHierarchie.konfigAtg);
+								.getConfigurationData(TlsHierarchie.apKonfigAtg);
 						if (konfigDatum != null) {
 							final SystemObject unterGeraet = konfigDatum
-									.getReferenceValue("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
+									.getReferenceValue("KommunikationsPartner")
+									.getSystemObject();
 							if (unterGeraet != null) {
 								unterGeraete.add(unterGeraet);
 							} else {
-								TlsHierarchie.LOGGER
-								.warning("An " + komPartner + //$NON-NLS-1$
-										" (Geraet: " + geraet + //$NON-NLS-1$
-										") ist kein Geraet definiert"); //$NON-NLS-1$
+								TlsHierarchie.LOGGER.warning("An " + komPartner
+										+ " (Geraet: " + geraet
+										+ ") ist kein Geraet definiert");
 							}
 						} else {
-							TlsHierarchie.LOGGER
-							.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
-									" (an Geraet: "
-											+ geraet
+							TlsHierarchie.LOGGER.warning("Konfiguration von "
+									+ komPartner + " (an Geraet: " + geraet
 									+ ") konnte nicht ausgelesen werden. "
-									+ "Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
+									+ "Das assoziierte Geraet wird ignoriert");
 						}
 					}
 
@@ -170,7 +168,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 					 */
 					int steuerModulZaehler = 0;
 					for (final SystemObject unterGeraet : unterGeraete) {
-						if (unterGeraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
+						if (unterGeraet.isOfType("typ.steuerModul")) {
 							steuerModulZaehler++;
 						}
 					}
@@ -192,19 +190,17 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(final long zeitStempel) {
 		assert (false);
+	}
+
+	protected AttributeGroup getApKonfigAtg() {
+		return TlsHierarchie.apKonfigAtg;
 	}
 }
