@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -42,9 +42,9 @@ import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikationTest2;
 
 /**
  * Assoziiert mit <code>typ.tlsFehlerAnalyse</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
@@ -66,26 +66,27 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav1
 	 *            Datenverteiler-Verbindung
 	 * @return eine statische Instanz dieser Klasse.
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	public static TypTlsFehlerAnalyse getInstanz(ClientDavInterface dav1)
+	public static TypTlsFehlerAnalyse getInstanz(final ClientDavInterface dav1)
 			throws Exception {
-		if (instanz == null) {
-			dav = dav1;
-			instanz = new TypTlsFehlerAnalyse(dav);
+		if (TypTlsFehlerAnalyse.instanz == null) {
+			TypTlsFehlerAnalyse.dav = dav1;
+			TypTlsFehlerAnalyse.instanz = new TypTlsFehlerAnalyse(
+					TypTlsFehlerAnalyse.dav);
 
 		}
-		return instanz;
+		return TypTlsFehlerAnalyse.instanz;
 	}
 
 	/**
 	 * Setzt die Parameter der TLS-Fehleranalyse.
-	 * 
+	 *
 	 * @param verzugErkennung
 	 *            der zusaetzliche Zeitverzug, der nach dem erwarteten
 	 *            Empfangszeitpunkt noch bis zur Erkennung eines nicht
@@ -94,12 +95,14 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	 *            der zusaetzliche Zeitverzug, der nach der Fehlererkennung bis
 	 *            zur Fehlerermittlung abgewartet werden muss
 	 */
-	public void setParameter(long verzugErkennung, long verzugErmittlung) {
-		Data data = dav.createData(dav.getDataModel().getAttributeGroup(
-				"atg.parameterTlsFehlerAnalyse"));
+	public void setParameter(final long verzugErkennung,
+			final long verzugErmittlung) {
+		Data data = TypTlsFehlerAnalyse.dav.createData(TypTlsFehlerAnalyse.dav
+				.getDataModel().getAttributeGroup(
+						"atg.parameterTlsFehlerAnalyse"));
 
 		data.getItem("Urlasser").getReferenceValue("BenutzerReferenz")
-				.setSystemObject(null);
+		.setSystemObject(null);
 		data.getItem("Urlasser").getTextValue("Ursache").setText("");
 		data.getItem("Urlasser").getTextValue("Veranlasser").setText("");
 
@@ -109,12 +112,13 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 				verzugErmittlung);
 
 		ResultData resultat = new ResultData(this.objekt, new DataDescription(
-				dav.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
-						.getAspect("asp.parameterVorgabe")), System
-				.currentTimeMillis(), data);
+				TypTlsFehlerAnalyse.dav.getDataModel().getAttributeGroup(
+						"atg.parameterTlsFehlerAnalyse"),
+				TypTlsFehlerAnalyse.dav.getDataModel().getAspect(
+						"asp.parameterVorgabe")), System.currentTimeMillis(),
+				data);
 		try {
-			dav.sendData(resultat);
+			TypTlsFehlerAnalyse.dav.sendData(resultat);
 			if (DeFaApplikationTest2.DEBUG) {
 				System.out.println("Sende Parameter:\n" + resultat);
 			}
@@ -129,20 +133,23 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @throws OneSubscriptionPerSendData
 	 *             wenn bereits eine lokale Sendeanmeldung fuer die gleichen
 	 *             Daten von einem anderen Anwendungsobjekt vorliegt
 	 */
-	private TypTlsFehlerAnalyse(ClientDavInterface dav)
+	private TypTlsFehlerAnalyse(final ClientDavInterface dav)
 			throws OneSubscriptionPerSendData {
 		this.objekt = dav.getDataModel().getObject("DeFa");
-		dav.subscribeSender(this, this.objekt, new DataDescription(dav
-				.getDataModel().getAttributeGroup(
+		dav.subscribeSender(
+				this,
+				this.objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
-				.getAspect("asp.parameterVorgabe")), SenderRole.sender());
+						.getAspect("asp.parameterVorgabe")), SenderRole
+						.sender());
 		try {
 			Thread.sleep(2L * Constants.MILLIS_PER_SECOND);
 		} catch (InterruptedException e) {
@@ -153,16 +160,18 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(final SystemObject object,
+			final DataDescription dataDescription, final byte state) {
 		//
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 

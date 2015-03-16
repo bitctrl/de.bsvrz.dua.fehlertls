@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -45,9 +45,9 @@ import de.bsvrz.dua.fehlertls.de.IDeTyp;
 /**
  * Klasse zum Auslesen und Anmelden auf die Betriebsparameter zur
  * Zyklussteuerung eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class ZyklusSteuerungsParameter implements ClientReceiverInterface {
@@ -61,7 +61,7 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	/**
 	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<IZyklusSteuerungsParameterListener> listenerMenge = Collections
+	private final Set<IZyklusSteuerungsParameterListener> listenerMenge = Collections
 			.synchronizedSet(new HashSet<IZyklusSteuerungsParameterListener>());
 
 	/**
@@ -76,7 +76,7 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
@@ -87,17 +87,18 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
 	public static ZyklusSteuerungsParameter getInstanz(
-			ClientDavInterface dav, SystemObject objekt) throws DeFaException {
+			final ClientDavInterface dav, final SystemObject objekt)
+			throws DeFaException {
 		ZyklusSteuerungsParameter instanz = null;
 
-		synchronized (instanzen) {
-			instanz = instanzen.get(objekt);
+		synchronized (ZyklusSteuerungsParameter.instanzen) {
+			instanz = ZyklusSteuerungsParameter.instanzen.get(objekt);
 		}
 
 		if (instanz == null) {
 			instanz = new ZyklusSteuerungsParameter(dav, objekt);
-			synchronized (instanzen) {
-				instanzen.put(objekt, instanz);
+			synchronized (ZyklusSteuerungsParameter.instanzen) {
+				ZyklusSteuerungsParameter.instanzen.put(objekt, instanz);
 			}
 		}
 
@@ -106,7 +107,7 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
@@ -115,43 +116,42 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	private ZyklusSteuerungsParameter(ClientDavInterface dav,
-			SystemObject objekt) throws DeFaException {
+	private ZyklusSteuerungsParameter(final ClientDavInterface dav,
+			final SystemObject objekt) throws DeFaException {
 		this.deTyp = DeTypLader.getDeTyp(objekt.getType());
 
-		dav.subscribeReceiver(this, objekt, this.deTyp
-				.getDeFaIntervallParameterDataDescription(dav), ReceiveOptions
-				.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt,
+				this.deTyp.getDeFaIntervallParameterDataDescription(dav),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Fuegt diesem Objekt einen Listener hinzu.
-	 * 
+	 *
 	 * @param listener
 	 *            eine neuer Listener
 	 */
 	public synchronized void addListener(
 			final IZyklusSteuerungsParameterListener listener) {
 		if (listenerMenge.add(listener)
-				&& this.erfassungsIntervallDauer != null) {
-			listener
-					.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
+				&& (this.erfassungsIntervallDauer != null)) {
+			listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
-				if (resultat != null && resultat.getData() != null) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.erfassungsIntervallDauer = this.deTyp
 								.getErfassungsIntervall(resultat.getData());
 						for (IZyklusSteuerungsParameterListener listener : this.listenerMenge) {
-							listener
-									.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
+							listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 						}
 					}
 				}

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -37,9 +37,9 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Von diesem Typ sollten alle finalen DE-Typ-Beschreibungen abgeleitet sein.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstraktDeTyp implements IDeTyp {
@@ -48,7 +48,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	 * Erfragt einen Array mit (ATG-Pid, ASP-Pid, SIMVAR)-Tripeln, die eine
 	 * Datenidentifikation von Messwerten beschreiben, welche bzgl. dieses DE
 	 * ueberprueft werden sollen
-	 * 
+	 *
 	 * @return ggf. leerer Array mit (ATG, ASP, SIMVAR)-Tripeln
 	 */
 	protected abstract DataDescriptionPid[] getDataIdentifikations();
@@ -56,7 +56,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	/**
 	 * Erfragt die Pid der Attributgruppe, in der die Betriebsparameter des DE
 	 * parametriert sind.
-	 * 
+	 *
 	 * @return die Pid der Attributgruppe, in der die Betriebsparameter des DE
 	 *         parametriert sind
 	 */
@@ -65,6 +65,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DataDescription[] getDeFaMesswertDataDescriptions(
 			final ClientDavInterface dav) throws DeFaException {
 		List<DataDescription> dataDescriptions = new ArrayList<DataDescription>();
@@ -76,7 +77,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 			if (atg == null) {
 				throw new DeFaException(
 						"Attributgruppe " + dataIdentifikation.getAtgPid() + //$NON-NLS-1$
-								" existiert nicht im Datenkatalog"); //$NON-NLS-1$
+						" existiert nicht im Datenkatalog"); //$NON-NLS-1$
 			}
 
 			Aspect asp = dav.getDataModel().getAspect(
@@ -84,7 +85,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 			if (asp == null) {
 				throw new DeFaException(
 						"Aspekt " + dataIdentifikation.getAspPid() + //$NON-NLS-1$
-								" existiert nicht im Datenkatalog"); //$NON-NLS-1$
+						" existiert nicht im Datenkatalog"); //$NON-NLS-1$
 			}
 
 			dataDescriptions.add(new DataDescription(atg, asp,
@@ -97,15 +98,16 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DataDescription getDeFaIntervallParameterDataDescription(
-			ClientDavInterface dav) throws DeFaException {
+			final ClientDavInterface dav) throws DeFaException {
 		AttributeGroup atg = dav.getDataModel().getAttributeGroup(
 				this.getBetriebsParameterAtgPid());
 
 		if (atg == null) {
 			throw new DeFaException(
-					"Die Parameter-Attributgruppe " + this.getBetriebsParameterAtgPid() + //$NON-NLS-1$ 
-							" konnte nicht identifiziert werden"); //$NON-NLS-1$
+					"Die Parameter-Attributgruppe " + this.getBetriebsParameterAtgPid() + //$NON-NLS-1$
+					" konnte nicht identifiziert werden"); //$NON-NLS-1$
 		}
 
 		return new DataDescription(atg, dav.getDataModel().getAspect(
@@ -115,9 +117,9 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	/**
 	 * Haelt pro Instanz das Tripel (ATG-Pid, ASP-Pid, SIMVAR) vor, das eine
 	 * Datenidentifikation beschreibt.
-	 * 
+	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
+	 *
 	 */
 	protected class DataDescriptionPid {
 
@@ -138,7 +140,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 
 		/**
 		 * Standardkonstruktor (Simulationsvariante ist 0).
-		 * 
+		 *
 		 * @param atgPid
 		 *            Pid einer ATG
 		 * @param aspPid
@@ -151,7 +153,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 
 		/**
 		 * Konstruktor.
-		 * 
+		 *
 		 * @param atgPid
 		 *            Pid einer ATG
 		 * @param aspPid
@@ -167,7 +169,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 
 		/**
 		 * Erfragt die Pid des ASP.
-		 * 
+		 *
 		 * @return die Pid des ASP
 		 */
 		protected String getAspPid() {
@@ -176,7 +178,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 
 		/**
 		 * Erfragt die Pid der ATG.
-		 * 
+		 *
 		 * @return die Pid der ATG
 		 */
 		protected String getAtgPid() {
@@ -185,7 +187,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 
 		/**
 		 * Erfragt die Simulationsvariante.
-		 * 
+		 *
 		 * @return die Simulationsvariante
 		 */
 		protected short getSimVar() {

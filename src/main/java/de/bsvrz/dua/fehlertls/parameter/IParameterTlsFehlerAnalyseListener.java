@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -30,9 +30,9 @@ package de.bsvrz.dua.fehlertls.parameter;
  * Hoert auf Veraenderungen der Attributgruppe
  * <code>atg.parameterTlsFehlerAnalyse</code> (Parameter für die TLS
  * Fehleranalyse).
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public interface IParameterTlsFehlerAnalyseListener {
@@ -40,7 +40,7 @@ public interface IParameterTlsFehlerAnalyseListener {
 	/**
 	 * Informiert ueber neue Parameter der Attributgruppe
 	 * <code>atg.parameterTlsFehlerAnalyse</code>.
-	 * 
+	 *
 	 * @param zeitverzugFehlerErkennung
 	 *            Der zusätzliche Zeitverzug, der nach dem erwarteten
 	 *            Empfangszeitpunkt noch bis zur Erkennung eines nicht
@@ -49,7 +49,7 @@ public interface IParameterTlsFehlerAnalyseListener {
 	 *            Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis
 	 *            zur Fehlerermittlung abgewartet werden muss
 	 */
-	void aktualisiereParameterTlsFehlerAnalyse(
-			long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung);
+	void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung,
+			long zeitverzugFehlerErmittlung);
 
 }

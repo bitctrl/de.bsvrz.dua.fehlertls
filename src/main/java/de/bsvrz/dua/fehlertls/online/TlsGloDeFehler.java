@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -44,9 +44,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Korrespondiert mit der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TlsGloDeFehler implements ClientReceiverInterface {
@@ -60,7 +60,7 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	/**
 	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<ITlsGloDeFehlerListener> listenerMenge = Collections
+	private final Set<ITlsGloDeFehlerListener> listenerMenge = Collections
 			.synchronizedSet(new HashSet<ITlsGloDeFehlerListener>());
 
 	/**
@@ -75,25 +75,25 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static TlsGloDeFehler getInstanz(ClientDavInterface dav,
-			SystemObject objekt) {
+	public static TlsGloDeFehler getInstanz(final ClientDavInterface dav,
+			final SystemObject objekt) {
 		TlsGloDeFehler instanz = null;
 
-		synchronized (instanzen) {
-			instanz = instanzen.get(objekt);
+		synchronized (TlsGloDeFehler.instanzen) {
+			instanz = TlsGloDeFehler.instanzen.get(objekt);
 		}
 
 		if (instanz == null) {
 			instanz = new TlsGloDeFehler(dav, objekt);
-			synchronized (instanzen) {
-				instanzen.put(objekt, instanz);
+			synchronized (TlsGloDeFehler.instanzen) {
+				TlsGloDeFehler.instanzen.put(objekt, instanz);
 			}
 		}
 
@@ -102,13 +102,14 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private TlsGloDeFehler(ClientDavInterface dav, SystemObject objekt) {
+	private TlsGloDeFehler(final ClientDavInterface dav,
+			final SystemObject objekt) {
 		dav.subscribeReceiver(this, objekt, new DataDescription(dav
 				.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
 				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
@@ -117,12 +118,12 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 
 	/**
 	 * Fuegt diesem Objekt einen Listener hinzu.
-	 * 
+	 *
 	 * @param listener
 	 *            eine neuer Listener
 	 */
 	public synchronized void addListener(final ITlsGloDeFehlerListener listener) {
-		if (listenerMenge.add(listener) && this.aktiv != null) {
+		if (listenerMenge.add(listener) && (this.aktiv != null)) {
 			listener.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
 		}
 	}
@@ -130,10 +131,11 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
-				if (resultat != null && resultat.getData() != null) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.aktiv = resultat.getData()
 								.getUnscaledValue("DEKanalStatus").intValue() == 0;

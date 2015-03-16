@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -41,9 +41,9 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 
 /**
  * TLS-Hierarchieelement EAK.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class Eak extends TlsHierarchieElement {
@@ -55,9 +55,9 @@ public class Eak extends TlsHierarchieElement {
 	 */
 	private static Set<String> unsupportedDeTypes = new LinkedHashSet<String>();
 
-	/** 
+	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 * @param objekt
@@ -65,12 +65,14 @@ public class Eak extends TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Eak(ClientDavInterface dav, SystemObject objekt,
-			TlsHierarchieElement vater) {
+	protected Eak(final ClientDavInterface dav, final SystemObject objekt,
+			final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 		for (SystemObject deObj : this.objekt
 				.getNonMutableSet("De").getElements()) { //$NON-NLS-1$
-			if (deObj.isValid() && ( !unsupportedDeTypes.contains(deObj.getType().getPid()))) {
+			if (deObj.isValid()
+					&& (!Eak.unsupportedDeTypes.contains(deObj.getType()
+							.getPid()))) {
 				try {
 					Data deKonfig = deObj.getConfigurationData(dav
 							.getDataModel().getAttributeGroup("atg.de"));
@@ -79,25 +81,24 @@ public class Eak extends TlsHierarchieElement {
 							De de = new De(dav, deObj, this);
 							addKind(de);
 						} else {
-							LOGGER
-									.info("DE "
-											+ deObj
-											+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
+							Eak.LOGGER
+							.info("DE "
+									+ deObj
+									+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
 						}
 					} else {
-						LOGGER
-								.warning(
-										"DE "
-												+ deObj
-												+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
+						Eak.LOGGER
+						.warning("DE "
+										+ deObj
+										+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
 					}
 				} catch (DeTypUnsupportedException e) {
-					LOGGER.warning(e.getMessage(), deObj);
-					unsupportedDeTypes.add(e.getDeTypPid());
+					Eak.LOGGER.warning(e.getMessage(), deObj);
+					Eak.unsupportedDeTypes.add(e.getDeTypPid());
 				} catch (DeFaException e) {
-					LOGGER
-							.warning(
-									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+					Eak.LOGGER
+					.warning(
+							"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -115,7 +116,7 @@ public class Eak extends TlsHierarchieElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void publiziereFehler(long zeitStempel) {
+	public void publiziereFehler(final long zeitStempel) {
 		this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
 				"EAK " + this.objekt + " am Steuermodul "
 						+ this.getVater().getObjekt() + " defekt." + " EAK "

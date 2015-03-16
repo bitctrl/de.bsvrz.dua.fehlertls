@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -41,9 +41,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Testet die Applikation nach PruefSpez (erster Teil - UZ).
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class DeFaApplikationTest2 {
@@ -82,7 +82,7 @@ public class DeFaApplikationTest2 {
 
 	/**
 	 * Testet analog PrüfSpez. (1.Teil).
-	 * 
+	 *
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
@@ -111,18 +111,18 @@ public class DeFaApplikationTest2 {
 		TypDeTestWrapper.getInstanz("DE4").setDe(
 				DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS);
 
-		if (DEBUG2) {
+		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer alle ausser DE2, DE4 und DE6 starten und auf Ergebnisse warten\n");
+			.println("\n"
+					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer alle ausser DE2, DE4 und DE6 starten und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 3; r++) {
 			long jetzt = System.currentTimeMillis();
 			for (int i = 1; i < 17; i++) {
 				TypDeTestWrapper de = TypDeTestWrapper.getInstanz("DE" + i);
-				if (i != 6 && i != 4 && i != 2) {
+				if ((i != 6) && (i != 4) && (i != 2)) {
 					de.sendDeData(true, jetzt);
 				}
 			}
@@ -137,18 +137,18 @@ public class DeFaApplikationTest2 {
 		/**
 		 * Datengenerator für DE1 stoppen und auf Ergebnisse warten
 		 */
-		if (DEBUG2) {
+		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE1 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE1 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			long jetzt = System.currentTimeMillis();
 			for (int i = 1; i < 17; i++) {
 				TypDeTestWrapper de = TypDeTestWrapper.getInstanz("DE" + i);
-				if (i != 6 && i != 2 && i != 4 && i != 1) {
+				if ((i != 6) && (i != 2) && (i != 4) && (i != 1)) {
 					de.sendDeData(true, jetzt);
 				}
 			}
@@ -163,18 +163,18 @@ public class DeFaApplikationTest2 {
 		/**
 		 * Datengenerator für DE3 stoppen und 2 Minuten auf Ergebnisse warten
 		 */
-		if (DEBUG2) {
+		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE3 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE3 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			long jetzt = System.currentTimeMillis();
 			for (int i = 1; i < 17; i++) {
 				TypDeTestWrapper de = TypDeTestWrapper.getInstanz("DE" + i);
-				if (i != 6 && i != 1 && i != 3 && i != 4 && i != 2) {
+				if ((i != 6) && (i != 1) && (i != 3) && (i != 4) && (i != 2)) {
 					de.sendDeData(true, jetzt);
 				}
 			}
@@ -190,19 +190,19 @@ public class DeFaApplikationTest2 {
 		 * Datengenerator für DE5, DE7 und DE8 stoppen und 2 Minuten auf
 		 * Ergebnisse warten
 		 */
-		if (DEBUG2) {
+		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE5, DE7 und DE8 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE5, DE7 und DE8 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			long jetzt = System.currentTimeMillis();
 			for (int i = 1; i < 17; i++) {
 				TypDeTestWrapper de = TypDeTestWrapper.getInstanz("DE" + i);
-				if (i != 1 && i != 2 && i != 3 && i != 4 && i != 5 && i != 6
-						&& i != 7 && i != 8) {
+				if ((i != 1) && (i != 2) && (i != 3) && (i != 4) && (i != 5)
+						&& (i != 6) && (i != 7) && (i != 8)) {
 					de.sendDeData(true, jetzt);
 				}
 			}
@@ -218,12 +218,12 @@ public class DeFaApplikationTest2 {
 		 * Datengenerator für DE9,..., DE16 stoppen und 2 Minuten auf Ergebnisse
 		 * warten
 		 */
-		if (DEBUG2) {
+		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE9,..., DE16 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE9,..., DE16 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			try {
@@ -237,19 +237,19 @@ public class DeFaApplikationTest2 {
 		 * Datengenerator alle außer DE2, DE4, DE6, DE13,..., DE16 wieder
 		 * anschalten und 2 Minuten auf Ergebnisse warten
 		 */
-		if (DEBUG2) {
+		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
+			.println("\n"
+					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
 		}
 		for (int r = 0; r < 20; r++) {
 			long jetzt = System.currentTimeMillis();
 			for (int i = 1; i < 17; i++) {
 				TypDeTestWrapper de = TypDeTestWrapper.getInstanz("DE" + i);
-				if (i != 2 && i != 4 && i != 6 && i != 13 && i != 14 && i != 15
-						&& i != 16) {
+				if ((i != 2) && (i != 4) && (i != 6) && (i != 13) && (i != 14)
+						&& (i != 15) && (i != 16)) {
 					de.sendDeData(true, jetzt);
 				}
 			}

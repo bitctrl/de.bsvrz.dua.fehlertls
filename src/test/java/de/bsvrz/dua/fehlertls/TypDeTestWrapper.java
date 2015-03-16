@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -52,9 +52,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Korrespondiert mit <code>atg.test</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TypDeTestWrapper implements ClientSenderInterface {
@@ -76,7 +76,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param obj
 	 *            ein Systemobjekt
 	 * @throws OneSubscriptionPerSendData
@@ -87,28 +87,39 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 *             beschreibenden Klasse gibt. Oder insbesondere auch, wenn
 	 *             diese Klasse nicht ermittelt oder instanziiert werden konnte
 	 */
-	private TypDeTestWrapper(SystemObject obj)
+	private TypDeTestWrapper(final SystemObject obj)
 			throws OneSubscriptionPerSendData, DeFaException {
 		this.objekt = obj;
-		dav.subscribeSender(this, this.objekt, new DataDescription(dav
-				.getDataModel().getAttributeGroup("atg.test"), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
-				SenderRole.source());
-		dav.subscribeSender(this, obj, new DataDescription(dav.getDataModel()
-				.getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
-				SenderRole.source());
+		TypDeTestWrapper.dav.subscribeSender(this, this.objekt,
+				new DataDescription(TypDeTestWrapper.dav.getDataModel()
+						.getAttributeGroup("atg.test"), TypDeTestWrapper.dav
+						.getDataModel()
+						.getAspect(DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole
+						.source());
+		TypDeTestWrapper.dav.subscribeSender(
+				this,
+				obj,
+				new DataDescription(TypDeTestWrapper.dav.getDataModel()
+						.getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
+						TypDeTestWrapper.dav.getDataModel().getAspect(
+								DUAKonstanten.ASP_TLS_ANTWORT)), SenderRole
+						.source());
 
 		IDeTyp deTyp = DeTypLader.getDeTyp(this.objekt.getType());
-		dav.subscribeSender(this, this.objekt, new DataDescription(deTyp
-				.getDeFaIntervallParameterDataDescription(dav)
-				.getAttributeGroup(), dav.getDataModel().getAspect(
-				DaVKonstanten.ASP_PARAMETER_VORGABE)), SenderRole.sender());
+		TypDeTestWrapper.dav.subscribeSender(
+				this,
+				this.objekt,
+				new DataDescription(deTyp
+						.getDeFaIntervallParameterDataDescription(
+								TypDeTestWrapper.dav).getAttributeGroup(),
+						TypDeTestWrapper.dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				SenderRole.sender());
 	}
 
 	/**
 	 * Initialisiert diese Klasse.
-	 * 
+	 *
 	 * @param dav1
 	 *            Datenverteiler-Verbindung
 	 * @throws OneSubscriptionPerSendData
@@ -119,13 +130,14 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 *             beschreibenden Klasse gibt. Oder insbesondere auch, wenn
 	 *             diese Klasse nicht ermittelt oder instanziiert werden konnte
 	 */
-	public static void init(ClientDavInterface dav1)
+	public static void init(final ClientDavInterface dav1)
 			throws OneSubscriptionPerSendData, DeFaException {
-		dav = dav1;
-		instanzen = new HashMap<String, TypDeTestWrapper>();
-		for (SystemObject obj : dav.getDataModel().getType("typ.deTest")
-				.getElements()) {
-			instanzen.put(obj.getPid(), new TypDeTestWrapper(obj));
+		TypDeTestWrapper.dav = dav1;
+		TypDeTestWrapper.instanzen = new HashMap<String, TypDeTestWrapper>();
+		for (SystemObject obj : TypDeTestWrapper.dav.getDataModel()
+				.getType("typ.deTest").getElements()) {
+			TypDeTestWrapper.instanzen.put(obj.getPid(), new TypDeTestWrapper(
+					obj));
 		}
 		try {
 			Thread.sleep(2L * Constants.MILLIS_PER_SECOND);
@@ -136,38 +148,39 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param name
 	 *            der Name des DE.
 	 * @return eine statische Instanz dieser Klasse.
 	 */
-	public static TypDeTestWrapper getInstanz(String name) {
-		return instanzen.get(name);
+	public static TypDeTestWrapper getInstanz(final String name) {
+		return TypDeTestWrapper.instanzen.get(name);
 	}
 
 	/**
 	 * Sendet ein Resultdatum mit oder ohne Nutzdaten.
-	 * 
+	 *
 	 * @param nutzDaten
 	 *            Sollen Nutzdaten enthalten sein?
 	 * @param zeitStempel
 	 *            Zeitstempel des Resultdatums.
 	 */
-	public void sendDeData(boolean nutzDaten, long zeitStempel) {
+	public void sendDeData(final boolean nutzDaten, final long zeitStempel) {
 		Data data = null;
 
 		if (nutzDaten) {
-			data = dav.createData(dav.getDataModel().getAttributeGroup(
-					"atg.test"));
+			data = TypDeTestWrapper.dav.createData(TypDeTestWrapper.dav
+					.getDataModel().getAttributeGroup("atg.test"));
 			data.getUnscaledValue("Code").set(0);
 		}
 
 		try {
 			ResultData resultat = new ResultData(this.objekt,
-					new DataDescription(dav.getDataModel().getAttributeGroup(
-							"atg.test"), dav.getDataModel().getAspect(
-							"asp.tlsAntwort")), zeitStempel, data);
-			dav.sendData(resultat);
+					new DataDescription(TypDeTestWrapper.dav.getDataModel()
+							.getAttributeGroup("atg.test"),
+							TypDeTestWrapper.dav.getDataModel().getAspect(
+									"asp.tlsAntwort")), zeitStempel, data);
+			TypDeTestWrapper.dav.sendData(resultat);
 			if (DeFaApplikationTest2.DEBUG) {
 				System.out.println("Sende Daten:\n" + resultat);
 			}
@@ -182,36 +195,38 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 
 	/**
 	 * Setzt die Betriebsparameter eines DE.
-	 * 
+	 *
 	 * @param zyklus
 	 *            der Abfragezyklus (in ms) (-1 == nicht zyklusche Abfrage)
 	 */
-	public void setBetriebsParameter(long zyklus) {
+	public void setBetriebsParameter(final long zyklus) {
 		Data datenSatz;
 
 		try {
-			datenSatz = dav.createData(DeTypLader.getDeTyp(
-					this.objekt.getType())
-					.getDeFaIntervallParameterDataDescription(dav)
-					.getAttributeGroup());
+			datenSatz = TypDeTestWrapper.dav.createData(DeTypLader
+					.getDeTyp(this.objekt.getType())
+					.getDeFaIntervallParameterDataDescription(
+							TypDeTestWrapper.dav).getAttributeGroup());
 		} catch (DeFaException e1) {
 			throw new RuntimeException(e1);
 		}
 
 		datenSatz
-				.getTimeValue("Erfassungsperiodendauer").setMillis(zyklus >= 0 ? zyklus : 1L); //$NON-NLS-1$
+		.getTimeValue("Erfassungsperiodendauer").setMillis(zyklus >= 0 ? zyklus : 1L); //$NON-NLS-1$
 		datenSatz
-				.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0); //$NON-NLS-1$
+		.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0); //$NON-NLS-1$
 
 		ResultData neuerParameter = null;
 		try {
 			neuerParameter = new ResultData(this.objekt, new DataDescription(
-					DeTypLader.getDeTyp(this.objekt.getType())
-							.getDeFaIntervallParameterDataDescription(dav)
-							.getAttributeGroup(), dav.getDataModel().getAspect(
-							DaVKonstanten.ASP_PARAMETER_VORGABE)), System
-					.currentTimeMillis(), datenSatz);
-			dav.sendData(neuerParameter);
+					DeTypLader
+							.getDeTyp(this.objekt.getType())
+					.getDeFaIntervallParameterDataDescription(
+									TypDeTestWrapper.dav).getAttributeGroup(),
+					TypDeTestWrapper.dav.getDataModel().getAspect(
+							DaVKonstanten.ASP_PARAMETER_VORGABE)),
+					System.currentTimeMillis(), datenSatz);
+			TypDeTestWrapper.dav.sendData(neuerParameter);
 			System.out.println("Sende Betriebsparameter:\n" + neuerParameter); //$NON-NLS-1$
 		} catch (Exception e) {
 			throw new RuntimeException(neuerParameter.toString(), e);
@@ -220,28 +235,31 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 
 	/**
 	 * Setzt den DE-Fehler.
-	 * 
+	 *
 	 * @param fehlerStatus
 	 *            Zustand des DE-Fehlers 0 = ok, 1 = StörEAK, 2 = StörSM
 	 * @param passiviert
 	 *            ob der Kanal passiviert ist
 	 */
-	private void setDeFehlerStatus(int fehlerStatus, boolean passiviert) {
-		AttributeGroup atg = dav.getDataModel().getAttributeGroup(
-				"atg.tlsGloDeFehler"); //$NON-NLS-1$
-		Data datum = dav.createData(atg);
+	private void setDeFehlerStatus(final int fehlerStatus,
+			final boolean passiviert) {
+		AttributeGroup atg = TypDeTestWrapper.dav.getDataModel()
+				.getAttributeGroup("atg.tlsGloDeFehler"); //$NON-NLS-1$
+		Data datum = TypDeTestWrapper.dav.createData(atg);
 		datum.getUnscaledValue("DEFehlerStatus").set(fehlerStatus); //$NON-NLS-1$
 		datum.getUnscaledValue("DEKanalStatus").set(passiviert ? 1 : 0); //$NON-NLS-1$
 		datum.getUnscaledValue("DEProjektierungsStatus").set(0); //$NON-NLS-1$
 		datum.getUnscaledValue("HerstellerDefinierterCode").set(0); //$NON-NLS-1$
 		datum.getUnscaledValue("Hersteller").set(0); //$NON-NLS-1$
 		ResultData resultat = new ResultData(this.objekt, new DataDescription(
-				dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+				TypDeTestWrapper.dav.getDataModel().getAttributeGroup(
+						"atg.tlsGloDeFehler"), //$NON-NLS-1$
+				TypDeTestWrapper.dav.getDataModel().getAspect(
+						DUAKonstanten.ASP_TLS_ANTWORT)),
 				System.currentTimeMillis(), datum);
 
 		try {
-			dav.sendData(resultat);
+			TypDeTestWrapper.dav.sendData(resultat);
 			if (DeFaApplikationTest2.DEBUG) {
 				System.out.println("Sende DE-Fehler:\n" + resultat);
 			}
@@ -256,15 +274,13 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 
 	/**
 	 * Setzt ein DE in einen bestimmten Zustand bzgl der DeFa.
-	 * 
+	 *
 	 * @param status
 	 *            der neue Zustand
 	 */
-	public void setDe(DeStatus status) {
+	public void setDe(final DeStatus status) {
 		if (status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AN)) {
-			this
-					.setDeFehlerStatus(TlsDeFehlerStatus.STOER_EAK.getCode(),
-							false);
+			this.setDeFehlerStatus(TlsDeFehlerStatus.STOER_EAK.getCode(), false);
 		} else if (status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS)) {
 			this.setDeFehlerStatus(0, false);
 		} else if (status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AN)) {
@@ -277,16 +293,18 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		// 
+	@Override
+	public void dataRequest(final SystemObject object,
+			final DataDescription dataDescription, final byte state) {
+		//
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 

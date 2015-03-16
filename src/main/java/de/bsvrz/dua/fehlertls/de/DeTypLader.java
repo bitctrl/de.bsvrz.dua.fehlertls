@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -38,9 +38,9 @@ import de.bsvrz.dav.daf.main.config.SystemObjectType;
  * Beschreibungen implementieren das Interface <code>IDeTyp</code>, müssen so
  * heißen, wie die DE-Typ-PID in der Konfiguration (ohne Punkte) und müssen
  * weiterhin im Package <code>de.bsvrz.dua.DeFa</code> definiert sein.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class DeTypLader {
@@ -52,8 +52,7 @@ public final class DeTypLader {
 	 * unterstützen.
 	 */
 	private static final String PACKAGE = DeTypLader.class.getPackage()
-			.getName()
-			+ ".typen"; //$NON-NLS-1$
+			.getName() + ".typen"; //$NON-NLS-1$
 
 	/**
 	 * speichert alle statischen Instanzen von DE-Typen.
@@ -61,21 +60,19 @@ public final class DeTypLader {
 	private static Map<SystemObject, IDeTyp> typen = Collections
 			.synchronizedMap(new HashMap<SystemObject, IDeTyp>());
 
-	
 	/**
 	 * Default-Konstruktor.
 	 */
 	private DeTypLader() {
-		
+
 	}
-	
-	
+
 	/**
 	 * Erfragt eine (statische) Instanz einer DE-Typ-Beschreibung, wie sie in
 	 * der SWE "DE Fehleranalyse fehlende Messdaten" benötigt wird, um die
 	 * Datenidentifikationen eines bestimmten DE-Typs zu ermitteln, die
 	 * Messwerte enthalten.
-	 * 
+	 *
 	 * @param deTypObj
 	 *            Systemobjekttyp des DE-Typs wie er in der Konfiguration steht
 	 * @return eine Instanz einer DE-Typ-Beschreibung des DE-Typs, dessen PID
@@ -88,18 +85,20 @@ public final class DeTypLader {
 			throws DeFaException {
 		IDeTyp deTyp = null;
 
-		synchronized (typen) {
-			deTyp = typen.get(deTypObj);
+		synchronized (DeTypLader.typen) {
+			deTyp = DeTypLader.typen.get(deTypObj);
 
 			if (deTyp == null) {
 				Class<?> klasse = null;
 
 				try {
 					klasse = ClassLoader.getSystemClassLoader().loadClass(
-							PACKAGE + "." + //$NON-NLS-1$
-									getKlassenNameVonPid(deTypObj.getPid()));
+							DeTypLader.PACKAGE
+									+ "." + //$NON-NLS-1$
+									DeTypLader.getKlassenNameVonPid(deTypObj
+											.getPid()));
 					deTyp = (IDeTyp) klasse.newInstance();
-					typen.put(deTypObj, deTyp);
+					DeTypLader.typen.put(deTypObj, deTyp);
 				} catch (Throwable e) {
 					throw new DeTypUnsupportedException(deTypObj.getPid());
 				}
@@ -118,7 +117,7 @@ public final class DeTypLader {
 	 * ü -> ue, Ü -> Ue<br>
 	 * ö -> oe, Ö -> Oe<br>
 	 * ß -> ss
-	 * 
+	 *
 	 * @param pid
 	 *            eine PID eines DE-Typs
 	 * @return den über die PID referenzierten Klassennamen

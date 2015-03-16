@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -28,9 +28,9 @@ package de.bsvrz.dua.fehlertls;
 
 /**
  * Zustaende, die eine DE bzgl. der DeFa annehmen kann
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class DeStatus {
@@ -81,11 +81,11 @@ public final class DeStatus {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param name
 	 *            der Name des Status
 	 */
-	private DeStatus(String name) {
+	private DeStatus(final String name) {
 		this.name = name;
 	}
 
@@ -93,10 +93,10 @@ public final class DeStatus {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		boolean gleich = false;
 
-		if (obj != null && obj instanceof DeStatus) {
+		if ((obj != null) && (obj instanceof DeStatus)) {
 			DeStatus that = (DeStatus) obj;
 			gleich = this.name.equals(that.name);
 		}

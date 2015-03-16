@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -39,13 +39,12 @@ import de.bsvrz.sys.funclib.debug.Debug;
 /**
  * Initialisiert alle Objekte im Teilmodel TLS, die (inklusive und) unterhalb
  * der uebergebenen Objekte vom Typ <code>typ.gerät</code> konfiguriert sind.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TlsHierarchie extends TlsHierarchieElement {
-
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -66,67 +65,67 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	 */
 	private static TlsHierarchie wurzel = null;
 
-	private boolean initialisiert;
-
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 */
-	private TlsHierarchie(ClientDavInterface dav) {
+	private TlsHierarchie(final ClientDavInterface dav) {
 		super(dav, null, null);
 	}
 
 	/**
 	 * Erfragt die statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel
 	 * haengen die Geraete, mit der diese TLS-Hierarchie initialisiert wurde.
-	 * 
+	 *
 	 * @return die statische Wurzel der TLS-Hierarchie
 	 */
 	public static TlsHierarchie getWurzel() {
-		if (wurzel == null) {
+		if (TlsHierarchie.wurzel == null) {
 			throw new RuntimeException(
 					"TLS-Hierarchie wurde noch nicht initialisiert"); //$NON-NLS-1$
 		}
-		return wurzel;
+		return TlsHierarchie.wurzel;
 	}
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 * @param geraete
 	 *            Geraete, die in der Kommandozeile uebergeben wurden
 	 */
-	public static void initialisiere(ClientDavInterface dav,
-			Set<SystemObject> geraete) {
-		if (wurzel == null) {
-			wurzel = new TlsHierarchie(dav);
-			sDav = dav;
-			konfigAtg = dav.getDataModel().getAttributeGroup(
+	public static void initialisiere(final ClientDavInterface dav,
+			final Set<SystemObject> geraete) {
+		if (TlsHierarchie.wurzel == null) {
+			TlsHierarchie.wurzel = new TlsHierarchie(dav);
+			TlsHierarchie.sDav = dav;
+			TlsHierarchie.konfigAtg = dav.getDataModel().getAttributeGroup(
 					"atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
 
 			for (SystemObject geraet : geraete) {
-				initialisiere((ConfigurationObject) geraet);
+				TlsHierarchie.initialisiere((ConfigurationObject) geraet);
 			}
 		}
 
-		LOGGER.config("TlsHierarchie wurde initialisiert");
+		TlsHierarchie.LOGGER.config("TlsHierarchie wurde initialisiert");
 	}
 
 	/**
 	 * Initialisiert ein einzelnes Objekt vom Typ <code>typ.gerät</code>.
-	 * 
+	 *
 	 * @param geraet
 	 *            ein Objekt vom Typ <code>typ.gerät</code>
 	 */
-	private static void initialisiere(ConfigurationObject geraet) {
+	private static void initialisiere(final ConfigurationObject geraet) {
 		if (geraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
-			wurzel.addKind(new Sm(sDav, geraet, wurzel));
+			TlsHierarchie.wurzel.addKind(new Sm(TlsHierarchie.sDav, geraet,
+					TlsHierarchie.wurzel));
 		} else if (geraet.isOfType("typ.kri")) { //$NON-NLS-1$
-			wurzel.addKind(new Kri(sDav, geraet, wurzel));
+			TlsHierarchie.wurzel.addKind(new Kri(TlsHierarchie.sDav, geraet,
+					TlsHierarchie.wurzel));
 		} else if (geraet.isOfType("typ.uz") || //$NON-NLS-1$
 				geraet.isOfType("typ.viz") || //$NON-NLS-1$
 				geraet.isOfType("typ.vrz")) { //$NON-NLS-1$
@@ -141,22 +140,26 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 									"AnschlussPunkteKommunikationsPartner").getElements()) { //$NON-NLS-1$
 
 						Data konfigDatum = komPartner
-								.getConfigurationData(konfigAtg);
+								.getConfigurationData(TlsHierarchie.konfigAtg);
 						if (konfigDatum != null) {
 							SystemObject unterGeraet = konfigDatum
 									.getReferenceValue("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
 							if (unterGeraet != null) {
 								unterGeraete.add(unterGeraet);
 							} else {
-								LOGGER.warning("An " + komPartner + //$NON-NLS-1$
-										" (Geraet: " + geraet + //$NON-NLS-1$
-										") ist kein Geraet definiert"); //$NON-NLS-1$				
+								TlsHierarchie.LOGGER
+										.warning("An " + komPartner + //$NON-NLS-1$
+												" (Geraet: " + geraet + //$NON-NLS-1$
+												") ist kein Geraet definiert"); //$NON-NLS-1$
 							}
 						} else {
-							LOGGER.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
-									" (an Geraet: " + geraet + //$NON-NLS-1$
-									") konnte nicht ausgelesen werden. " + //$NON-NLS-1$
-									"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
+							TlsHierarchie.LOGGER
+									.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+											" (an Geraet: " + geraet
+											+ //$NON-NLS-1$
+											") konnte nicht ausgelesen werden. "
+											+ //$NON-NLS-1$
+											"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
 						}
 					}
 
@@ -175,11 +178,13 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 
 					if (unterGeraete.size() > 0) {
 						if (unterGeraete.size() == steuerModulZaehler) {
-							wurzel.addKind(new AnschlussPunkt(sDav,
-									anschlussPunktSysObj, wurzel));
+							TlsHierarchie.wurzel.addKind(new AnschlussPunkt(
+									TlsHierarchie.sDav, anschlussPunktSysObj,
+									TlsHierarchie.wurzel));
 						} else {
 							for (SystemObject unterGeraet : unterGeraete) {
-								initialisiere((ConfigurationObject) unterGeraet);
+								TlsHierarchie
+										.initialisiere((ConfigurationObject) unterGeraet);
 							}
 						}
 					}
@@ -200,7 +205,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void publiziereFehler(long zeitStempel) {
+	public void publiziereFehler(final long zeitStempel) {
 		assert (false);
 	}
 }

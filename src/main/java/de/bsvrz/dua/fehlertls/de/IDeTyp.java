@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -34,9 +34,9 @@ import de.bsvrz.dav.daf.main.DataDescription;
  * Interface, dass von allen Klassen implementiert werden muss, die einen
  * konkreten DE-Typ für die SWE "DE Fehleranalyse fehlende Messdaten"
  * beschreiben.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public interface IDeTyp {
@@ -45,7 +45,7 @@ public interface IDeTyp {
 	 * Erfragt alle Datenidentifikationen, die bzgl. dieses DE-Typs Messwerte
 	 * (Nutzdaten) enthalten und auf die sich von der SWE "DE Fehleranalyse
 	 * fehlende Messdaten" angemeldet werden sollte
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @return die Datenidentifikationen, die bzgl. dieses DE-Typs zyklische
@@ -60,7 +60,7 @@ public interface IDeTyp {
 	/**
 	 * Erfragt die Datenidentifikation, in der sich die Parameter für die
 	 * Ermittlung der Erfassungsintervalldauer dieses DE-Typs befinden.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @return die Parameter-Datenidentifikation für die
@@ -75,7 +75,7 @@ public interface IDeTyp {
 	/**
 	 * Liest aus einem Parameterdatensatz die aktuelle Erfassungsintervalldauer
 	 * aus.
-	 * 
+	 *
 	 * @param parameter
 	 *            der Parameterdatensatz, welcher der Datenidentifikation
 	 *            entspricht, die über die Methode

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -34,9 +34,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * DeFa-Beschreibung eines Test DE-Typs (nur für Test-Zwecke innerhalb der
  * Test-Konfiguration).<br>
  * (PID: typ.deTest)
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class TypDeTest extends AbstraktDeTyp {
@@ -44,11 +44,13 @@ public class TypDeTest extends AbstraktDeTyp {
 	/**
 	 * {@inheritDoc}
 	 */
-	public long getErfassungsIntervall(Data parameter) {
+	@Override
+	public long getErfassungsIntervall(final Data parameter) {
 		long erfassungsIntervallDauer = -1;
 
 		if (parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1) {
-			erfassungsIntervallDauer = parameter.getTimeValue("Erfassungsperiodendauer").getMillis();
+			erfassungsIntervallDauer = parameter.getTimeValue(
+					"Erfassungsperiodendauer").getMillis();
 		}
 
 		return erfassungsIntervallDauer;
@@ -65,10 +67,10 @@ public class TypDeTest extends AbstraktDeTyp {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DataDescriptionPid[] getDataIdentifikations() {
-		return new DataDescriptionPid[] { new DataDescriptionPid(
-				"atg.test", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
-		};
+		return new DataDescriptionPid[] { new DataDescriptionPid("atg.test",
+				DUAKonstanten.ASP_TLS_ANTWORT, (short) 0), };
 	}
 
 }

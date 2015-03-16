@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -61,14 +61,14 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 /**
  * Repraesentiert ein DE fuer die DeFa. Liest alle generischen DE-Parameter und
  * meldet sich auf alle Daten an, auf die von dem DE gewartet werden soll.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class De extends TlsHierarchieElement implements
-		ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
-		IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
+ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
+IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -128,11 +128,11 @@ public class De extends TlsHierarchieElement implements
 	 */
 	private DeErfassungsZustand.Zustand aktuellerZustand = null;
 
-	private boolean initialisiert;
+	private final boolean initialisiert;
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param objekt
@@ -142,12 +142,12 @@ public class De extends TlsHierarchieElement implements
 	 * @throws DeFaException
 	 *             wird nach oben weitergereicht
 	 */
-	protected De(ClientDavInterface dav, SystemObject objekt,
-			TlsHierarchieElement vater) throws DeFaException {
+	protected De(final ClientDavInterface dav, final SystemObject objekt,
+			final TlsHierarchieElement vater) throws DeFaException {
 		super(dav, objekt, vater);
 
-		if (fehlerDatenBeschreibung == null) {
-			fehlerDatenBeschreibung = new DataDescription(dav.getDataModel()
+		if (De.fehlerDatenBeschreibung == null) {
+			De.fehlerDatenBeschreibung = new DataDescription(dav.getDataModel()
 					.getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
 					dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 		}
@@ -156,28 +156,30 @@ public class De extends TlsHierarchieElement implements
 				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
-			LOGGER.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
+			De.LOGGER
+					.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		try {
-			dav.subscribeSender(this, objekt, fehlerDatenBeschreibung,
+			dav.subscribeSender(this, objekt, De.fehlerDatenBeschreibung,
 					SenderRole.source());
 		} catch (OneSubscriptionPerSendData e) {
 			throw new IllegalStateException("Quellenanmeldung für DE" + objekt
 					+ " nicht möglich", e);
 		}
 
-		new DeErfassungsZustand(sDav, this.getObjekt()).addListener(this);
+		new DeErfassungsZustand(TlsHierarchieElement.sDav, this.getObjekt())
+				.addListener(this);
 		ParameterTlsFehlerAnalyse.getInstanz(dav,
 				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
 		initialisiert = true;
 	}
 
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
-				if ((resultat != null)
-						&& (resultat.getData() != null)) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					this.inTime = true;
 					this.versucheErwartung();
 				}
@@ -192,7 +194,7 @@ public class De extends TlsHierarchieElement implements
 
 	/**
 	 * Publiziert eine erkannte Fehlerursache an diesem DE.
-	 * 
+	 *
 	 * @param fehlerZeit
 	 *            die Zeit mit der der Fehler assoziiert ist (Die Zeit, zu der
 	 *            ausgefallene Datensatz erwartet wurde)
@@ -203,18 +205,18 @@ public class De extends TlsHierarchieElement implements
 			final TlsFehlerAnalyse tlsFehler) {
 		this.zeitStempelLetzterPublizierterFehler = fehlerZeit;
 
-		Data datum = sDav.createData(fehlerDatenBeschreibung
-				.getAttributeGroup());
+		Data datum = TlsHierarchieElement.sDav
+				.createData(De.fehlerDatenBeschreibung.getAttributeGroup());
 		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode());
 		try {
-			sDav.sendData(new ResultData(this.objekt, fehlerDatenBeschreibung,
-					fehlerZeit, datum));
+			TlsHierarchieElement.sDav.sendData(new ResultData(this.objekt,
+					De.fehlerDatenBeschreibung, fehlerZeit, datum));
 		} catch (DataNotSubscribedException e) {
-			LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
+			De.LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
 					+ " nicht publiziert werden. Grund:\n"
 					+ e.getLocalizedMessage());
 		} catch (SendSubscriptionNotConfirmed e) {
-			LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
+			De.LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
 					+ " nicht publiziert werden. Grund:\n"
 					+ e.getLocalizedMessage());
 		}
@@ -224,7 +226,7 @@ public class De extends TlsHierarchieElement implements
 
 	/**
 	 * Erfragt den aktuellen Erfassungszustand dieses DE.
-	 * 
+	 *
 	 * @return der aktuellen Erfassungszustand dieses DE
 	 */
 	public final synchronized DeErfassungsZustand.Zustand getZustand() {
@@ -234,7 +236,7 @@ public class De extends TlsHierarchieElement implements
 	/**
 	 * Erfragt, ob dieses DE im Moment Daten im Sinne der DeFa hat (Also ob
 	 * Daten vorhanden sind, und ob diese rechtzeitig angekommen sind).
-	 * 
+	 *
 	 * @return ob dieses DE im Moment Daten im Sinne der DeFa hat
 	 */
 	public final boolean isInTime() {
@@ -245,7 +247,7 @@ public class De extends TlsHierarchieElement implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean kannFehlerHierPublizieren(long zeitStempel) {
+	public boolean kannFehlerHierPublizieren(final long zeitStempel) {
 		return zeitStempel > this.zeitStempelLetzterPublizierterFehler;
 	}
 
@@ -253,15 +255,17 @@ public class De extends TlsHierarchieElement implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void publiziereFehler(long zeitStempel) {
+	public void publiziereFehler(final long zeitStempel) {
 		this.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.UNBEKANNT);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public synchronized void aktualisiereParameterTlsFehlerAnalyse(
-			long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung) {
+			final long zeitverzugFehlerErkennung,
+			final long zeitverzugFehlerErmittlung) {
 		this.zeitVerzugFehlerErkennung = zeitverzugFehlerErkennung;
 		this.zeitVerzugFehlerErmittlung = zeitverzugFehlerErmittlung;
 
@@ -271,7 +275,8 @@ public class De extends TlsHierarchieElement implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public synchronized void aktualisiereErfassungsZustand(Zustand zustand) {
+	@Override
+	public synchronized void aktualisiereErfassungsZustand(final Zustand zustand) {
 		this.aktuellerZustand = zustand;
 		this.versucheErwartung();
 	}
@@ -289,49 +294,51 @@ public class De extends TlsHierarchieElement implements
 
 		if (this.zeitVerzugFehlerErkennung >= 0) {
 
-			if (this.aktuellerZustand != null
-					&& this.aktuellerZustand.getErfassungsIntervallDauer() > 0) {
+			if ((this.aktuellerZustand != null)
+					&& (this.aktuellerZustand.getErfassungsIntervallDauer() > 0)) {
 
-				this.letzterErwarteterDatenZeitpunkt = getNaechstenIntervallZeitstempel(
-						System.currentTimeMillis(),
-						this.aktuellerZustand.getErfassungsIntervallDauer());
+				this.letzterErwarteterDatenZeitpunkt = De
+						.getNaechstenIntervallZeitstempel(System
+								.currentTimeMillis(), this.aktuellerZustand
+								.getErfassungsIntervallDauer());
 				long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt
 						+ zeitVerzugFehlerErkennung;
 
-				LOGGER.info("Plane Erwartung fuer "
+				De.LOGGER.info("Plane Erwartung fuer "
 						+ De.this.getObjekt()
 						+ ": "
 						+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
 								nachsterErwarteterZeitpunkt
-										+ STANDARD_ZEIT_ABSTAND)));
-				fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
-						+ STANDARD_ZEIT_ABSTAND);
+								+ De.STANDARD_ZEIT_ABSTAND)));
+				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
+						+ De.STANDARD_ZEIT_ABSTAND);
 			} else {
-				if (this.aktuellerZustand != null
+				if ((this.aktuellerZustand != null)
 						&& this.aktuellerZustand.isInitialisiert()) {
 					if (this.aktuellerZustand.getErfassungsIntervallDauer() <= 0) {
-						LOGGER.info("Erwartung fuer " + De.this.getObjekt()
+						De.LOGGER.info("Erwartung fuer " + De.this.getObjekt()
 								+ " ausgeplant.");
-						fehlerWecker.setWecker(this, ObjektWecker.AUS);
+						De.fehlerWecker.setWecker(this, ObjektWecker.AUS);
 						this.einzelPublikator.publiziere(MessageGrade.WARNING,
 								this.objekt, this.objekt + ": "
 										+ this.aktuellerZustand.getGrund());
 					}
 				} else {
 					if (this.aktuellerZustand == null) {
-						LOGGER.info("Aktueller Erfassungszustand von "
+						De.LOGGER.info("Aktueller Erfassungszustand von "
 								+ De.this.objekt + " ist (noch) nicht bekannt");
 					} else {
-						LOGGER.info("DE "
-								+ De.this.objekt
-								+ " ist (noch) nicht vollstaendig initialisiert:\n"
-								+ this.aktuellerZustand);
+						De.LOGGER
+								.info("DE "
+										+ De.this.objekt
+										+ " ist (noch) nicht vollstaendig initialisiert:\n"
+										+ this.aktuellerZustand);
 					}
 				}
 			}
 
 		} else {
-			LOGGER.warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
+			De.LOGGER.warning("Kann keine Daten fuer " + this.objekt + //$NON-NLS-1$
 					" erwarten, da noch keine (sinnvollen) " + //$NON-NLS-1$
 					"Parameter zur TLS-Fehleranalyse empfangen wurden"); //$NON-NLS-1$
 		}
@@ -340,15 +347,17 @@ public class De extends TlsHierarchieElement implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(final SystemObject object,
+			final DataDescription dataDescription, final byte state) {
 		if (state == ClientSenderInterface.STOP_SENDING_NOT_A_VALID_SUBSCRIPTION) {
-			LOGGER.error("SWE wird beendet, weil die Quellenanmeldung für "
+			De.LOGGER.error("SWE wird beendet, weil die Quellenanmeldung für "
 					+ object + ": " + dataDescription + " ungültig ist");
 			System.exit(-1);
 		} else if (state == ClientSenderInterface.STOP_SENDING_NO_RIGHTS) {
-			LOGGER.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
-					+ object + ": " + dataDescription + " hat");
+			De.LOGGER
+					.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
+							+ object + ": " + dataDescription + " hat");
 			System.exit(-1);
 		}
 	}
@@ -356,14 +365,16 @@ public class De extends TlsHierarchieElement implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void alarm() {
 		/**
 		 * Ueberpruefe Bedingungen nach Afo-9.0 DUA BW C1C2-21 (S. 45)
@@ -375,22 +386,23 @@ public class De extends TlsHierarchieElement implements
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
-			LOGGER.info("Plane Fehlerpublikation fuer "
+			De.LOGGER.info("Plane Fehlerpublikation fuer "
 					+ De.this.getObjekt()
 					+ ": "
 					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
 							fehlerZeit + zeitVerzugFehlerErkennung
-									+ zeitVerzugFehlerErmittlung + 2
-									* STANDARD_ZEIT_ABSTAND))
-					+ "\nFehlerzeit: "
-					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-							fehlerZeit)) + "\nVerzug (Erkennung): "
-					+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): "
-					+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
-					+ (2 * STANDARD_ZEIT_ABSTAND));
+							+ zeitVerzugFehlerErmittlung
+									+ (2 * De.STANDARD_ZEIT_ABSTAND)))
+									+ "\nFehlerzeit: "
+									+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+											fehlerZeit)) + "\nVerzug (Erkennung): "
+											+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): "
+											+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
+											+ (2 * De.STANDARD_ZEIT_ABSTAND));
 
-			analyseWecker.setWecker(new IObjektWeckerListener() {
+			De.analyseWecker.setWecker(new IObjektWeckerListener() {
 
+				@Override
 				public void alarm() {
 					if (!De.this.inTime) {
 						versucheFehlerPublikation(fehlerZeit);
@@ -398,13 +410,14 @@ public class De extends TlsHierarchieElement implements
 				}
 
 			}, fehlerZeit + zeitVerzugFehlerErkennung
-					+ zeitVerzugFehlerErmittlung + 2 * STANDARD_ZEIT_ABSTAND);
+			+ zeitVerzugFehlerErmittlung
+					+ (2 * De.STANDARD_ZEIT_ABSTAND));
 		} else {
 			if (zustand.isInitialisiert()) {
 				De.this.einzelPublikator.publiziere(MessageGrade.WARNING,
 						this.objekt, this.objekt + ": " + zustand.getGrund());
 			} else {
-				LOGGER.warning(De.this.objekt
+				De.LOGGER.warning(De.this.objekt
 						+ " ist (noch) nicht vollstaendig initialisiert"); //$NON-NLS-1$
 			}
 		}
@@ -414,7 +427,7 @@ public class De extends TlsHierarchieElement implements
 	 * Erfragt den ersten Zeitstempel, der sich echt (> 500ms) nach dem
 	 * Zeitstempel <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet und
 	 * der zur uebergebenen Erfassungsintervalllange passt.
-	 * 
+	 *
 	 * @param jetzt
 	 *            angenommener Jetzt-Zeitpunkt (in ms)
 	 * @param intervallLaenge
@@ -440,14 +453,14 @@ public class De extends TlsHierarchieElement implements
 			final long intervalleSeitTagesAnfang = msNachTagesAnfang
 					/ intervallLaenge;
 			naechsterIntervallZeitstempel = stundenAnfang.getTimeInMillis()
-					+ (intervalleSeitTagesAnfang + 1) * intervallLaenge;
+					+ ((intervalleSeitTagesAnfang + 1) * intervallLaenge);
 		} else {
 			final long msNachStundenAnfang = jetztPlus
 					- stundenAnfang.getTimeInMillis();
 			final long intervalleSeitStundenAnfang = msNachStundenAnfang
 					/ intervallLaenge;
 			naechsterIntervallZeitstempel = stundenAnfang.getTimeInMillis()
-					+ (intervalleSeitStundenAnfang + 1) * intervallLaenge;
+					+ ((intervalleSeitStundenAnfang + 1) * intervallLaenge);
 		}
 
 		return naechsterIntervallZeitstempel;

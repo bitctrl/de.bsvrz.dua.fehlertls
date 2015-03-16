@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -32,10 +32,11 @@ import java.util.Map;
 import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 
 /**
- * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsDEFehlerStatus</code>.
- * 
+ * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsDEFehlerStatus</code>
+ * .
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TlsDeFehlerStatus extends AbstractDavZustand {
@@ -75,7 +76,7 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param kode
 	 *            der Kode
 	 * @param name
@@ -83,15 +84,16 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 	 * @param text
 	 *            der Text der die Natur des DE-Fehlers illustriert
 	 */
-	private TlsDeFehlerStatus(String name, int kode, String text) {
+	private TlsDeFehlerStatus(final String name, final int kode,
+			final String text) {
 		super(kode, name);
 		this.text = text;
-		werteBereich.put(kode, this);
+		TlsDeFehlerStatus.werteBereich.put(kode, this);
 	}
 
 	/**
 	 * Erfragt den Text der die Natur des DE-Fehlers illustriert.
-	 * 
+	 *
 	 * @return der Text der die Natur des DE-Fehlers illustriert
 	 */
 	public String getText() {
@@ -100,13 +102,13 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 
 	/**
 	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
-	 * 
+	 *
 	 * @param kode
 	 *            der Kode des Zustands
 	 * @return der Enumerations-Wert
 	 */
 	public static TlsDeFehlerStatus getZustand(final int kode) {
-		return werteBereich.get(kode);
+		return TlsDeFehlerStatus.werteBereich.get(kode);
 	}
 
 }

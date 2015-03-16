@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -33,16 +33,16 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 
 /**
  * TLS-Hierarchieelement Steuermodul.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class Sm extends TlsHierarchieElement {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 * @param objekt
@@ -50,8 +50,8 @@ public class Sm extends TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Sm(ClientDavInterface dav, SystemObject objekt,
-			TlsHierarchieElement vater) {
+	protected Sm(final ClientDavInterface dav, final SystemObject objekt,
+			final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 		for (SystemObject eak : this.objekt
 				.getNonMutableSet("Eak").getElements()) { //$NON-NLS-1$
@@ -73,12 +73,12 @@ public class Sm extends TlsHierarchieElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void publiziereFehler(long zeitStempel) {
+	public void publiziereFehler(final long zeitStempel) {
 		this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
 				"Modem am Steuermodul " + this.objekt
-						+ " oder Steuermodul defekt. "
-						+ "Modem am Steuermodul " + this.objekt
-						+ " oder Steuermodul instand setzen");
+				+ " oder Steuermodul defekt. "
+				+ "Modem am Steuermodul " + this.objekt
+				+ " oder Steuermodul instand setzen");
 
 		for (De de : this.getErfassteDes()) {
 			de.publiziereFehlerUrsache(zeitStempel,

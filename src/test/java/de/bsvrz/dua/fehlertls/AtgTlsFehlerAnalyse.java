@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -43,9 +43,9 @@ import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 /**
  * Assoziiert mit DE-Daten von <code>atg.tlsFehlerAnalyse</code>,
  * <code>asp.analyse</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
@@ -58,7 +58,7 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	/**
 	 * Listenermenge.
 	 */
-	private Set<IAtgTlsFehlerAnalyseListener> listenerMenge = Collections
+	private final Set<IAtgTlsFehlerAnalyseListener> listenerMenge = Collections
 			.synchronizedSet(new HashSet<IAtgTlsFehlerAnalyseListener>());
 
 	/**
@@ -68,20 +68,20 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param obj
 	 *            ein DE-Objekt
 	 * @return eine statische Instanz dieser Klasse
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	public static AtgTlsFehlerAnalyse getInstanz(SystemObject obj)
+	public static AtgTlsFehlerAnalyse getInstanz(final SystemObject obj)
 			throws Exception {
-		AtgTlsFehlerAnalyse instanz = instanzen.get(obj);
+		AtgTlsFehlerAnalyse instanz = AtgTlsFehlerAnalyse.instanzen.get(obj);
 
 		if (instanz == null) {
 			instanz = new AtgTlsFehlerAnalyse(obj);
-			instanzen.put(obj, instanz);
+			AtgTlsFehlerAnalyse.instanzen.put(obj, instanz);
 		}
 
 		return instanz;
@@ -89,30 +89,30 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param obj
 	 *            ein DE-Objekt
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	private AtgTlsFehlerAnalyse(SystemObject obj) throws Exception {
+	private AtgTlsFehlerAnalyse(final SystemObject obj) throws Exception {
 		DataDescription datenBeschreibung = new DataDescription(DAVTest
-				.getDav().getDataModel().getAttributeGroup(
-						"atg.tlsFehlerAnalyse"), //$NON-NLS-1$
-				DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
+				.getDav().getDataModel()
+				.getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
+						DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung,
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Fuegt Listener hinzu.
-	 * 
+	 *
 	 * @param listener
 	 *            neuer Listener
 	 */
 	public synchronized void addListener(
-			IAtgTlsFehlerAnalyseListener listener) {
-		if (this.listenerMenge.add(listener) && this.aktuellerFehler != null) {
+			final IAtgTlsFehlerAnalyseListener listener) {
+		if (this.listenerMenge.add(listener) && (this.aktuellerFehler != null)) {
 			listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 		}
 	}
@@ -120,17 +120,18 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] results) {
+	@Override
+	public void update(final ResultData[] results) {
 		if (results != null) {
 			for (ResultData result : results) {
-				if (result != null && result.getData() != null) {
+				if ((result != null) && (result.getData() != null)) {
 					synchronized (this) {
 						this.aktuellerFehler = TlsFehlerAnalyse
-								.getZustand(result.getData().getUnscaledValue(
-										"TlsFehlerAnalyse").intValue()); //$NON-NLS-1$
+								.getZustand(result
+										.getData()
+										.getUnscaledValue("TlsFehlerAnalyse").intValue()); //$NON-NLS-1$
 						for (IAtgTlsFehlerAnalyseListener listener : this.listenerMenge) {
-							listener
-									.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
+							listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 						}
 					}
 				}

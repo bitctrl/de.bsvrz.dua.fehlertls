@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -44,9 +44,9 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 /**
  * Korrespondiert mit der Attributgruppe <code>atg.tlsGloKanalSteuerung</code>
  * (Kanalsteuerung (FG alle / Typ 29)).
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
@@ -60,7 +60,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	/**
 	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<ITlsGloKanalSteuerungsListener> listenerMenge = Collections
+	private final Set<ITlsGloKanalSteuerungsListener> listenerMenge = Collections
 			.synchronizedSet(new HashSet<ITlsGloKanalSteuerungsListener>());
 
 	/**
@@ -70,25 +70,25 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static TlsGloKanalSteuerung getInstanz(ClientDavInterface dav,
-			SystemObject objekt) {
+	public static TlsGloKanalSteuerung getInstanz(final ClientDavInterface dav,
+			final SystemObject objekt) {
 		TlsGloKanalSteuerung instanz = null;
 
-		synchronized (instanzen) {
-			instanz = instanzen.get(objekt);
+		synchronized (TlsGloKanalSteuerung.instanzen) {
+			instanz = TlsGloKanalSteuerung.instanzen.get(objekt);
 		}
 
 		if (instanz == null) {
 			instanz = new TlsGloKanalSteuerung(dav, objekt);
-			synchronized (instanzen) {
-				instanzen.put(objekt, instanz);
+			synchronized (TlsGloKanalSteuerung.instanzen) {
+				TlsGloKanalSteuerung.instanzen.put(objekt, instanz);
 			}
 		}
 
@@ -97,13 +97,14 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private TlsGloKanalSteuerung(ClientDavInterface dav, SystemObject objekt) {
+	private TlsGloKanalSteuerung(final ClientDavInterface dav,
+			final SystemObject objekt) {
 		dav.subscribeReceiver(
 				this,
 				objekt,
@@ -111,26 +112,27 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 						"atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(
 								DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+								ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Fuegt diesem Objekt einen Listener hinzu.
-	 * 
+	 *
 	 * @param listener
 	 *            eine neuer Listener
 	 */
 	public synchronized void addListener(
 			final ITlsGloKanalSteuerungsListener listener) {
-		if (listenerMenge.add(listener) && this.aktiv != null) {
+		if (listenerMenge.add(listener) && (this.aktiv != null)) {
 			listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 		}
 	}
 
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
-				if (resultat != null && resultat.getData() != null) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.aktiv = resultat.getData()
 								.getUnscaledValue("DEKanalStatus").intValue() == 0;

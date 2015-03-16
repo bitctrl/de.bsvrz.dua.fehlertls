@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -45,9 +45,9 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  * Korrespondiert mit der Attributgruppe
  * <code>atg.parameterTlsFehlerAnalyse</code> (Parameter für die TLS
  * Fehleranalyse).
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface {
@@ -61,7 +61,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	/**
 	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<IParameterTlsFehlerAnalyseListener> listenerMenge = Collections
+	private final Set<IParameterTlsFehlerAnalyseListener> listenerMenge = Collections
 			.synchronizedSet(new HashSet<IParameterTlsFehlerAnalyseListener>());
 
 	/**
@@ -79,7 +79,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
@@ -87,17 +87,17 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
 	public static ParameterTlsFehlerAnalyse getInstanz(
-			ClientDavInterface dav, SystemObject objekt) {
+			final ClientDavInterface dav, final SystemObject objekt) {
 		ParameterTlsFehlerAnalyse instanz = null;
 
-		synchronized (instanzen) {
-			instanz = instanzen.get(objekt);
+		synchronized (ParameterTlsFehlerAnalyse.instanzen) {
+			instanz = ParameterTlsFehlerAnalyse.instanzen.get(objekt);
 		}
 
 		if (instanz == null) {
 			instanz = new ParameterTlsFehlerAnalyse(dav, objekt);
-			synchronized (instanzen) {
-				instanzen.put(objekt, instanz);
+			synchronized (ParameterTlsFehlerAnalyse.instanzen) {
+				ParameterTlsFehlerAnalyse.instanzen.put(objekt, instanz);
 			}
 		}
 
@@ -106,31 +106,34 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.tlsFehlerAnalyse</code>
 	 */
-	private ParameterTlsFehlerAnalyse(ClientDavInterface dav,
-			SystemObject objekt) {
-		dav.subscribeReceiver(this, objekt, new DataDescription(
-				dav.getDataModel().getAttributeGroup(
+	private ParameterTlsFehlerAnalyse(final ClientDavInterface dav,
+			final SystemObject objekt) {
+		dav.subscribeReceiver(
+				this,
+				objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.parameterTlsFehlerAnalyse"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_SOLL)),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Fuegt diesem Objekt einen Listener hinzu.
-	 * 
+	 *
 	 * @param listener
 	 *            eine neuer Listener
 	 */
 	public synchronized void addListener(
 			final IParameterTlsFehlerAnalyseListener listener) {
 		if (listenerMenge.add(listener)
-				&& this.zeitverzugFehlerErkennung != Long.MIN_VALUE) {
+				&& (this.zeitverzugFehlerErkennung != Long.MIN_VALUE)) {
 			listener.aktualisiereParameterTlsFehlerAnalyse(
 					zeitverzugFehlerErkennung, zeitverzugFehlerErmittlung);
 		}
@@ -139,10 +142,11 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
-				if (resultat != null && resultat.getData() != null) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.zeitverzugFehlerErkennung = resultat
 								.getData()

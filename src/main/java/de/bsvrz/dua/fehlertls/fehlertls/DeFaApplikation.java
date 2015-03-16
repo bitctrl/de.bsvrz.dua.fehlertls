@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -50,9 +50,9 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * Diese SWE versucht die Störung innerhalb dieser Kommunikationskette zu
  * lokalisieren und über Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE
  * verfügbar zu machen
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
@@ -73,7 +73,7 @@ public class DeFaApplikation implements StandardApplication {
 	/**
 	 * Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
-	private Set<SystemObject> geraete = new HashSet<SystemObject>();
+	private final Set<SystemObject> geraete = new HashSet<SystemObject>();
 
 	/**
 	 * die PIDs der Geraete, die in der Kommandozeile uebergeben wurden.
@@ -90,18 +90,18 @@ public class DeFaApplikation implements StandardApplication {
 	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
 	 * dem diese Applikation assoziiert ist (aus der sie ihre Parameter
 	 * bezieht).
-	 * 
+	 *
 	 * @return das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
 	 *         dem diese Applikation assoziiert ist (aus der sie ihre Parameter
 	 *         bezieht)
 	 */
 	public static final SystemObject getTlsFehlerAnalyseObjekt() {
-		return tlsFehlerAnalyseObjekte;
+		return DeFaApplikation.tlsFehlerAnalyseObjekte;
 	}
 
 	/**
 	 * Erfragt den Namen dieser Applikation.
-	 * 
+	 *
 	 * @return der Name dieser Applikation
 	 */
 	public static final String getAppName() {
@@ -111,8 +111,9 @@ public class DeFaApplikation implements StandardApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void initialize(ClientDavInterface dav) throws Exception {
-		sDav = dav;
+	@Override
+	public void initialize(final ClientDavInterface dav) throws Exception {
+		DeFaApplikation.sDav = dav;
 
 		MessageSender.getInstance().setApplicationLabel(
 				"Ueberpruefung fehlende Messdaten TLS-LVE");
@@ -124,14 +125,12 @@ public class DeFaApplikation implements StandardApplication {
 				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
-					LOGGER
-							.warning(
-									"Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
+					DeFaApplikation.LOGGER
+					.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				LOGGER
-						.warning(
-								"Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
+				DeFaApplikation.LOGGER
+				.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -139,16 +138,15 @@ public class DeFaApplikation implements StandardApplication {
 			for (SystemObject obj : dav.getDataModel()
 					.getType("typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
 				if (obj.isValid()) {
-					if (tlsFehlerAnalyseObjekte != null) {
-						LOGGER
-								.warning(
-										"Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
+						DeFaApplikation.LOGGER
+						.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 						break;
 					}
-					tlsFehlerAnalyseObjekte = obj;
+					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
 					if (obj.getConfigurationArea().equals(
 							dav.getDataModel().getConfigurationAuthority()
-									.getConfigurationArea())) {
+							.getConfigurationArea())) {
 						break;
 					}
 				}
@@ -156,24 +154,25 @@ public class DeFaApplikation implements StandardApplication {
 		} else {
 			SystemObject dummy = dav.getDataModel().getObject(
 					this.parameterModulPid);
-			if (dummy != null && dummy.isValid()) {
-				tlsFehlerAnalyseObjekte = dummy;
+			if ((dummy != null) && dummy.isValid()) {
+				DeFaApplikation.tlsFehlerAnalyseObjekte = dummy;
 			}
 		}
 
-		if (tlsFehlerAnalyseObjekte == null) {
+		if (DeFaApplikation.tlsFehlerAnalyseObjekte == null) {
 			throw new RuntimeException(
 					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 		} else {
-			ParameterTlsFehlerAnalyse.getInstanz(dav, tlsFehlerAnalyseObjekte);
-			LOGGER.config(
-					"Es werden die Parameter von " + tlsFehlerAnalyseObjekte //$NON-NLS-1$
-							+ " verwendet"); //$NON-NLS-1$
+			ParameterTlsFehlerAnalyse.getInstanz(dav,
+					DeFaApplikation.tlsFehlerAnalyseObjekte);
+			DeFaApplikation.LOGGER
+					.config("Es werden die Parameter von " + DeFaApplikation.tlsFehlerAnalyseObjekte //$NON-NLS-1$
+					+ " verwendet"); //$NON-NLS-1$
 		}
 
 		if (this.geraete.isEmpty()) {
-			LOGGER.warning(
-					"Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
+			DeFaApplikation.LOGGER
+					.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		} else {
 			TlsHierarchie.initialisiere(dav, geraete);
 		}
@@ -182,12 +181,13 @@ public class DeFaApplikation implements StandardApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void parseArguments(ArgumentList argumente) throws Exception {
+	@Override
+	public void parseArguments(final ArgumentList argumente) throws Exception {
 
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			public void uncaughtException(@SuppressWarnings("unused") Thread t,
-					Throwable e) {
-				LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
+			@Override
+			public void uncaughtException(final Thread t, final Throwable e) {
+				DeFaApplikation.LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
 						" unerwartetem Fehler beendet", e); //$NON-NLS-1$
 				e.printStackTrace();
 				Runtime.getRuntime().exit(-1);
@@ -198,9 +198,8 @@ public class DeFaApplikation implements StandardApplication {
 			this.parameterModulPid = argumente.fetchArgument("-param")
 					.asNonEmptyString();
 		} else {
-			LOGGER
-					.warning(
-							"Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+			DeFaApplikation.LOGGER
+			.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
 		this.geraetePids = argumente
@@ -211,20 +210,20 @@ public class DeFaApplikation implements StandardApplication {
 
 	/**
 	 * Erfragt die statische Verbindung zum Datenverteiler.
-	 * 
+	 *
 	 * @return die statische Verbindung zum Datenverteiler.
 	 */
 	public static final ClientDavInterface getDav() {
-		return sDav;
+		return DeFaApplikation.sDav;
 	}
 
 	/**
 	 * Startet diese Applikation.
-	 * 
+	 *
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
-	public static void main(String[] argumente) {
+	public static void main(final String[] argumente) {
 		StandardApplicationRunner.run(new DeFaApplikation(), argumente);
 	}
 

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -33,16 +33,16 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 
 /**
  * TLS-Hierarchieelement KRI.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class Kri extends TlsHierarchieElement {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 * @param objekt
@@ -50,8 +50,8 @@ public class Kri extends TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Kri(ClientDavInterface dav, SystemObject objekt,
-			TlsHierarchieElement vater) {
+	protected Kri(final ClientDavInterface dav, final SystemObject objekt,
+			final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 
 	}
@@ -68,15 +68,14 @@ public class Kri extends TlsHierarchieElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void publiziereFehler(long zeitStempel) {
+	public void publiziereFehler(final long zeitStempel) {
 		this.einzelPublikator.publiziere(MessageGrade.ERROR, this.objekt,
 				"Verbindung zum KRI " + this.objekt
-						+ " oder KRI selbst defekt."
-						+ " Verbindung zum KRI oder KRI instand setzen");
+				+ " oder KRI selbst defekt."
+				+ " Verbindung zum KRI oder KRI instand setzen");
 
 		for (De de : this.getErfassteDes()) {
-			de.publiziereFehlerUrsache(zeitStempel,
-							TlsFehlerAnalyse.KRI_DEFEKT);
+			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.KRI_DEFEKT);
 		}
 	}
 

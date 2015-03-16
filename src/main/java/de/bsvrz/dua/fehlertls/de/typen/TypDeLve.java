@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -33,9 +33,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 /**
  * DeFa-Beschreibung eines DE-Typs zur Langzeitdatenerfassung<br>
  * (PID: typ.deLve).
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class TypDeLve extends AbstraktDeTyp {
@@ -43,7 +43,8 @@ public class TypDeLve extends AbstraktDeTyp {
 	/**
 	 * {@inheritDoc}
 	 */
-	public long getErfassungsIntervall(Data parameter) {
+	@Override
+	public long getErfassungsIntervall(final Data parameter) {
 		return parameter
 				.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
 	}

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -29,9 +29,9 @@ package de.bsvrz.dua.fehlertls.parameter;
 /**
  * Hoert auf Veraenderungen der Attributgruppe
  * <code>atg.tlsGloKanalSteuerung</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public interface ITlsGloKanalSteuerungsListener {
@@ -39,7 +39,7 @@ public interface ITlsGloKanalSteuerungsListener {
 	/**
 	 * Informiert ueber neue Parameter der Attributgruppe
 	 * <code>atg.tlsGloKanalSteuerung</code>.
-	 * 
+	 *
 	 * @param aktiv
 	 *            indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code>
 	 *            steht

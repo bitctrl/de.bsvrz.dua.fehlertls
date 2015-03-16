@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -37,9 +37,9 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 
 /**
  * Stellt eine Datenverteiler-Verbindung zur Verfügung.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class DAVTest {
@@ -47,27 +47,27 @@ public final class DAVTest {
 	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
-			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=passwd", //$NON-NLS-1$
-			"-debugLevelStdErrText=OFF", //$NON-NLS-1$
-			"-debugLevelFileText=OFF" }; //$NON-NLS-1$
+		"-datenverteiler=localhost:8083", //$NON-NLS-1$
+		"-benutzer=Tester", //$NON-NLS-1$
+		"-authentifizierung=passwd", //$NON-NLS-1$
+		"-debugLevelStdErrText=OFF", //$NON-NLS-1$
+	"-debugLevelFileText=OFF" }; //$NON-NLS-1$
 
-//	 /**
-//	 * Verbindungsdaten.
-//	 */
-//	 private static final String[] CON_DATA = new String[] {
-//	 "-datenverteiler=localhost:8083", //$NON-NLS-1$
-//	 "-benutzer=Tester", //$NON-NLS-1$
-//	 "-authentifizierung=c:\\passwd", //$NON-NLS-1$
-//	 "-debugLevelStdErrText=ERROR", //$NON-NLS-1$
-//	 "-debugLevelFileText=OFF" }; //$NON-NLS-1$
+	// /**
+	// * Verbindungsdaten.
+	// */
+	// private static final String[] CON_DATA = new String[] {
+	//	 "-datenverteiler=localhost:8083", //$NON-NLS-1$
+	//	 "-benutzer=Tester", //$NON-NLS-1$
+	//	 "-authentifizierung=c:\\passwd", //$NON-NLS-1$
+	//	 "-debugLevelStdErrText=ERROR", //$NON-NLS-1$
+	//	 "-debugLevelFileText=OFF" }; //$NON-NLS-1$
 
 	/**
 	 * Verbindung zum Datenverteiler.
 	 */
 	protected static String geraet = null;
-	 
+
 	/**
 	 * Verbindung zum Datenverteiler.
 	 */
@@ -83,76 +83,78 @@ public final class DAVTest {
 	 */
 	public static final long START_ZEIT = 0;
 
-	
 	/**
 	 * Konstruktor.
 	 */
 	private DAVTest() {
-		
+
 	}
 
-	
 	/**
 	 * Setzt das zu ueberwachende Geraet.
-	 * 
-	 * @param geraet1 eine PID eines Geraetes.
+	 *
+	 * @param geraet1
+	 *            eine PID eines Geraetes.
 	 */
 	public static void setTestParameter(final String geraet1) {
 		DAVTest.geraet = geraet1;
 	}
-	
+
 	/**
 	 * Schließt die aktuelle Datenverteiler-Verbindung.
-	 * 
-	 * @param nachricht die Nachricht
+	 *
+	 * @param nachricht
+	 *            die Nachricht
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
 	public static void disconnect(final String nachricht) throws Exception {
-		if (verbindung != null) {
-			verbindung.disconnect(true, nachricht);
-			verbindung = null;
+		if (DAVTest.verbindung != null) {
+			DAVTest.verbindung.disconnect(true, nachricht);
+			DAVTest.verbindung = null;
 		}
 	}
 
 	/**
-	 * Erfragt bzw. initialisiert eine Datenverteiler-Verbindung 
-	 * fuer den Extra-Test.
-	 * 
+	 * Erfragt bzw. initialisiert eine Datenverteiler-Verbindung fuer den
+	 * Extra-Test.
+	 *
 	 * @return die Datenverteiler-Verbindung
 	 * @throws Exception
 	 *             falls die Verbindung nicht hergestellt werden konnte
 	 */
 	public static ClientDavInterface getDav() throws Exception {
 
-		if (verbindung == null) {
+		if (DAVTest.verbindung == null) {
 
-			String[] conDataApp = new String[CON_DATA.length + 1];
+			String[] conDataApp = new String[DAVTest.CON_DATA.length + 1];
 			int i = 0;
-			for (String str : CON_DATA.clone()) {
+			for (String str : DAVTest.CON_DATA.clone()) {
 				conDataApp[i++] = new String(str.getBytes());
 			}
 			conDataApp[i] = "-geraet=" + DAVTest.geraet; //$NON-NLS-1$
 
 			StandardApplicationRunner.run(new StandardApplication() {
 
-				public void initialize(ClientDavInterface connection)
+				@Override
+				public void initialize(final ClientDavInterface connection)
 						throws Exception {
 					DAVTest.verbindung = connection;
-					UmfeldDatenArt.initialisiere(verbindung);
-//					TestKEx.getInstanz(verbindung);
+					UmfeldDatenArt.initialisiere(DAVTest.verbindung);
+					// TestKEx.getInstanz(verbindung);
 				}
 
-				public void parseArguments(ArgumentList argumentList)
+				@Override
+				public void parseArguments(final ArgumentList argumentList)
 						throws Exception {
 					//
 				}
 
-			}, CON_DATA.clone());
+			}, DAVTest.CON_DATA.clone());
 			StandardApplicationRunner.run(new DeFaApplikation(), conDataApp);
 		}
 
-		return verbindung;
+		return DAVTest.verbindung;
 	}
 
 }

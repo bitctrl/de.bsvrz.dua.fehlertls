@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -40,9 +40,9 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
  * Klasse zur einmaligen Publikation von Betriebsmeldungen.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class SingleMessageSender {
@@ -58,7 +58,7 @@ public class SingleMessageSender {
 
 	/**
 	 * Publiziert eine Fehlermeldung einmalig.
-	 * 
+	 *
 	 * @param grade
 	 *            die Meldungsklasse fuer die Betriebsmeldungen
 	 * @param obj
@@ -73,16 +73,17 @@ public class SingleMessageSender {
 
 			if (obj != null) {
 				MessageSender.getInstance().sendMessage(
-						KONVERTER.konvertiere(new BetriebsmeldungDaten(obj),
-								null, new Object[0]),
-						MessageType.APPLICATION_DOMAIN,
-						null,
-						grade,
-						obj,
-						MessageState.MESSAGE,
-						new MessageCauser(DeFaApplikation.getDav()
-								.getLocalUser(), Constants.EMPTY_STRING,
-								DeFaApplikation.getAppName()), text);
+						SingleMessageSender.KONVERTER.konvertiere(
+								new BetriebsmeldungDaten(obj), null,
+								new Object[0]),
+								MessageType.APPLICATION_DOMAIN,
+								null,
+								grade,
+								obj,
+								MessageState.MESSAGE,
+								new MessageCauser(DeFaApplikation.getDav()
+										.getLocalUser(), Constants.EMPTY_STRING,
+										DeFaApplikation.getAppName()), text);
 			} else {
 				MessageSender.getInstance().sendMessage(
 						MessageType.APPLICATION_DOMAIN,
@@ -93,10 +94,10 @@ public class SingleMessageSender {
 								.getLocalUser(), Constants.EMPTY_STRING,
 								DeFaApplikation.getAppName()), text);
 			}
-			LOGGER.info(text); //$NON-NLS-1$
+			SingleMessageSender.LOGGER.info(text);
 		} else {
-			LOGGER.info(
-					obj + ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
+			SingleMessageSender.LOGGER.info(obj
+					+ ", Keine doppelte Ausgabe von: " + text); //$NON-NLS-1$
 		}
 	}
 

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -33,9 +33,9 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 
 /**
  * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsFehlerAnalyse</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class TlsFehlerAnalyse extends AbstractDavZustand {
@@ -92,26 +92,26 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param kode
 	 *            der Kode
 	 * @param name
 	 *            die Bezeichnung
 	 */
-	private TlsFehlerAnalyse(String name, int kode) {
+	private TlsFehlerAnalyse(final String name, final int kode) {
 		super(kode, name);
-		werteBereich.put(kode, this);
+		TlsFehlerAnalyse.werteBereich.put(kode, this);
 	}
 
 	/**
 	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
-	 * 
+	 *
 	 * @param kode
 	 *            der Kode des Zustands
 	 * @return der Enumerations-Wert
 	 */
 	public static TlsFehlerAnalyse getZustand(final int kode) {
-		return werteBereich.get(kode);
+		return TlsFehlerAnalyse.werteBereich.get(kode);
 	}
 
 }

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH 
- * 
+ * Copyright (C) 2007 BitCtrl Systems GmbH
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -38,9 +38,9 @@ import de.bsvrz.dua.fehlertls.fehlertls.SingleMessageSender;
 
 /**
  * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.gerät</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public abstract class TlsHierarchieElement {
@@ -98,7 +98,7 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete.
 	 */
-	private Set<TlsHierarchieElement> kinder = new HashSet<TlsHierarchieElement>();
+	private final Set<TlsHierarchieElement> kinder = new HashSet<TlsHierarchieElement>();
 
 	/**
 	 * das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet.
@@ -112,7 +112,7 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Erfragt die Geraeteart dieses Geraetes.
-	 * 
+	 *
 	 * @return die Geraeteart dieses Geraetes
 	 */
 	public abstract Art getGeraeteArt();
@@ -126,13 +126,13 @@ public abstract class TlsHierarchieElement {
 	 * <b>Achtung:</b> Dies impliziert nicht, dass das Element eine
 	 * TLS-Hierarchie- Ebene hoeher (beiom EAK ein Steuermodul) keine
 	 * Fehlermeldung publizieren kann (das ist nicht bekannt).
-	 * 
+	 *
 	 * @param zeitStempel
 	 *            der Zeitstempel des Fehlers
 	 * @return ob an diesem Knoten innerhalb der TLS-Hierarchie eine Publikation
 	 *         eines Fehlers moeglich "waere"
 	 */
-	public boolean kannFehlerHierPublizieren(long zeitStempel) {
+	public boolean kannFehlerHierPublizieren(final long zeitStempel) {
 		boolean kannHierPublizieren = false;
 
 		if (this.getErfassteDes().size() > 0) {
@@ -151,7 +151,7 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Publiziert einen Fehler.
-	 * 
+	 *
 	 * @param zeitStempel
 	 *            der Zeitstempel des Fehlers
 	 */
@@ -159,7 +159,7 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 * @param objekt
@@ -167,10 +167,10 @@ public abstract class TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected TlsHierarchieElement(ClientDavInterface dav, SystemObject objekt,
-			TlsHierarchieElement vater) {
-		if (sDav == null) {
-			sDav = dav;
+	protected TlsHierarchieElement(final ClientDavInterface dav,
+			final SystemObject objekt, final TlsHierarchieElement vater) {
+		if (TlsHierarchieElement.sDav == null) {
+			TlsHierarchieElement.sDav = dav;
 		}
 		this.einzelPublikator = new SingleMessageSender();
 		this.objekt = (ConfigurationObject) objekt;
@@ -187,13 +187,13 @@ public abstract class TlsHierarchieElement {
 		}
 	}
 
-	protected void addKind(TlsHierarchieElement kind) {
+	protected void addKind(final TlsHierarchieElement kind) {
 		kinder.add(kind);
 	}
 
 	/**
 	 * Versucht eine Fehlerpublikation fuer diesen Geraet.
-	 * 
+	 *
 	 * @param zeitStempel
 	 *            der Zeitstempel des Fehlers
 	 */
@@ -213,7 +213,7 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Erfragt die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete.
-	 * 
+	 *
 	 * @return die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete
 	 *         (ggf. leere Liste)
 	 */
@@ -223,7 +223,7 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Efragt das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet.
-	 * 
+	 *
 	 * @return das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 *         bzw. <code>null</code>, wenn dieses Geraet die Spitze der
 	 *         Hierarchie sein sollte
@@ -234,21 +234,21 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Erfragt ob dieses Geraet an der Spitze einer TLS-Hierarchie steht.
-	 * 
+	 *
 	 * @return ob dieses Geraet an der Spitze einer TLS-Hierarchie steht
 	 */
 	public final boolean isTopElement() {
-		return this.vater == null || this.vater.getObjekt() == null;
+		return (this.vater == null) || (this.vater.getObjekt() == null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		boolean ergebnis = false;
 
-		if (obj != null && obj instanceof TlsHierarchieElement) {
+		if ((obj != null) && (obj instanceof TlsHierarchieElement)) {
 			TlsHierarchieElement that = (TlsHierarchieElement) obj;
 			ergebnis = this.objekt.getId() == that.objekt.getId();
 		}
@@ -261,7 +261,7 @@ public abstract class TlsHierarchieElement {
 	 */
 	@Override
 	public String toString() {
-		if (TLS_BAUM) {
+		if (TlsHierarchieElement.TLS_BAUM) {
 			String baum = Constants.EMPTY_STRING;
 
 			TlsHierarchieElement dummy = this;
@@ -292,14 +292,14 @@ public abstract class TlsHierarchieElement {
 			}
 
 			return this.objekt == null ? "WURZEL" : this.objekt.toString() + " (Vater: " + v + //$NON-NLS-1$ //$NON-NLS-2$
-							", Kinder:[" + k + "])"; //$NON-NLS-1$ //$NON-NLS-2$			
+					", Kinder:[" + k + "])"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	/**
 	 * Erfragt die in der untersten TLS-Hierarchie unter diesem Geraet liegenden
 	 * DEs, die von der DeFa im Moment erfasst sind.
-	 * 
+	 *
 	 * @return die in der untersten TLS-Hierarchie unter diesem Geraet liegenden
 	 *         DEs, die von der DeFa im Moment erfasst sind (ggf. leere Liste)
 	 */
@@ -307,7 +307,7 @@ public abstract class TlsHierarchieElement {
 		Set<De> erfassteDes = new HashSet<De>();
 
 		for (De de : getDes()) {
-			if (de.getZustand() != null && de.getZustand().isErfasst()) {
+			if ((de.getZustand() != null) && de.getZustand().isErfasst()) {
 				erfassteDes.add(de);
 			}
 		}
@@ -318,7 +318,7 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * Erfragt die in der untersten TLS-Hierarchie unter diesem Geraet liegenden
 	 * Geraete (DEs).
-	 * 
+	 *
 	 * @return die in der untersten TLS-Hierarchie unter diesem Geraet liegenden
 	 *         Geraete (ggf. leere Liste)
 	 */
@@ -335,7 +335,7 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Erfragt das mit diesem Objekt assoziierte Systemobjekt.
-	 * 
+	 *
 	 * @return das mit diesem Objekt assoziierte Systemobjekt
 	 */
 	public final SystemObject getObjekt() {
@@ -344,11 +344,11 @@ public abstract class TlsHierarchieElement {
 
 	/**
 	 * Sammelt rekursiv alle DE unterhalb dieses Objektes.
-	 * 
+	 *
 	 * @param des1
 	 *            eine Menge mit Des
 	 */
-	private void sammleDes(Set<De> des1) {
+	private void sammleDes(final Set<De> des1) {
 		if (this.getGeraeteArt() == Art.DE) {
 			des1.add((De) this);
 		} else {
