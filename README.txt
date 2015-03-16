@@ -21,6 +21,11 @@ zu machen.
 Versionsgeschichte
 ==================
 
+1.3.0
+=====
+
+Auflösung der TlsHierarchie berücksichtigt Anschlusspunkte für beliebige Geräte (Kri2B).
+
 1.2.4
 
   - Senden von reinen Betriebsmeldungen in DUA um die Umsetzung von Objekt-PID/ID nach

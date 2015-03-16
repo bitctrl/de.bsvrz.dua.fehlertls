@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -52,7 +52,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
-IZyklusSteuerungsParameterListener {
+		IZyklusSteuerungsParameterListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -64,24 +64,24 @@ IZyklusSteuerungsParameterListener {
 	/**
 	 * indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht.
 	 */
-	protected Boolean aktiv = null;
+	protected Boolean aktiv;
 
 	/**
 	 * TLS-DE-Fehler-Status.
 	 */
-	protected TlsDeFehlerStatus deFehlerStatus = null;
+	protected TlsDeFehlerStatus deFehlerStatus;
 
 	/**
 	 * die entsprechende Erassungsintervalldauer (in ms), wenn das DE auf
 	 * zyklischen Abruf parametriert ist und -1 sonst.
 	 */
-	protected Long erfassungsIntervallDauer = null;
+	protected Long erfassungsIntervallDauer;
 
 	/**
 	 * aktueller Erfassungszustand bzgl. der DeFa des mit dieser Instanz
 	 * assoziierten DE.
 	 */
-	protected Zustand aktuellerZustand = null;
+	protected Zustand aktuellerZustand;
 
 	/**
 	 * Menge aller Listener dieses Objektes.
@@ -91,7 +91,7 @@ IZyklusSteuerungsParameterListener {
 	/**
 	 * das erfasste DE.
 	 */
-	private SystemObject obj = null;
+	private SystemObject obj;
 
 	/**
 	 * Standardkonstruktor.
@@ -111,7 +111,7 @@ IZyklusSteuerungsParameterListener {
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
 		DeErfassungsZustand.LOGGER
-		.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
+				.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	/**
@@ -145,10 +145,10 @@ IZyklusSteuerungsParameterListener {
 	 */
 	private void informiereListener() {
 		synchronized (this) {
-			Zustand neuerZustand = new Zustand();
+			final Zustand neuerZustand = new Zustand();
 			if (!neuerZustand.equals(this.aktuellerZustand)) {
 				this.aktuellerZustand = neuerZustand;
-				for (IDeErfassungsZustandListener listener : this.listenerMenge) {
+				for (final IDeErfassungsZustandListener listener : this.listenerMenge) {
 					listener.aktualisiereErfassungsZustand(this.aktuellerZustand);
 				}
 			}
@@ -205,7 +205,7 @@ IZyklusSteuerungsParameterListener {
 		 * Grund fuer die Tatsache, dass dieser Zustand den Wert nicht
 		 * <code>nicht erfasst</code> hat.
 		 */
-		private String grund = null;
+		private String grund;
 
 		/**
 		 * Standardkonstruktor.
@@ -251,14 +251,14 @@ IZyklusSteuerungsParameterListener {
 					} else {
 						debug += "DE-Fehlerstatus != TlsDeFehlerStatus.OK ("
 								+ DeErfassungsZustand.this.deFehlerStatus
-										.toString() + ")\n";
+								.toString() + ")\n";
 						this.grund = DeErfassungsZustand.GRUND_PRAEFIX
 								+ "DE-Fehler(" + //$NON-NLS-1$
 								DeErfassungsZustand.this.deFehlerStatus
-								.toString()
+										.toString()
 								+ "): " //$NON-NLS-1$
 								+ DeErfassungsZustand.this.deFehlerStatus
-								.getText();
+										.getText();
 					}
 				} else {
 					debug += "DE-Fehlerstatus == <<null>>\n";
@@ -267,7 +267,7 @@ IZyklusSteuerungsParameterListener {
 			}
 
 			DeErfassungsZustand.LOGGER
-			.info("Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj + "):\n" + this + "\nGrund:\n" + debug); //$NON-NLS-1$ //$NON-NLS-2$
+					.info("Neuer Erfassungszusstand (" + DeErfassungsZustand.this.obj + "):\n" + this + "\nGrund:\n" + debug); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		/**
@@ -329,7 +329,7 @@ IZyklusSteuerungsParameterListener {
 			boolean gleich = false;
 
 			if ((obj1 != null) && (obj1 instanceof Zustand)) {
-				Zustand that = (Zustand) obj1;
+				final Zustand that = (Zustand) obj1;
 				gleich = (this.initialisiert == that.initialisiert)
 						&& (this.erfassungsIntervallDauer == that.erfassungsIntervallDauer);
 				if (gleich) {

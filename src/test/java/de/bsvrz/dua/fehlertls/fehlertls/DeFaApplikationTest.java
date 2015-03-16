@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -89,10 +89,10 @@ public class DeFaApplikationTest implements IBmListener {
 	@Test
 	public void test() throws Exception {
 		DAVTest.setTestParameter("kri1");
-		ClientDavInterface dav = DAVTest.getDav();
+		final ClientDavInterface dav = DAVTest.getDav();
 		init();
 
-		GregorianCalendar cal = new GregorianCalendar();
+		final GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -104,11 +104,11 @@ public class DeFaApplikationTest implements IBmListener {
 
 		BmClient.getInstanz(dav).addListener(this);
 
-		TestKEx kex = TestKEx.getInstanz(dav);
+		final TestKEx testKex = TestKEx.getInstanz(dav);
 
-		kex.setAnalyseParameter(3000L, 3000L);
+		testKex.setAnalyseParameter(3000L, 3000L);
 
-		AtgTlsFehlerAnalyse.getInstanz(TestKEx.iB2SM1LVE1DE1).addListener(
+		AtgTlsFehlerAnalyse.getInstanz(testKex.getiB2SM1LVE1DE1()).addListener(
 				new IAtgTlsFehlerAnalyseListener() {
 					private final TlsFehlerAnalyse[] fehler = new TlsFehlerAnalyse[] {
 							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
@@ -117,7 +117,7 @@ public class DeFaApplikationTest implements IBmListener {
 							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
 							TlsFehlerAnalyse.KRI_DEFEKT,
 							TlsFehlerAnalyse.EAK_AN_SM_DEFEKT };
-					private int i = 0;
+					private int i;
 
 					@Override
 					public void aktualisiereTlsFehlerAnalyse(
@@ -131,7 +131,7 @@ public class DeFaApplikationTest implements IBmListener {
 					}
 				});
 
-		AtgTlsFehlerAnalyse.getInstanz(TestKEx.iB2SM2LVE1DE1).addListener(
+		AtgTlsFehlerAnalyse.getInstanz(testKex.getiB2SM2LVE1DE1()).addListener(
 				new IAtgTlsFehlerAnalyseListener() {
 					private final TlsFehlerAnalyse[] fehler = new TlsFehlerAnalyse[] {
 							TlsFehlerAnalyse.UNBEKANNT,
@@ -140,7 +140,7 @@ public class DeFaApplikationTest implements IBmListener {
 							TlsFehlerAnalyse.INSELBUS_DEFEKT,
 							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
 							TlsFehlerAnalyse.KRI_DEFEKT };
-					private int i = 0;
+					private int i;
 
 					@Override
 					public void aktualisiereTlsFehlerAnalyse(
@@ -154,7 +154,7 @@ public class DeFaApplikationTest implements IBmListener {
 					}
 				});
 
-		AtgTlsFehlerAnalyse.getInstanz(TestKEx.iB2SM2LVE1DE2).addListener(
+		AtgTlsFehlerAnalyse.getInstanz(testKex.getiB2SM2LVE1DE2()).addListener(
 				new IAtgTlsFehlerAnalyseListener() {
 					private final TlsFehlerAnalyse[] fehler = new TlsFehlerAnalyse[] {
 							TlsFehlerAnalyse.KRI_DEFEKT,
@@ -162,7 +162,7 @@ public class DeFaApplikationTest implements IBmListener {
 							TlsFehlerAnalyse.KRI_DEFEKT,
 							TlsFehlerAnalyse.INSELBUS_DEFEKT,
 							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT };
-					private int i = 0;
+					private int i;
 
 					@Override
 					public void aktualisiereTlsFehlerAnalyse(
@@ -179,15 +179,15 @@ public class DeFaApplikationTest implements IBmListener {
 		 * Setzte DE-Fehlerstatus auf != 0 fuer alle DE ausser alle LVE DE an
 		 * SM2.1 und SM2.2
 		 */
-		for (SystemObject de : kex.getAlleLveDes()) {
-			if (de.equals(TestKEx.iB2SM2LVE1DE1)
-					|| de.equals(TestKEx.iB2SM2LVE1DE2)
-					|| de.equals(TestKEx.iB2SM1LVE1DE1)) {
-				kex.setDeFehlerStatus(de, 0, false);
+		for (final SystemObject de : testKex.getAlleLveDes()) {
+			if (de.equals(testKex.getiB2SM2LVE1DE1())
+					|| de.equals(testKex.getiB2SM2LVE1DE2())
+					|| de.equals(testKex.getiB2SM1LVE1DE1())) {
+				testKex.setDeFehlerStatus(de, 0, false);
 			} else {
-				kex.setDeFehlerStatus(de, 0, true);
+				testKex.setDeFehlerStatus(de, 0, true);
 			}
-			kex.setBetriebsParameter(de, 15L * 1000L);
+			testKex.setBetriebsParameter(de, 15L * 1000L);
 
 			final SystemObject obj = de;
 			AtgTlsFehlerAnalyse.getInstanz(de).addListener(
@@ -198,9 +198,9 @@ public class DeFaApplikationTest implements IBmListener {
 								final TlsFehlerAnalyse fehlerAnalyse) {
 							if (DeFaApplikationTest.SHOW_DE) {
 								System.out
-								.println("+++ " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + //$NON-NLS-1$ //$NON-NLS-2$
-										obj
-										+ ", " + fehlerAnalyse + " +++"); //$NON-NLS-1$ //$NON-NLS-2$
+										.println("+++ " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + //$NON-NLS-1$ //$NON-NLS-2$
+												obj
+												+ ", " + fehlerAnalyse + " +++"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 
@@ -210,9 +210,9 @@ public class DeFaApplikationTest implements IBmListener {
 		/**
 		 * Alle UFD-DE auf kein zyklischer Abruf setzten
 		 */
-		for (SystemObject de : kex.getAlleUFDDes()) {
-			kex.setBetriebsParameter(de, -1);
-			kex.setDeFehlerStatus(de, 0, false);
+		for (final SystemObject de : testKex.getAlleUFDDes()) {
+			testKex.setBetriebsParameter(de, -1);
+			testKex.setDeFehlerStatus(de, 0, false);
 			final SystemObject obj = de;
 			AtgTlsFehlerAnalyse.getInstanz(de).addListener(
 					new IAtgTlsFehlerAnalyseListener() {
@@ -222,9 +222,9 @@ public class DeFaApplikationTest implements IBmListener {
 								final TlsFehlerAnalyse fehlerAnalyse) {
 							if (DeFaApplikationTest.SHOW_DE) {
 								System.out
-								.println("+++ " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + //$NON-NLS-1$ //$NON-NLS-2$
-										obj
-										+ ", " + fehlerAnalyse + " +++"); //$NON-NLS-1$ //$NON-NLS-2$
+										.println("+++ " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + //$NON-NLS-1$ //$NON-NLS-2$
+												obj
+												+ ", " + fehlerAnalyse + " +++"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 
@@ -232,7 +232,7 @@ public class DeFaApplikationTest implements IBmListener {
 		}
 		try {
 			Thread.sleep(1000L);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			//
 		}
 
@@ -245,7 +245,8 @@ public class DeFaApplikationTest implements IBmListener {
 			theoretischerEmpfangsZeitStempel += 15L * 1000L;
 		}
 
-		kex.setDe(TestKEx.iB1SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+		testKex.setDe(testKex.getiB1SM1LVE1DE1(),
+				theoretischerEmpfangsZeitStempel,
 				DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS);
 
 		int zeitpunkt = 1;
@@ -255,10 +256,10 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE2(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		theoretischerEmpfangsZeitStempel += 15L * 1000L;
 		warteBis(theoretischerEmpfangsZeitStempel);
@@ -267,8 +268,8 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE2(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		theoretischerEmpfangsZeitStempel += 15L * 1000L;
 		warteBis(theoretischerEmpfangsZeitStempel);
@@ -285,8 +286,8 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		theoretischerEmpfangsZeitStempel += 15L * 1000L;
 		warteBis(theoretischerEmpfangsZeitStempel);
@@ -297,17 +298,17 @@ public class DeFaApplikationTest implements IBmListener {
 		}
 
 		warteBis(theoretischerEmpfangsZeitStempel + 10000L);
-		kex.setDe(TestKEx.iB2SM1UFD1DE1, System.currentTimeMillis(),
+		testKex.setDe(testKex.getiB2SM1UFD1DE1(), System.currentTimeMillis(),
 				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
-		kex.setDe(TestKEx.iB2SM1UFD1DE1, System.currentTimeMillis(),
+		testKex.setDe(testKex.getiB2SM1UFD1DE1(), System.currentTimeMillis(),
 				DeStatus.ZYKLISCH_AN);
-		kex.setDe(TestKEx.iB2SM1UFD1DE2, System.currentTimeMillis(),
+		testKex.setDe(testKex.getiB2SM1UFD1DE2(), System.currentTimeMillis(),
 				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
-		kex.setDe(TestKEx.iB2SM1UFD1DE2, System.currentTimeMillis(),
+		testKex.setDe(testKex.getiB2SM1UFD1DE2(), System.currentTimeMillis(),
 				DeStatus.ZYKLISCH_AN);
-		kex.setDe(TestKEx.iB2SM3LVE1DE1, System.currentTimeMillis(),
+		testKex.setDe(testKex.getiB2SM3LVE1DE1(), System.currentTimeMillis(),
 				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
-		kex.setDe(TestKEx.iB2SM3LVE1DE1, System.currentTimeMillis(),
+		testKex.setDe(testKex.getiB2SM3LVE1DE1(), System.currentTimeMillis(),
 				DeStatus.ZYKLISCH_AN);
 
 		theoretischerEmpfangsZeitStempel += 15L * 1000L;
@@ -328,8 +329,8 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM3LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		/**
 		 * 2.0
@@ -341,14 +342,14 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM3LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE2(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM1LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		/**
 		 * 2.1
@@ -371,14 +372,14 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM3LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE2(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM1LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		/**
 		 * 2.3
@@ -390,14 +391,14 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM3LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM2LVE1DE2(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM1LVE1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 
 		/**
 		 * 3.0
@@ -409,23 +410,23 @@ public class DeFaApplikationTest implements IBmListener {
 					+ (zeitpunkt % 4) + "\n***");
 			zeitpunkt++;
 		}
-		kex.setDe(TestKEx.iB2SM1UFD1DE1, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
-		kex.setDe(TestKEx.iB2SM1UFD1DE2, theoretischerEmpfangsZeitStempel,
-				DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM1UFD1DE1(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
+		testKex.setDe(testKex.getiB2SM1UFD1DE2(),
+				theoretischerEmpfangsZeitStempel, DeStatus.NUTZ_DATEN);
 	}
 
 	/**
 	 * globaler Meldungszaehler.
 	 */
-	private static int meldungsZeitpunkt = 0;
+	private static int meldungsZeitpunkt;
 
 	/**
 	 * Die Meldungen die der Reihe nach erwartet werden (aufgeteilt und sortiert
 	 * nach Meldungszeitpunkt und den dazu erwarteten Meldungen (innerhalb eines
 	 * Meldungszeitpunktes ist die Reihenfolge der Meldungen egal)).
 	 */
-	private MeldungsZeitpunkt[] meldungen = null;
+	private MeldungsZeitpunkt[] meldungen;
 
 	/**
 	 * Initialisiert die erwarteten Meldungen.
@@ -443,68 +444,68 @@ public class DeFaApplikationTest implements IBmListener {
 						new ErwarteteMeldung[] {
 								new ErwarteteMeldung(
 										"kri1.ib1.sm1.eaklve1.de1", "kri1.ib1.sm1.eaklve1.de1 (kri1.ib1.sm1.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
-										new ErwarteteMeldung(
-												"kri1.ib2.sm3.eaklve1.de1", "kri1.ib2.sm3.eaklve1.de1 (kri1.ib2.sm3.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
-												new ErwarteteMeldung(
-														"kri1.ib1.sm1.eakufd1.de1", "kri1.ib1.sm1.eakufd1.de1 (kri1.ib1.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
-														new ErwarteteMeldung(
-																"kri1.ib1.sm1.eakufd1.de2", "kri1.ib1.sm1.eakufd1.de2 (kri1.ib1.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
-																new ErwarteteMeldung(
-																		"kri1.ib2.sm1.eakufd1.de1", "kri1.ib2.sm1.eakufd1.de1 (kri1.ib2.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
-																		new ErwarteteMeldung(
-																				"kri1.ib2.sm1.eakufd1.de2", "kri1.ib2.sm1.eakufd1.de2 (kri1.ib2.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }), //$NON-NLS-1$ //$NON-NLS-2$
-																				new MeldungsZeitpunkt(
+								new ErwarteteMeldung(
+										"kri1.ib2.sm3.eaklve1.de1", "kri1.ib2.sm3.eaklve1.de1 (kri1.ib2.sm3.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de1", "kri1.ib1.sm1.eakufd1.de1 (kri1.ib1.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de2", "kri1.ib1.sm1.eakufd1.de2 (kri1.ib1.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de1", "kri1.ib2.sm1.eakufd1.de1 (kri1.ib2.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de2", "kri1.ib2.sm1.eakufd1.de2 (kri1.ib2.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 0.1
-																						new ErwarteteMeldung[] { new ErwarteteMeldung(
-																								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-																								// new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
-																								// new ErwarteteMeldung[0]),
-																								new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				// new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
+				// new ErwarteteMeldung[0]),
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 0.3
-																										new ErwarteteMeldung[] { new ErwarteteMeldung(
-																												"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-																												// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
-																												// new ErwarteteMeldung[0]), //$NON-NLS-1$ //$NON-NLS-2$
-																												// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
-																												// new ErwarteteMeldung[0]), //$NON-NLS-1$ //$NON-NLS-2$
-																												new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
+				// new ErwarteteMeldung[0]), //$NON-NLS-1$ //$NON-NLS-2$
+				// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
+				// new ErwarteteMeldung[0]), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 1.2
-																														new ErwarteteMeldung[] {
-																																new ErwarteteMeldung(
-																																		"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
-																																		new ErwarteteMeldung(
-																																				"kri1.ib2", "Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
-																																				new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2", "Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 1.3
-																																						new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																								"kri1.ib2.sm2",
-																																								"Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen") }),
-																																								new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm2",
+								"Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen") }),
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 2.0
-																																										new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																												"kri1.ib2.sm1.eakufd1",
-																																												"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
-																																												new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1.eakufd1",
+								"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 2.1
-																																														new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																																"kri1",
-																																																"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$
-																																																new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1",
+								"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 3.0
-																																																		new ErwarteteMeldung[] {
-																																																				new ErwarteteMeldung(
-																																																						null,
-																																																						"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"), //$NON-NLS-1$
-																																																						new ErwarteteMeldung(
-																																																								null,
-																																																								"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
-																																																								/**
-																																																								 * Ende
-																																																								 */
-																																																								new MeldungsZeitpunkt(
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										null,
+										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"), //$NON-NLS-1$
+								new ErwarteteMeldung(
+										null,
+										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
+				/**
+				 * Ende
+				 */
+				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr.7
-																																																										new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																																												Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
 
 		};
 	}
@@ -532,13 +533,13 @@ public class DeFaApplikationTest implements IBmListener {
 		if (DeFaApplikationTest.SHOW_BM) {
 			if (text.length() > 70) {
 				System.out
-				.println("*** " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + obj + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						text.substring(0, 60)
-						+ "\n      " + text.substring(60, text.length()) + " ***"); //$NON-NLS-1$ //$NON-NLS-2$
+						.println("*** " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + obj + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								text.substring(0, 60)
+								+ "\n      " + text.substring(60, text.length()) + " ***"); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				System.out
-				.println("*** " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + obj + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						text + " ***"); //$NON-NLS-1$
+						.println("*** " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + obj + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								text + " ***"); //$NON-NLS-1$
 			}
 		}
 	}
@@ -553,7 +554,7 @@ public class DeFaApplikationTest implements IBmListener {
 		while (System.currentTimeMillis() < zeitStempel) {
 			try {
 				Thread.sleep(50L);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				//
 			}
 		}
@@ -571,12 +572,12 @@ public class DeFaApplikationTest implements IBmListener {
 		/**
 		 * alle Meldungen, die zu diesem Zeitpunkt erwartet werden (unsortiert).
 		 */
-		private ErwarteteMeldung[] erwarteteMeldungenZumZeitpunkt = null;
+		private final ErwarteteMeldung[] erwarteteMeldungenZumZeitpunkt;
 
 		/**
 		 * Meldungszaehler.
 		 */
-		private int meldungsZaehler = 0;
+		private int meldungsZaehler;
 
 		/**
 		 * Standardkonstruktor.
@@ -612,7 +613,7 @@ public class DeFaApplikationTest implements IBmListener {
 			if (erwarteteMeldungenZumZeitpunkt.length == 0) {
 				erwartet = true;
 			}
-			for (ErwarteteMeldung element : erwarteteMeldungenZumZeitpunkt) {
+			for (final ErwarteteMeldung element : erwarteteMeldungenZumZeitpunkt) {
 				if (element.equals(meldung)) {
 					erwartet = true;
 					this.meldungsZaehler++;
@@ -622,7 +623,7 @@ public class DeFaApplikationTest implements IBmListener {
 
 			if (!erwartet) {
 				System.out.println("**********\n\nErwartet: " + meldung); //$NON-NLS-1$
-				for (ErwarteteMeldung element : erwarteteMeldungenZumZeitpunkt) {
+				for (final ErwarteteMeldung element : erwarteteMeldungenZumZeitpunkt) {
 					System.out.println(element.text);
 					if (element.equals(meldung)) {
 						erwartet = true;
@@ -649,12 +650,12 @@ public class DeFaApplikationTest implements IBmListener {
 		/**
 		 * erwarteter Meldungstext.
 		 */
-		private String text = null;
+		private final String text;
 
 		/**
 		 * mit Meldung assoziiertes Systemobjekt.
 		 */
-		private SystemObject referenz = null;
+		private SystemObject referenz;
 
 		/**
 		 * Standardkonstruktor.
@@ -669,7 +670,7 @@ public class DeFaApplikationTest implements IBmListener {
 				try {
 					this.referenz = DAVTest.getDav().getDataModel()
 							.getObject(referenzPid);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -684,7 +685,7 @@ public class DeFaApplikationTest implements IBmListener {
 			boolean gleich = false;
 
 			if ((obj != null) && (obj instanceof ErwarteteMeldung)) {
-				ErwarteteMeldung that = (ErwarteteMeldung) obj;
+				final ErwarteteMeldung that = (ErwarteteMeldung) obj;
 				if ((this.referenz != null) && (that.referenz != null)) {
 					gleich = this.referenz.equals(that.referenz);
 				} else {

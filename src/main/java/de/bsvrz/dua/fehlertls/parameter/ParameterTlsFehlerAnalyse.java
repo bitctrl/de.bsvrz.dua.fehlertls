@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -48,7 +48,8 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
- * @version $Id$
+ * @version $Id: ParameterTlsFehlerAnalyse.java 53669 2015-03-16 09:10:22Z
+ *          peuker $
  */
 public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface {
 
@@ -121,7 +122,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 						"atg.parameterTlsFehlerAnalyse"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(
 								DaVKonstanten.ASP_PARAMETER_SOLL)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -145,7 +146,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.zeitverzugFehlerErkennung = resultat
@@ -154,7 +155,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 						this.zeitverzugFehlerErmittlung = resultat
 								.getData()
 								.getTimeValue("ZeitverzugFehlerErmittlung").getMillis(); //$NON-NLS-1$
-						for (IParameterTlsFehlerAnalyseListener listener : this.listenerMenge) {
+						for (final IParameterTlsFehlerAnalyseListener listener : this.listenerMenge) {
 							listener.aktualisiereParameterTlsFehlerAnalyse(
 									this.zeitverzugFehlerErkennung,
 									this.zeitverzugFehlerErmittlung);

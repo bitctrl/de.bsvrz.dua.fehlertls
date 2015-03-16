@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -67,8 +67,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * @version $Id$
  */
 public class De extends TlsHierarchieElement implements
-ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
-IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
+		ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
+		IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -92,7 +92,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	/**
 	 * <code>atg.tlsFehlerAnalyse</code>, <code>asp.analyse</code>.
 	 */
-	private static DataDescription fehlerDatenBeschreibung = null;
+	private static DataDescription fehlerDatenBeschreibung;
 
 	/**
 	 * Der zusätzliche Zeitverzug, der nach dem erwarteten Empfangszeitpunkt
@@ -126,7 +126,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	/**
 	 * aktueller Erfassungszustand bzgl. der DeFa.
 	 */
-	private DeErfassungsZustand.Zustand aktuellerZustand = null;
+	private DeErfassungsZustand.Zustand aktuellerZustand;
 
 	private final boolean initialisiert;
 
@@ -152,24 +152,24 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 					dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 		}
 
-		for (DataDescription messWertBeschreibung : DeTypLader.getDeTyp(
+		for (final DataDescription messWertBeschreibung : DeTypLader.getDeTyp(
 				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
 			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
 			De.LOGGER
-					.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
+			.info("Ueberwache " + this.objekt.getPid() + ", " + messWertBeschreibung); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		try {
 			dav.subscribeSender(this, objekt, De.fehlerDatenBeschreibung,
 					SenderRole.source());
-		} catch (OneSubscriptionPerSendData e) {
+		} catch (final OneSubscriptionPerSendData e) {
 			throw new IllegalStateException("Quellenanmeldung für DE" + objekt
 					+ " nicht möglich", e);
 		}
 
 		new DeErfassungsZustand(TlsHierarchieElement.sDav, this.getObjekt())
-				.addListener(this);
+		.addListener(this);
 		ParameterTlsFehlerAnalyse.getInstanz(dav,
 				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
 		initialisiert = true;
@@ -178,7 +178,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					this.inTime = true;
 					this.versucheErwartung();
@@ -205,17 +205,17 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 			final TlsFehlerAnalyse tlsFehler) {
 		this.zeitStempelLetzterPublizierterFehler = fehlerZeit;
 
-		Data datum = TlsHierarchieElement.sDav
+		final Data datum = TlsHierarchieElement.sDav
 				.createData(De.fehlerDatenBeschreibung.getAttributeGroup());
 		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode());
 		try {
 			TlsHierarchieElement.sDav.sendData(new ResultData(this.objekt,
 					De.fehlerDatenBeschreibung, fehlerZeit, datum));
-		} catch (DataNotSubscribedException e) {
+		} catch (final DataNotSubscribedException e) {
 			De.LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
 					+ " nicht publiziert werden. Grund:\n"
 					+ e.getLocalizedMessage());
-		} catch (SendSubscriptionNotConfirmed e) {
+		} catch (final SendSubscriptionNotConfirmed e) {
 			De.LOGGER.error("Datum " + datum + " konnte fuer " + this.objekt
 					+ " nicht publiziert werden. Grund:\n"
 					+ e.getLocalizedMessage());
@@ -301,7 +301,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 						.getNaechstenIntervallZeitstempel(System
 								.currentTimeMillis(), this.aktuellerZustand
 								.getErfassungsIntervallDauer());
-				long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt
+				final long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt
 						+ zeitVerzugFehlerErkennung;
 
 				De.LOGGER.info("Plane Erwartung fuer "
@@ -309,7 +309,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 						+ ": "
 						+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
 								nachsterErwarteterZeitpunkt
-								+ De.STANDARD_ZEIT_ABSTAND)));
+										+ De.STANDARD_ZEIT_ABSTAND)));
 				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
 						+ De.STANDARD_ZEIT_ABSTAND);
 			} else {
@@ -329,10 +329,10 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 								+ De.this.objekt + " ist (noch) nicht bekannt");
 					} else {
 						De.LOGGER
-								.info("DE "
-										+ De.this.objekt
-										+ " ist (noch) nicht vollstaendig initialisiert:\n"
-										+ this.aktuellerZustand);
+						.info("DE "
+								+ De.this.objekt
+								+ " ist (noch) nicht vollstaendig initialisiert:\n"
+								+ this.aktuellerZustand);
 					}
 				}
 			}
@@ -356,8 +356,8 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 			System.exit(-1);
 		} else if (state == ClientSenderInterface.STOP_SENDING_NO_RIGHTS) {
 			De.LOGGER
-					.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
-							+ object + ": " + dataDescription + " hat");
+			.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
+					+ object + ": " + dataDescription + " hat");
 			System.exit(-1);
 		}
 	}
@@ -380,7 +380,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 		 * Ueberpruefe Bedingungen nach Afo-9.0 DUA BW C1C2-21 (S. 45)
 		 */
 
-		DeErfassungsZustand.Zustand zustand = De.this.aktuellerZustand;
+		final DeErfassungsZustand.Zustand zustand = De.this.aktuellerZustand;
 
 		if (zustand.isErfasst()) {
 			De.this.inTime = false;
@@ -391,14 +391,14 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 					+ ": "
 					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
 							fehlerZeit + zeitVerzugFehlerErkennung
-							+ zeitVerzugFehlerErmittlung
-									+ (2 * De.STANDARD_ZEIT_ABSTAND)))
-									+ "\nFehlerzeit: "
-									+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-											fehlerZeit)) + "\nVerzug (Erkennung): "
-											+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): "
-											+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
-											+ (2 * De.STANDARD_ZEIT_ABSTAND));
+									+ zeitVerzugFehlerErmittlung
+							+ (2 * De.STANDARD_ZEIT_ABSTAND)))
+					+ "\nFehlerzeit: "
+					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							fehlerZeit)) + "\nVerzug (Erkennung): "
+					+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): "
+					+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
+					+ (2 * De.STANDARD_ZEIT_ABSTAND));
 
 			De.analyseWecker.setWecker(new IObjektWeckerListener() {
 
@@ -410,8 +410,8 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 				}
 
 			}, fehlerZeit + zeitVerzugFehlerErkennung
-			+ zeitVerzugFehlerErmittlung
-					+ (2 * De.STANDARD_ZEIT_ABSTAND));
+					+ zeitVerzugFehlerErmittlung
+			+ (2 * De.STANDARD_ZEIT_ABSTAND));
 		} else {
 			if (zustand.isInitialisiert()) {
 				De.this.einzelPublikator.publiziere(MessageGrade.WARNING,
@@ -439,7 +439,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	private static long getNaechstenIntervallZeitstempel(final long jetzt,
 			final long intervallLaenge) {
 		final long jetztPlus = jetzt + 500L;
-		GregorianCalendar stundenAnfang = new GregorianCalendar();
+		final GregorianCalendar stundenAnfang = new GregorianCalendar();
 		stundenAnfang.setTimeInMillis(jetztPlus);
 		stundenAnfang.set(Calendar.MINUTE, 0);
 		stundenAnfang.set(Calendar.SECOND, 0);

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -94,12 +94,12 @@ public final class DeTypLader {
 				try {
 					klasse = ClassLoader.getSystemClassLoader().loadClass(
 							DeTypLader.PACKAGE
-									+ "." + //$NON-NLS-1$
-									DeTypLader.getKlassenNameVonPid(deTypObj
-											.getPid()));
+							+ "." + //$NON-NLS-1$
+							DeTypLader.getKlassenNameVonPid(deTypObj
+									.getPid()));
 					deTyp = (IDeTyp) klasse.newInstance();
 					DeTypLader.typen.put(deTypObj, deTyp);
-				} catch (Throwable e) {
+				} catch (final Throwable e) {
 					throw new DeTypUnsupportedException(deTypObj.getPid());
 				}
 			}
@@ -137,7 +137,7 @@ public final class DeTypLader {
 
 		String klassenName = ""; //$NON-NLS-1$
 		for (int i = 0; i < dummy.length();) {
-			String zeichen = dummy.substring(i, i + 1);
+			final String zeichen = dummy.substring(i, i + 1);
 			if (zeichen.equals(".")) { //$NON-NLS-1$
 				i++;
 				klassenName += dummy.substring(i, i + 1).toUpperCase();

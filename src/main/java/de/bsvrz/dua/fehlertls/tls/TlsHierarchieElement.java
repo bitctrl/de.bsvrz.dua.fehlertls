@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -83,17 +83,17 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * statische Datenverteiler-Verbindund.
 	 */
-	protected static ClientDavInterface sDav = null;
+	protected static ClientDavInterface sDav;
 
 	/**
 	 * zur einmaligen Publikation von Fehlermeldungen.
 	 */
-	protected SingleMessageSender einzelPublikator = null;
+	protected SingleMessageSender einzelPublikator;
 
 	/**
 	 * das Konfigurationsobjekt vom Typ <code>typ.gerät</code>.
 	 */
-	protected ConfigurationObject objekt = null;
+	protected ConfigurationObject objekt;
 
 	/**
 	 * die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete.
@@ -103,12 +103,12 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet.
 	 */
-	protected TlsHierarchieElement vater = null;
+	protected TlsHierarchieElement vater;
 
 	/**
 	 * alle DEs, die sich unterhalb von diesem Element befinden.
 	 */
-	private Set<De> des = null;
+	private Set<De> des;
 
 	/**
 	 * Erfragt die Geraeteart dieses Geraetes.
@@ -138,7 +138,7 @@ public abstract class TlsHierarchieElement {
 		if (this.getErfassteDes().size() > 0) {
 			kannHierPublizieren = true;
 
-			for (De de : this.getErfassteDes()) {
+			for (final De de : this.getErfassteDes()) {
 				if (de.isInTime()) {
 					kannHierPublizieren = false;
 					break;
@@ -178,7 +178,7 @@ public abstract class TlsHierarchieElement {
 
 		if ((objekt != null) && objekt.isOfType("typ.gerät")) {
 			/** Initialisiere Anschlusspunkte. */
-			for (SystemObject ap : this.objekt.getNonMutableSet(
+			for (final SystemObject ap : this.objekt.getNonMutableSet(
 					"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
 				if (ap.isValid()) {
 					addKind(new AnschlussPunkt(dav, ap, this));
@@ -249,7 +249,7 @@ public abstract class TlsHierarchieElement {
 		boolean ergebnis = false;
 
 		if ((obj != null) && (obj instanceof TlsHierarchieElement)) {
-			TlsHierarchieElement that = (TlsHierarchieElement) obj;
+			final TlsHierarchieElement that = (TlsHierarchieElement) obj;
 			ergebnis = this.objekt.getId() == that.objekt.getId();
 		}
 
@@ -270,7 +270,7 @@ public abstract class TlsHierarchieElement {
 				dummy = dummy.getVater();
 			}
 			baum += this.objekt == null ? "WURZEL" : this.objekt.getPid(); //$NON-NLS-1$
-			for (TlsHierarchieElement kind : this.kinder) {
+			for (final TlsHierarchieElement kind : this.kinder) {
 				baum += "\n" + kind.toString(); //$NON-NLS-1$
 			}
 
@@ -283,7 +283,7 @@ public abstract class TlsHierarchieElement {
 				v = this.vater.getObjekt() == null ? "WURZEL" : this.vater.getObjekt().getPid(); //$NON-NLS-1$
 			}
 			if (!this.kinder.isEmpty()) {
-				TlsHierarchieElement[] dummy = this.kinder
+				final TlsHierarchieElement[] dummy = this.kinder
 						.toArray(new TlsHierarchieElement[0]);
 				k = dummy[0].getObjekt().getPid();
 				for (int i = 1; i < dummy.length; i++) {
@@ -292,7 +292,7 @@ public abstract class TlsHierarchieElement {
 			}
 
 			return this.objekt == null ? "WURZEL" : this.objekt.toString() + " (Vater: " + v + //$NON-NLS-1$ //$NON-NLS-2$
-					", Kinder:[" + k + "])"; //$NON-NLS-1$ //$NON-NLS-2$
+							", Kinder:[" + k + "])"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -304,9 +304,9 @@ public abstract class TlsHierarchieElement {
 	 *         DEs, die von der DeFa im Moment erfasst sind (ggf. leere Liste)
 	 */
 	public final Set<De> getErfassteDes() {
-		Set<De> erfassteDes = new HashSet<De>();
+		final Set<De> erfassteDes = new HashSet<De>();
 
-		for (De de : getDes()) {
+		for (final De de : getDes()) {
 			if ((de.getZustand() != null) && de.getZustand().isErfasst()) {
 				erfassteDes.add(de);
 			}
@@ -352,7 +352,7 @@ public abstract class TlsHierarchieElement {
 		if (this.getGeraeteArt() == Art.DE) {
 			des1.add((De) this);
 		} else {
-			for (TlsHierarchieElement kind : this.kinder) {
+			for (final TlsHierarchieElement kind : this.kinder) {
 				kind.sammleDes(des1);
 			}
 		}

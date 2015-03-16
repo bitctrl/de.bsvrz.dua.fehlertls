@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -52,17 +52,17 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	/**
 	 * ein Systemobjekt.
 	 */
-	private SystemObject objekt = null;
+	private SystemObject objekt;
 
 	/**
 	 * Statische Verbindung zum Datenverteiler.
 	 */
-	private static ClientDavInterface dav = null;
+	private static ClientDavInterface dav;
 
 	/**
 	 * statische Instanz.
 	 */
-	private static TypTlsFehlerAnalyse instanz = null;
+	private static TypTlsFehlerAnalyse instanz;
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
@@ -97,12 +97,12 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	 */
 	public void setParameter(final long verzugErkennung,
 			final long verzugErmittlung) {
-		Data data = TypTlsFehlerAnalyse.dav.createData(TypTlsFehlerAnalyse.dav
-				.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"));
+		final Data data = TypTlsFehlerAnalyse.dav
+				.createData(TypTlsFehlerAnalyse.dav.getDataModel()
+						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
 
 		data.getItem("Urlasser").getReferenceValue("BenutzerReferenz")
-		.setSystemObject(null);
+				.setSystemObject(null);
 		data.getItem("Urlasser").getTextValue("Ursache").setText("");
 		data.getItem("Urlasser").getTextValue("Veranlasser").setText("");
 
@@ -111,21 +111,21 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 		data.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(
 				verzugErmittlung);
 
-		ResultData resultat = new ResultData(this.objekt, new DataDescription(
-				TypTlsFehlerAnalyse.dav.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"),
-				TypTlsFehlerAnalyse.dav.getDataModel().getAspect(
-						"asp.parameterVorgabe")), System.currentTimeMillis(),
-				data);
+		final ResultData resultat = new ResultData(this.objekt,
+				new DataDescription(TypTlsFehlerAnalyse.dav.getDataModel()
+						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
+						TypTlsFehlerAnalyse.dav.getDataModel().getAspect(
+								"asp.parameterVorgabe")),
+				System.currentTimeMillis(), data);
 		try {
 			TypTlsFehlerAnalyse.dav.sendData(resultat);
 			if (DeFaApplikationTest2.DEBUG) {
 				System.out.println("Sende Parameter:\n" + resultat);
 			}
-		} catch (DataNotSubscribedException e) {
+		} catch (final DataNotSubscribedException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		} catch (SendSubscriptionNotConfirmed e) {
+		} catch (final SendSubscriptionNotConfirmed e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
@@ -152,7 +152,7 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 						.sender());
 		try {
 			Thread.sleep(2L * Constants.MILLIS_PER_SECOND);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

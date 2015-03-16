@@ -71,6 +71,14 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.14</version>
+				<configuration>
+					<configLocation>releng/checkstyle.xml</configLocation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
@@ -101,6 +109,7 @@
 									<customClasspathLayout>
 										../${artifact.artifactId}/${artifact.artifactId}.${artifact.extension}
 									</customClasspathLayout>
+									<mainClass>de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation</mainClass>
 								</manifest>
 								<manifestEntries>
 									<Class-Path>${project.artifactId}.jar</Class-Path>
@@ -200,7 +209,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>bitctrl.nexus.snapshots</id>
@@ -208,5 +217,5 @@
 			<url>http://bitctrlbuildserver:8081/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</distributionManagement>
-	
+
 </project>

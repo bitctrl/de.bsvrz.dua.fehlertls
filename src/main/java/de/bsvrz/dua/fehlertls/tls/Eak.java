@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -68,37 +68,37 @@ public class Eak extends TlsHierarchieElement {
 	protected Eak(final ClientDavInterface dav, final SystemObject objekt,
 			final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
-		for (SystemObject deObj : this.objekt
+		for (final SystemObject deObj : this.objekt
 				.getNonMutableSet("De").getElements()) { //$NON-NLS-1$
 			if (deObj.isValid()
 					&& (!Eak.unsupportedDeTypes.contains(deObj.getType()
 							.getPid()))) {
 				try {
-					Data deKonfig = deObj.getConfigurationData(dav
+					final Data deKonfig = deObj.getConfigurationData(dav
 							.getDataModel().getAttributeGroup("atg.de"));
 					if (deKonfig != null) {
 						if (deKonfig.getUnscaledValue("Cluster").intValue() == DUAKonstanten.NEIN) {
-							De de = new De(dav, deObj, this);
+							final De de = new De(dav, deObj, this);
 							addKind(de);
 						} else {
 							Eak.LOGGER
-							.info("DE "
-									+ deObj
-									+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
+									.info("DE "
+											+ deObj
+											+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
 						}
 					} else {
 						Eak.LOGGER
-						.warning("DE "
-										+ deObj
-										+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
+								.warning("DE "
+								+ deObj
+								+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
 					}
-				} catch (DeTypUnsupportedException e) {
+				} catch (final DeTypUnsupportedException e) {
 					Eak.LOGGER.warning(e.getMessage(), deObj);
 					Eak.unsupportedDeTypes.add(e.getDeTypPid());
-				} catch (DeFaException e) {
+				} catch (final DeFaException e) {
 					Eak.LOGGER
-					.warning(
-							"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
+							.warning(
+									"De "	+ deObj + " konnte nicht initialisiert werden. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -123,7 +123,7 @@ public class Eak extends TlsHierarchieElement {
 						+ this.objekt + " am Steuermodul "
 						+ this.getVater().getObjekt() + " instand setzen");
 
-		for (De de : this.getErfassteDes()) {
+		for (final De de : this.getErfassteDes()) {
 			de.publiziereFehlerUrsache(zeitStempel,
 					TlsFehlerAnalyse.EAK_AN_SM_DEFEKT);
 		}

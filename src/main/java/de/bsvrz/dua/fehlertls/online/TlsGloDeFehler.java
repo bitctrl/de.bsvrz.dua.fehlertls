@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -66,12 +66,12 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	/**
 	 * indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht.
 	 */
-	private Boolean aktiv = null;
+	private Boolean aktiv;
 
 	/**
 	 * TLS-DE-Fehler-Status.
 	 */
-	private TlsDeFehlerStatus deFehlerStatus = null;
+	private TlsDeFehlerStatus deFehlerStatus;
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
@@ -134,7 +134,7 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.aktiv = resultat.getData()
@@ -143,7 +143,7 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 								.getZustand(resultat.getData()
 										.getUnscaledValue("DEFehlerStatus")
 										.intValue());
-						for (ITlsGloDeFehlerListener listener : this.listenerMenge) {
+						for (final ITlsGloDeFehlerListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsGloDeFehler(this.aktiv,
 									this.deFehlerStatus);
 						}

@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -47,11 +47,11 @@ public final class DAVTest {
 	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] {
-		"-datenverteiler=localhost:8083", //$NON-NLS-1$
-		"-benutzer=Tester", //$NON-NLS-1$
-		"-authentifizierung=passwd", //$NON-NLS-1$
-		"-debugLevelStdErrText=OFF", //$NON-NLS-1$
-	"-debugLevelFileText=OFF" }; //$NON-NLS-1$
+			"-datenverteiler=localhost:8083", //$NON-NLS-1$
+			"-benutzer=Tester", //$NON-NLS-1$
+			"-authentifizierung=passwd", //$NON-NLS-1$
+			"-debugLevelStdErrText=OFF", //$NON-NLS-1$
+			"-debugLevelFileText=OFF" }; //$NON-NLS-1$
 
 	// /**
 	// * Verbindungsdaten.
@@ -66,12 +66,12 @@ public final class DAVTest {
 	/**
 	 * Verbindung zum Datenverteiler.
 	 */
-	protected static String geraet = null;
+	protected static String geraet;
 
 	/**
 	 * Verbindung zum Datenverteiler.
 	 */
-	protected static ClientDavInterface verbindung = null;
+	protected static ClientDavInterface verbindung;
 
 	/**
 	 * Randomizer.
@@ -127,9 +127,9 @@ public final class DAVTest {
 
 		if (DAVTest.verbindung == null) {
 
-			String[] conDataApp = new String[DAVTest.CON_DATA.length + 1];
+			final String[] conDataApp = new String[DAVTest.CON_DATA.length + 1];
 			int i = 0;
-			for (String str : DAVTest.CON_DATA.clone()) {
+			for (final String str : DAVTest.CON_DATA.clone()) {
 				conDataApp[i++] = new String(str.getBytes());
 			}
 			conDataApp[i] = "-geraet=" + DAVTest.geraet; //$NON-NLS-1$

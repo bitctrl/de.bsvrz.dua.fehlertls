@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -66,7 +66,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	/**
 	 * Indiziert, dass der TLS-Kanalstatus auf <code>aktiv</code> steht.
 	 */
-	private Boolean aktiv = null;
+	private Boolean aktiv;
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
@@ -112,7 +112,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 						"atg.tlsGloKanalSteuerung"), //$NON-NLS-1$
 						dav.getDataModel().getAspect(
 								DaVKonstanten.ASP_PARAMETER_SOLL)),
-								ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -131,12 +131,12 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.aktiv = resultat.getData()
 								.getUnscaledValue("DEKanalStatus").intValue() == 0;
-						for (ITlsGloKanalSteuerungsListener listener : this.listenerMenge) {
+						for (final ITlsGloKanalSteuerungsListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 						}
 					}

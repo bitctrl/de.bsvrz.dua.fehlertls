@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -51,19 +51,19 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	/**
 	 * Datenverteiler-Verbindung.
 	 */
-	private static ClientDavInterface sDav = null;
+	private static ClientDavInterface sDav;
 
 	/**
 	 * Konfigurierende Eigenschaften eines Kommunikationspartners an einem
 	 * Anschlusspunkt.
 	 */
-	public static AttributeGroup konfigAtg = null;
+	public static AttributeGroup konfigAtg;
 
 	/**
 	 * statische Wurzel der TLS-Hierarchie. Unterhalb dieser Wurzel haengen die
 	 * Geraete, mit der diese TLS-Hierarchie initialisiert wurde.
 	 */
-	private static TlsHierarchie wurzel = null;
+	private static TlsHierarchie wurzel;
 
 	/**
 	 * Standardkonstruktor.
@@ -105,7 +105,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 			TlsHierarchie.konfigAtg = dav.getDataModel().getAttributeGroup(
 					"atg.anschlussPunktKommunikationsPartner"); //$NON-NLS-1$
 
-			for (SystemObject geraet : geraete) {
+			for (final SystemObject geraet : geraete) {
 				TlsHierarchie.initialisiere((ConfigurationObject) geraet);
 			}
 		}
@@ -129,37 +129,36 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 		} else if (geraet.isOfType("typ.uz") || //$NON-NLS-1$
 				geraet.isOfType("typ.viz") || //$NON-NLS-1$
 				geraet.isOfType("typ.vrz")) { //$NON-NLS-1$
-			for (SystemObject anschlussPunktSysObj : geraet.getNonMutableSet(
-					"AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
+			for (final SystemObject anschlussPunktSysObj : geraet
+					.getNonMutableSet("AnschlussPunkteGerät").getElements()) { //$NON-NLS-1$
 				if (anschlussPunktSysObj.isValid()) {
-					ConfigurationObject anschlussPunktKonObj = (ConfigurationObject) anschlussPunktSysObj;
+					final ConfigurationObject anschlussPunktKonObj = (ConfigurationObject) anschlussPunktSysObj;
 
-					Set<SystemObject> unterGeraete = new HashSet<SystemObject>();
-					for (SystemObject komPartner : anschlussPunktKonObj
+					final Set<SystemObject> unterGeraete = new HashSet<SystemObject>();
+					for (final SystemObject komPartner : anschlussPunktKonObj
 							.getNonMutableSet(
 									"AnschlussPunkteKommunikationsPartner").getElements()) { //$NON-NLS-1$
 
-						Data konfigDatum = komPartner
+						final Data konfigDatum = komPartner
 								.getConfigurationData(TlsHierarchie.konfigAtg);
 						if (konfigDatum != null) {
-							SystemObject unterGeraet = konfigDatum
+							final SystemObject unterGeraet = konfigDatum
 									.getReferenceValue("KommunikationsPartner").getSystemObject(); //$NON-NLS-1$
 							if (unterGeraet != null) {
 								unterGeraete.add(unterGeraet);
 							} else {
 								TlsHierarchie.LOGGER
-										.warning("An " + komPartner + //$NON-NLS-1$
-												" (Geraet: " + geraet + //$NON-NLS-1$
-												") ist kein Geraet definiert"); //$NON-NLS-1$
+								.warning("An " + komPartner + //$NON-NLS-1$
+										" (Geraet: " + geraet + //$NON-NLS-1$
+										") ist kein Geraet definiert"); //$NON-NLS-1$
 							}
 						} else {
 							TlsHierarchie.LOGGER
-									.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
-											" (an Geraet: " + geraet
-											+ //$NON-NLS-1$
-											") konnte nicht ausgelesen werden. "
-											+ //$NON-NLS-1$
-											"Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
+							.warning("Konfiguration von " + komPartner + //$NON-NLS-1$
+									" (an Geraet: "
+											+ geraet
+									+ ") konnte nicht ausgelesen werden. "
+									+ "Das assoziierte Geraet wird ignoriert"); //$NON-NLS-1$
 						}
 					}
 
@@ -170,7 +169,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 					 * Anschlusspunkt um einen Inselbus handelt
 					 */
 					int steuerModulZaehler = 0;
-					for (SystemObject unterGeraet : unterGeraete) {
+					for (final SystemObject unterGeraet : unterGeraete) {
 						if (unterGeraet.isOfType("typ.steuerModul")) { //$NON-NLS-1$
 							steuerModulZaehler++;
 						}
@@ -182,9 +181,9 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 									TlsHierarchie.sDav, anschlussPunktSysObj,
 									TlsHierarchie.wurzel));
 						} else {
-							for (SystemObject unterGeraet : unterGeraete) {
+							for (final SystemObject unterGeraet : unterGeraete) {
 								TlsHierarchie
-										.initialisiere((ConfigurationObject) unterGeraet);
+								.initialisiere((ConfigurationObject) unterGeraet);
 							}
 						}
 					}

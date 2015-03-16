@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -64,7 +64,7 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	/**
 	 * aktueller Fehler.
 	 */
-	private TlsFehlerAnalyse aktuellerFehler = null;
+	private TlsFehlerAnalyse aktuellerFehler;
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
@@ -96,10 +96,10 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	 *             wird weitergereicht
 	 */
 	private AtgTlsFehlerAnalyse(final SystemObject obj) throws Exception {
-		DataDescription datenBeschreibung = new DataDescription(DAVTest
+		final DataDescription datenBeschreibung = new DataDescription(DAVTest
 				.getDav().getDataModel()
 				.getAttributeGroup("atg.tlsFehlerAnalyse"), //$NON-NLS-1$
-						DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
+				DAVTest.getDav().getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung,
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
@@ -123,14 +123,14 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	@Override
 	public void update(final ResultData[] results) {
 		if (results != null) {
-			for (ResultData result : results) {
+			for (final ResultData result : results) {
 				if ((result != null) && (result.getData() != null)) {
 					synchronized (this) {
 						this.aktuellerFehler = TlsFehlerAnalyse
 								.getZustand(result
 										.getData()
 										.getUnscaledValue("TlsFehlerAnalyse").intValue()); //$NON-NLS-1$
-						for (IAtgTlsFehlerAnalyseListener listener : this.listenerMenge) {
+						for (final IAtgTlsFehlerAnalyseListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 						}
 					}

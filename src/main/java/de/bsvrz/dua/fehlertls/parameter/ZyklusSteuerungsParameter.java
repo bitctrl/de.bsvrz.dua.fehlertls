@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -48,7 +48,8 @@ import de.bsvrz.dua.fehlertls.de.IDeTyp;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
- * @version $Id$
+ * @version $Id: ZyklusSteuerungsParameter.java 53669 2015-03-16 09:10:22Z
+ *          peuker $
  */
 public final class ZyklusSteuerungsParameter implements ClientReceiverInterface {
 
@@ -67,12 +68,12 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	/**
 	 * Schnittstelle zum De-Typ.
 	 */
-	private IDeTyp deTyp = null;
+	private IDeTyp deTyp;
 
 	/**
 	 * die aktuelle Erfassungsintervalldauer.
 	 */
-	private Long erfassungsIntervallDauer = null;
+	private Long erfassungsIntervallDauer;
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
@@ -88,7 +89,7 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	 */
 	public static ZyklusSteuerungsParameter getInstanz(
 			final ClientDavInterface dav, final SystemObject objekt)
-			throws DeFaException {
+					throws DeFaException {
 		ZyklusSteuerungsParameter instanz = null;
 
 		synchronized (ZyklusSteuerungsParameter.instanzen) {
@@ -145,12 +146,12 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
+			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						this.erfassungsIntervallDauer = this.deTyp
 								.getErfassungsIntervall(resultat.getData());
-						for (IZyklusSteuerungsParameterListener listener : this.listenerMenge) {
+						for (final IZyklusSteuerungsParameterListener listener : this.listenerMenge) {
 							listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 						}
 					}

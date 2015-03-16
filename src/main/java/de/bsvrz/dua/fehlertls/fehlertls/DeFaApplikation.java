@@ -1,7 +1,7 @@
 /**
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007 BitCtrl Systems GmbH
- *
+ * Copyright (C) 2007-2015 BitCtrl Systems GmbH 
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
@@ -62,13 +62,13 @@ public class DeFaApplikation implements StandardApplication {
 	/**
 	 * Statische Verbindung zum Datenverteiler.
 	 */
-	private static ClientDavInterface sDav = null;
+	private static ClientDavInterface sDav;
 
 	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem diese
 	 * Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
 	 */
-	private static SystemObject tlsFehlerAnalyseObjekte = null;
+	private static SystemObject tlsFehlerAnalyseObjekte;
 
 	/**
 	 * Geraete, die in der Kommandozeile uebergeben wurden.
@@ -78,13 +78,13 @@ public class DeFaApplikation implements StandardApplication {
 	/**
 	 * die PIDs der Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
-	private String[] geraetePids = null;
+	private String[] geraetePids;
 
 	/**
 	 * die Pid des Objektes vom Typ <code>typ.tlsFehlerAnalyse</code> mit dem
 	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
 	 */
-	private String parameterModulPid = null;
+	private String parameterModulPid;
 
 	/**
 	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
@@ -118,41 +118,41 @@ public class DeFaApplikation implements StandardApplication {
 		MessageSender.getInstance().setApplicationLabel(
 				"Ueberpruefung fehlende Messdaten TLS-LVE");
 
-		for (String pidVonGeraet : this.geraetePids) {
-			SystemObject geraeteObjekt = dav.getDataModel().getObject(
+		for (final String pidVonGeraet : this.geraetePids) {
+			final SystemObject geraeteObjekt = dav.getDataModel().getObject(
 					pidVonGeraet);
 			if (geraeteObjekt != null) {
 				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
 					DeFaApplikation.LOGGER
-					.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
+							.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
 				DeFaApplikation.LOGGER
-				.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
+						.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		if (this.parameterModulPid == null) {
-			for (SystemObject obj : dav.getDataModel()
+			for (final SystemObject obj : dav.getDataModel()
 					.getType("typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
 				if (obj.isValid()) {
 					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
 						DeFaApplikation.LOGGER
-						.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+								.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 						break;
 					}
 					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
 					if (obj.getConfigurationArea().equals(
 							dav.getDataModel().getConfigurationAuthority()
-							.getConfigurationArea())) {
+									.getConfigurationArea())) {
 						break;
 					}
 				}
 			}
 		} else {
-			SystemObject dummy = dav.getDataModel().getObject(
+			final SystemObject dummy = dav.getDataModel().getObject(
 					this.parameterModulPid);
 			if ((dummy != null) && dummy.isValid()) {
 				DeFaApplikation.tlsFehlerAnalyseObjekte = dummy;
@@ -166,13 +166,13 @@ public class DeFaApplikation implements StandardApplication {
 			ParameterTlsFehlerAnalyse.getInstanz(dav,
 					DeFaApplikation.tlsFehlerAnalyseObjekte);
 			DeFaApplikation.LOGGER
-					.config("Es werden die Parameter von " + DeFaApplikation.tlsFehlerAnalyseObjekte //$NON-NLS-1$
-					+ " verwendet"); //$NON-NLS-1$
+			.config("Es werden die Parameter von " + DeFaApplikation.tlsFehlerAnalyseObjekte //$NON-NLS-1$
+							+ " verwendet"); //$NON-NLS-1$
 		}
 
 		if (this.geraete.isEmpty()) {
 			DeFaApplikation.LOGGER
-					.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
+			.warning("Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		} else {
 			TlsHierarchie.initialisiere(dav, geraete);
 		}
@@ -199,7 +199,7 @@ public class DeFaApplikation implements StandardApplication {
 					.asNonEmptyString();
 		} else {
 			DeFaApplikation.LOGGER
-			.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+					.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
 		this.geraetePids = argumente
