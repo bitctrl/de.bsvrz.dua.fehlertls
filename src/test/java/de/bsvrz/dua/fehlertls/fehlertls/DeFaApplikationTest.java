@@ -26,6 +26,8 @@
 
 package de.bsvrz.dua.fehlertls.fehlertls;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -197,10 +199,13 @@ public class DeFaApplikationTest implements IBmListener {
 						public void aktualisiereTlsFehlerAnalyse(
 								final TlsFehlerAnalyse fehlerAnalyse) {
 							if (DeFaApplikationTest.SHOW_DE) {
-								System.out.println("+++ "
-										+ DUAKonstanten.ZEIT_FORMAT_GENAU
-										.format(new Date()) + ":\n"
-										+ obj + ", " + fehlerAnalyse + " +++");
+								System.out
+								.println("+++ "
+										+ new SimpleDateFormat(
+												DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
+										.format(new Date())
+										+ ":\n" + obj + ", "
+										+ fehlerAnalyse + " +++");
 							}
 						}
 
@@ -221,10 +226,13 @@ public class DeFaApplikationTest implements IBmListener {
 						public void aktualisiereTlsFehlerAnalyse(
 								final TlsFehlerAnalyse fehlerAnalyse) {
 							if (DeFaApplikationTest.SHOW_DE) {
-								System.out.println("+++ "
-										+ DUAKonstanten.ZEIT_FORMAT_GENAU
-										.format(new Date()) + ":\n"
-										+ obj + ", " + fehlerAnalyse + " +++");
+								System.out
+										.println("+++ "
+												+ new SimpleDateFormat(
+														DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
+														.format(new Date())
+												+ ":\n" + obj + ", "
+												+ fehlerAnalyse + " +++");
 							}
 						}
 
@@ -447,77 +455,77 @@ public class DeFaApplikationTest implements IBmListener {
 								new ErwarteteMeldung(
 										"kri1.ib1.sm1.eaklve1.de1",
 										"kri1.ib1.sm1.eaklve1.de1 (kri1.ib1.sm1.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"),
-										new ErwarteteMeldung(
-												"kri1.ib2.sm3.eaklve1.de1",
-												"kri1.ib2.sm3.eaklve1.de1 (kri1.ib2.sm3.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"),
-												new ErwarteteMeldung(
-														"kri1.ib1.sm1.eakufd1.de1",
-														"kri1.ib1.sm1.eakufd1.de1 (kri1.ib1.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"),
-														new ErwarteteMeldung(
-																"kri1.ib1.sm1.eakufd1.de2",
-																"kri1.ib1.sm1.eakufd1.de2 (kri1.ib1.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"),
-																new ErwarteteMeldung(
-																		"kri1.ib2.sm1.eakufd1.de1",
-																		"kri1.ib2.sm1.eakufd1.de1 (kri1.ib2.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"),
-																		new ErwarteteMeldung(
-																				"kri1.ib2.sm1.eakufd1.de2",
-																				"kri1.ib2.sm1.eakufd1.de2 (kri1.ib2.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }),
-																				new MeldungsZeitpunkt(
-																						// Zeitpunkt Nr. 0.1
-																						new ErwarteteMeldung[] { new ErwarteteMeldung(
-																								"kri1.ib2.sm1",
-																								"Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }),
-																								// new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
-																								// new ErwarteteMeldung[0]),
-																								new MeldungsZeitpunkt(
-																										// Zeitpunkt Nr. 0.3
-																										new ErwarteteMeldung[] { new ErwarteteMeldung(
-																												"kri1",
-																												"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }),
-																												// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
-																												// new ErwarteteMeldung[0]),
-																												// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
-																												// new ErwarteteMeldung[0]),
-																												new MeldungsZeitpunkt(
-																														// Zeitpunkt Nr. 1.2
-																														new ErwarteteMeldung[] {
-																																new ErwarteteMeldung(
-																																		"kri1.ib2.sm1.eaklve1",
-																																		"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"),
-																																		new ErwarteteMeldung(
-																																				"kri1.ib2",
-																																				"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }),
-																																				new MeldungsZeitpunkt(
-																																						// Zeitpunkt Nr. 1.3
-																																						new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																								"kri1.ib2.sm2",
-																																								"Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen") }),
-																																								new MeldungsZeitpunkt(
-																																										// Zeitpunkt Nr. 2.0
-																																										new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																												"kri1.ib2.sm1.eakufd1",
-																																												"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }),
-				new MeldungsZeitpunkt(
-																																														// Zeitpunkt Nr. 2.1
-																																														new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																																"kri1",
-																																																"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }),
-				new MeldungsZeitpunkt(
-																																																		// Zeitpunkt Nr. 3.0
-																																																		new ErwarteteMeldung[] {
-																																																				new ErwarteteMeldung(
-																																																						null,
-																																																						"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"),
 								new ErwarteteMeldung(
-																																																								null,
-																																																								"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }),
+										"kri1.ib2.sm3.eaklve1.de1",
+										"kri1.ib2.sm3.eaklve1.de1 (kri1.ib2.sm3.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"),
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de1",
+										"kri1.ib1.sm1.eakufd1.de1 (kri1.ib1.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"),
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de2",
+										"kri1.ib1.sm1.eakufd1.de2 (kri1.ib1.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"),
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de1",
+										"kri1.ib2.sm1.eakufd1.de1 (kri1.ib2.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"),
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de2",
+										"kri1.ib2.sm1.eakufd1.de2 (kri1.ib2.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 0.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1",
+								"Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }),
+				// new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
+				// new ErwarteteMeldung[0]),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 0.3
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1",
+								"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }),
+				// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
+				// new ErwarteteMeldung[0]),
+				// new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
+				// new ErwarteteMeldung[0]),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 1.2
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eaklve1",
+										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"),
+								new ErwarteteMeldung(
+										"kri1.ib2",
+										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 1.3
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm2",
+								"Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen") }),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 2.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1.eakufd1",
+								"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 2.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1",
+								"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }),
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr. 3.0
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										null,
+										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"),
+								new ErwarteteMeldung(
+										null,
+										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }),
 				/**
-																																																								 * Ende
-																																																								 */
-																																																								new MeldungsZeitpunkt(
-																																																										// Zeitpunkt Nr.7
-																																																										new ErwarteteMeldung[] { new ErwarteteMeldung(
-																																																												Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
+				 * Ende
+				 */
+				new MeldungsZeitpunkt(
+						// Zeitpunkt Nr.7
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
 
 		};
 	}
@@ -530,10 +538,10 @@ public class DeFaApplikationTest implements IBmListener {
 					"Falsche Nachricht (Zeitpunkt Nr. "
 							+ ((DeFaApplikationTest.meldungsZeitpunkt + 1) == meldungen.length ? "letzter Zeitpunkt"
 									: DeFaApplikationTest.meldungsZeitpunkt + 1)
-									+ "): " + obj.getPid() + ", " + text,
+							+ "): " + obj.getPid() + ", " + text,
 					meldungen[DeFaApplikationTest.meldungsZeitpunkt]
-											.isMeldungErwartet(new ErwarteteMeldung(obj
-													.getPid(), text)));
+							.isMeldungErwartet(new ErwarteteMeldung(obj
+									.getPid(), text)));
 			if (meldungen[DeFaApplikationTest.meldungsZeitpunkt]
 					.isNeuerZeitpunkt()) {
 				DeFaApplikationTest.meldungsZeitpunkt++;
@@ -541,16 +549,15 @@ public class DeFaApplikationTest implements IBmListener {
 		}
 
 		if (DeFaApplikationTest.SHOW_BM) {
+			final DateFormat format = new SimpleDateFormat(
+					DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 			if (text.length() > 70) {
-				System.out.println("*** "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date())
-						+ ":\n" + obj + "\n" + text.substring(0, 60)
-						+ "\n      " + text.substring(60, text.length())
-						+ " ***");
+				System.out.println("*** " + format.format(new Date()) + ":\n"
+						+ obj + "\n" + text.substring(0, 60) + "\n      "
+						+ text.substring(60, text.length()) + " ***");
 			} else {
-				System.out.println("*** "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date())
-						+ ":\n" + obj + "\n" + text + " ***");
+				System.out.println("*** " + format.format(new Date()) + ":\n"
+						+ obj + "\n" + text + " ***");
 			}
 		}
 	}

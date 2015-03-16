@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -92,7 +93,7 @@ public class De extends TlsHierarchieElement implements
 	/**
 	 * <code>atg.tlsFehlerAnalyse</code>, <code>asp.analyse</code>.
 	 */
-	private static DataDescription fehlerDatenBeschreibung;
+	private static volatile DataDescription fehlerDatenBeschreibung;
 
 	/**
 	 * Der zusätzliche Zeitverzug, der nach dem erwarteten Empfangszeitpunkt
@@ -296,8 +297,9 @@ public class De extends TlsHierarchieElement implements
 				De.LOGGER.info("Plane Erwartung fuer "
 						+ De.this.getObjekt()
 						+ ": "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-								nachsterErwarteterZeitpunkt
+						+ new SimpleDateFormat(
+								DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
+								.format(new Date(nachsterErwarteterZeitpunkt
 										+ De.STANDARD_ZEIT_ABSTAND)));
 				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
 						+ De.STANDARD_ZEIT_ABSTAND);
@@ -368,19 +370,20 @@ public class De extends TlsHierarchieElement implements
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
+			final SimpleDateFormat zeitFormat = new SimpleDateFormat(
+					DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 			De.LOGGER.info("Plane Fehlerpublikation fuer "
 					+ De.this.getObjekt()
 					+ ": "
-					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-							fehlerZeit + zeitVerzugFehlerErkennung
-									+ zeitVerzugFehlerErmittlung
+					+ zeitFormat.format(new Date(fehlerZeit
+							+ zeitVerzugFehlerErkennung
+							+ zeitVerzugFehlerErmittlung
 							+ (2 * De.STANDARD_ZEIT_ABSTAND)))
 					+ "\nFehlerzeit: "
-					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-							fehlerZeit)) + "\nVerzug (Erkennung): "
-					+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): "
-					+ zeitVerzugFehlerErmittlung + "\nZusatzverzug: "
-					+ (2 * De.STANDARD_ZEIT_ABSTAND));
+					+ zeitFormat.format(new Date(fehlerZeit))
+							+ "\nVerzug (Erkennung): " + zeitVerzugFehlerErkennung
+							+ "\nVerzug (Ermittlung): " + zeitVerzugFehlerErmittlung
+							+ "\nZusatzverzug: " + (2 * De.STANDARD_ZEIT_ABSTAND));
 
 			De.analyseWecker.setWecker(new IObjektWeckerListener() {
 

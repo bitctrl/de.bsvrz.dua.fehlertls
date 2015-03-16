@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.fehlertls.tls;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +53,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
-IZyklusSteuerungsParameterListener {
+		IZyklusSteuerungsParameterListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -245,14 +246,14 @@ IZyklusSteuerungsParameterListener {
 					} else {
 						debug += "DE-Fehlerstatus != TlsDeFehlerStatus.OK ("
 								+ DeErfassungsZustand.this.deFehlerStatus
-										.toString() + ")\n";
+								.toString() + ")\n";
 						this.grund = DeErfassungsZustand.GRUND_PRAEFIX
 								+ "DE-Fehler("
 								+ DeErfassungsZustand.this.deFehlerStatus
-								.toString()
+										.toString()
 								+ "): "
 								+ DeErfassungsZustand.this.deFehlerStatus
-								.getText();
+										.getText();
 					}
 				} else {
 					debug += "DE-Fehlerstatus == <<null>>\n";
@@ -343,8 +344,10 @@ IZyklusSteuerungsParameterListener {
 			if (initialisiert) {
 				if (this.intervallDauer >= 0) {
 					s += "erfasst (Intervalldauer: "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-									this.intervallDauer)) + ")";
+							+ new SimpleDateFormat(
+									DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
+									.format(new Date(this.intervallDauer))
+							+ ")";
 				} else {
 					s += this.grund;
 				}

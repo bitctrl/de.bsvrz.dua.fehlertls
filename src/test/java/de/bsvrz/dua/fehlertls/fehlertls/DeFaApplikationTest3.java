@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.fehlertls.fehlertls;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Test;
@@ -112,12 +113,14 @@ public class DeFaApplikationTest3 {
 		TypDeTestWrapper.getInstanz("DE4").setDe(
 				DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS);
 
+		final SimpleDateFormat testZeitFormatter = new SimpleDateFormat(
+				DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR);
 		if (DeFaApplikationTest3.DEBUG2) {
 			System.out
-			.println("\n"
-					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-					.format(new Date(System.currentTimeMillis()))
-					+ "\nDatengenerator fuer alle ausser DE2, DE4 und DE6 starten und auf Ergebnisse warten\n");
+					.println("\n"
+							+ testZeitFormatter.format(new Date(System
+									.currentTimeMillis()))
+							+ "\nDatengenerator fuer alle ausser DE2, DE4 und DE6 starten und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 3; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -141,10 +144,10 @@ public class DeFaApplikationTest3 {
 		 */
 		if (DeFaApplikationTest3.DEBUG2) {
 			System.out
-			.println("\n"
-					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-					.format(new Date(System.currentTimeMillis()))
-					+ "\nDatengenerator fuer DE1 stoppen und auf Ergebnisse warten\n");
+					.println("\n"
+							+ testZeitFormatter.format(new Date(System
+									.currentTimeMillis()))
+							+ "\nDatengenerator fuer DE1 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -168,10 +171,10 @@ public class DeFaApplikationTest3 {
 		 */
 		if (DeFaApplikationTest3.DEBUG2) {
 			System.out
-			.println("\n"
-					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-					.format(new Date(System.currentTimeMillis()))
-					+ "\nDatengenerator fuer DE3 stoppen und auf Ergebnisse warten\n");
+					.println("\n"
+							+ testZeitFormatter.format(new Date(System
+									.currentTimeMillis()))
+							+ "\nDatengenerator fuer DE3 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -196,10 +199,10 @@ public class DeFaApplikationTest3 {
 		 */
 		if (DeFaApplikationTest3.DEBUG2) {
 			System.out
-			.println("\n"
-					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-					.format(new Date(System.currentTimeMillis()))
-					+ "\nDatengenerator fuer DE5, DE7 und DE8 stoppen und auf Ergebnisse warten\n");
+					.println("\n"
+							+ testZeitFormatter.format(new Date(System
+									.currentTimeMillis()))
+							+ "\nDatengenerator fuer DE5, DE7 und DE8 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -225,10 +228,10 @@ public class DeFaApplikationTest3 {
 		 */
 		if (DeFaApplikationTest3.DEBUG2) {
 			System.out
-			.println("\n"
-					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-					.format(new Date(System.currentTimeMillis()))
-					+ "\nDatengenerator fuer DE9,..., DE16 stoppen und auf Ergebnisse warten\n");
+					.println("\n"
+							+ testZeitFormatter.format(new Date(System
+									.currentTimeMillis()))
+							+ "\nDatengenerator fuer DE9,..., DE16 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			try {
@@ -244,10 +247,10 @@ public class DeFaApplikationTest3 {
 		 */
 		if (DeFaApplikationTest3.DEBUG2) {
 			System.out
-			.println("\n"
-					+ DUAKonstanten.NUR_ZEIT_FORMAT_GENAU
-					.format(new Date(System.currentTimeMillis()))
-					+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
+					.println("\n"
+							+ testZeitFormatter.format(new Date(System
+									.currentTimeMillis()))
+							+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
 		}
 		for (int r = 0; r < 20; r++) {
 			final long jetzt = System.currentTimeMillis();

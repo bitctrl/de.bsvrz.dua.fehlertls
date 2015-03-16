@@ -172,7 +172,7 @@ public abstract class TlsHierarchieElement {
 		if (TlsHierarchieElement.dav == null) {
 			TlsHierarchieElement.dav = dav;
 		}
-		this.einzelPublikator = new SingleMessageSender();
+		this.einzelPublikator = new SingleMessageSender(dav);
 		this.objekt = (ConfigurationObject) objekt;
 		this.vater = vater;
 

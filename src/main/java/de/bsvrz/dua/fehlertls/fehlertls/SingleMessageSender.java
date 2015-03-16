@@ -28,6 +28,8 @@ package de.bsvrz.dua.fehlertls.fehlertls;
 
 import com.bitctrl.Constants;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.BetriebsmeldungDaten;
 import de.bsvrz.sys.funclib.bitctrl.daf.DefaultBetriebsMeldungsIdKonverter;
@@ -51,10 +53,21 @@ public class SingleMessageSender {
 
 	private static final DefaultBetriebsMeldungsIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
 
-	/**
-	 * letzte fuer dieses DE publizierte einmalige Betriebsmeldung.
-	 */
+	/** letzte fuer dieses DE publizierte einmalige Betriebsmeldung. */
 	private String letzteEinmaligeNachricht = Constants.EMPTY_STRING;
+
+	private final DynamicObject localUser;
+
+	/**
+	 * Konstruktor, erzeugt eine Instanz des MessageSenders für die übergebene
+	 * Datenverteilerverbiondung an.
+	 *
+	 * @param dav
+	 *            die Datenverteilerverbindung
+	 */
+	public SingleMessageSender(final ClientDavInterface dav) {
+		localUser = dav.getLocalUser();
+	}
 
 	/**
 	 * Publiziert eine Fehlermeldung einmalig.
@@ -76,22 +89,20 @@ public class SingleMessageSender {
 						SingleMessageSender.KONVERTER.konvertiere(
 								new BetriebsmeldungDaten(obj), null,
 								new Object[0]),
-								MessageType.APPLICATION_DOMAIN,
-								null,
-								grade,
-								obj,
-								MessageState.MESSAGE,
-								new MessageCauser(DeFaApplikation.getDav()
-										.getLocalUser(), Constants.EMPTY_STRING,
-										DeFaApplikation.getAppName()), text);
+						MessageType.APPLICATION_DOMAIN,
+						null,
+						grade,
+						obj,
+						MessageState.MESSAGE,
+						new MessageCauser(localUser, Constants.EMPTY_STRING,
+								DeFaApplikation.getAppName()), text);
 			} else {
 				MessageSender.getInstance().sendMessage(
 						MessageType.APPLICATION_DOMAIN,
 						null,
 						grade,
 						obj,
-						new MessageCauser(DeFaApplikation.getDav()
-								.getLocalUser(), Constants.EMPTY_STRING,
+						new MessageCauser(localUser, Constants.EMPTY_STRING,
 								DeFaApplikation.getAppName()), text);
 			}
 			SingleMessageSender.LOGGER.info(text);

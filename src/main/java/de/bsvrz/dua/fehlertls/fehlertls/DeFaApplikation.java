@@ -59,10 +59,8 @@ public class DeFaApplikation implements StandardApplication {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
-	/**
-	 * Statische Verbindung zum Datenverteiler.
-	 */
-	private static ClientDavInterface sDav;
+	/** Verbindung zum Datenverteiler. */
+	private ClientDavInterface dav;
 
 	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem diese
@@ -109,14 +107,14 @@ public class DeFaApplikation implements StandardApplication {
 	}
 
 	@Override
-	public void initialize(final ClientDavInterface dav) throws Exception {
-		DeFaApplikation.sDav = dav;
+	public void initialize(final ClientDavInterface connection) throws Exception {
+		this.dav = connection;
 
 		MessageSender.getInstance().setApplicationLabel(
 				"Ueberpruefung fehlende Messdaten TLS-LVE");
 
 		for (final String pidVonGeraet : this.geraetePids) {
-			final SystemObject geraeteObjekt = dav.getDataModel().getObject(
+			final SystemObject geraeteObjekt = connection.getDataModel().getObject(
 					pidVonGeraet);
 			if (geraeteObjekt != null) {
 				if (geraeteObjekt.isOfType("typ.gerät")) {
@@ -132,24 +130,24 @@ public class DeFaApplikation implements StandardApplication {
 		}
 
 		if (this.parameterModulPid == null) {
-			for (final SystemObject obj : dav.getDataModel()
+			for (final SystemObject obj : connection.getDataModel()
 					.getType("typ.tlsFehlerAnalyse").getElements()) {
 				if (obj.isValid()) {
 					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
 						DeFaApplikation.LOGGER
-								.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
+						.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
 						break;
 					}
 					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
 					if (obj.getConfigurationArea().equals(
-							dav.getDataModel().getConfigurationAuthority()
-									.getConfigurationArea())) {
+							connection.getDataModel().getConfigurationAuthority()
+							.getConfigurationArea())) {
 						break;
 					}
 				}
 			}
 		} else {
-			final SystemObject dummy = dav.getDataModel().getObject(
+			final SystemObject dummy = connection.getDataModel().getObject(
 					this.parameterModulPid);
 			if ((dummy != null) && dummy.isValid()) {
 				DeFaApplikation.tlsFehlerAnalyseObjekte = dummy;
@@ -160,16 +158,16 @@ public class DeFaApplikation implements StandardApplication {
 			throw new RuntimeException(
 					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\"");
 		}
-		ParameterTlsFehlerAnalyse.getInstanz(dav,
+		ParameterTlsFehlerAnalyse.getInstanz(connection,
 				DeFaApplikation.tlsFehlerAnalyseObjekte);
 		DeFaApplikation.LOGGER.config("Es werden die Parameter von "
 				+ DeFaApplikation.tlsFehlerAnalyseObjekte + " verwendet");
 
 		if (this.geraete.isEmpty()) {
 			DeFaApplikation.LOGGER
-			.warning("Es wurden keine gueltigen Geraete uebergeben");
+					.warning("Es wurden keine gueltigen Geraete uebergeben");
 		} else {
-			TlsHierarchie.initialisiere(dav, geraete);
+			TlsHierarchie.initialisiere(connection, geraete);
 		}
 	}
 
@@ -191,7 +189,7 @@ public class DeFaApplikation implements StandardApplication {
 					.asNonEmptyString();
 		} else {
 			DeFaApplikation.LOGGER
-					.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+			.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
 		this.geraetePids = argumente.fetchArgument("-geraet")
@@ -205,8 +203,8 @@ public class DeFaApplikation implements StandardApplication {
 	 *
 	 * @return die statische Verbindung zum Datenverteiler.
 	 */
-	public static final ClientDavInterface getDav() {
-		return DeFaApplikation.sDav;
+	public final ClientDavInterface getDav() {
+		return dav;
 	}
 
 	/**
