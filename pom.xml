@@ -33,6 +33,7 @@
 		<java.version>6</java.version>
 		<project.status>BETA</project.status>
 		<project.standDatum>2015-03-13</project.standDatum>
+		<basedir>${project.basedir}</basedir>
 	</properties>
 
 	<repositories>
@@ -79,7 +80,8 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.14</version>
 				<configuration>
-					<configLocation>releng/checkstyle.xml</configLocation>
+					<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
+					<configLocation>${basedir}/releng/checkstyle.xml</configLocation>
 				</configuration>
 			</plugin>
 			<plugin>
