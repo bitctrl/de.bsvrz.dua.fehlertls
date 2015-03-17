@@ -150,16 +150,18 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		}
 	}
 
-	/**
-	 * Erfragt den Erfassungszustand des durch diese Instanz ueberwachten DE in
-	 * Bezug auf die DeFa.
-	 *
-	 * @return der Erfassungszustand des durch diese Instanz ueberwachten DE in
-	 *         Bezug auf die DeFa
-	 */
-	public final DeErfassungsZustand.Zustand getZustand() {
-		return new Zustand();
-	}
+	// /**
+	// * Erfragt den Erfassungszustand des durch diese Instanz ueberwachten DE
+	// in
+	// * Bezug auf die DeFa.
+	// *
+	// * @return der Erfassungszustand des durch diese Instanz ueberwachten DE
+	// in
+	// * Bezug auf die DeFa
+	// */
+	// public final DeErfassungsZustand.Zustand getZustand() {
+	// return new Zustand();
+	// }
 
 	/**
 	 * Fuegt diesem Objekt einen neuen Listener hinzu und informiert diesen
@@ -206,47 +208,29 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		 * Standardkonstruktor.
 		 */
 		protected Zustand() {
-			String debug = Constants.EMPTY_STRING;
 			synchronized (DeErfassungsZustand.this) {
 				if (DeErfassungsZustand.this.deFehlerStatus != null) {
-					debug += "DE-Fehlerstatus != <<null>>\n";
 					if (DeErfassungsZustand.this.deFehlerStatus == TlsDeFehlerStatus.OK) {
-						debug += "DE-Fehlerstatus == TlsDeFehlerStatus.OK\n";
 						if (DeErfassungsZustand.this.aktiv != null) {
-							debug += "DE-Kanalzustand ist != <<null>>\n";
 							if (DeErfassungsZustand.this.aktiv) {
-								debug += "DE-Kanal ist aktiviert\n";
 								if (DeErfassungsZustand.this.erfassungsIntervallDauer != null) {
-									debug += "T != <<null>>\n";
 									if (DeErfassungsZustand.this.erfassungsIntervallDauer >= 0) {
-										debug += "T >= 0 ("
-												+ DeErfassungsZustand.this.erfassungsIntervallDauer
-												+ "s)\n";
 										this.intervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
 									} else {
-										debug += "T < 0 ("
-												+ DeErfassungsZustand.this.erfassungsIntervallDauer
-												+ "s)\n";
 										this.grund = "TLS-Fehlerueberwachung nicht moeglich, da keine "
 												+ "zyklische Abgabe von Meldungen eingestellt";
 									}
 								} else {
-									debug += "T == <<null>>\n";
 									this.initialisiert = false;
 								}
 							} else {
-								debug += "DE-Kanal ist passiviert\n";
 								this.grund = DeErfassungsZustand.GRUND_PRAEFIX
 										+ "DE-Kanal ist passiviert";
 							}
 						} else {
-							debug += "DE-Kanalzustand ist == <<null>>\n";
 							this.initialisiert = false;
 						}
 					} else {
-						debug += "DE-Fehlerstatus != TlsDeFehlerStatus.OK ("
-								+ DeErfassungsZustand.this.deFehlerStatus
-								.toString() + ")\n";
 						this.grund = DeErfassungsZustand.GRUND_PRAEFIX
 								+ "DE-Fehler("
 								+ DeErfassungsZustand.this.deFehlerStatus
@@ -256,14 +240,9 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 										.getText();
 					}
 				} else {
-					debug += "DE-Fehlerstatus == <<null>>\n";
 					this.initialisiert = false;
 				}
 			}
-
-			DeErfassungsZustand.LOGGER.info("Neuer Erfassungszusstand ("
-					+ DeErfassungsZustand.this.obj + "):\n" + this
-					+ "\nGrund:\n" + debug);
 		}
 
 		/**
