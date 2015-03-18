@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -85,13 +85,13 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 							addKind(new Sm(dav, steuerModul, this));
 						} else {
 							AnschlussPunkt.LOGGER
-							.warning("An "
-											+ komPartner
-											+ " (Inselbus: "
-											+ getObjekt()
-											+ ") duerfen nur Steuermodule definiert sein. Aber: "
-											+ steuerModul + " (Typ: "
-											+ steuerModul.getType() + ")");
+									.warning("An "
+									+ komPartner
+									+ " (Inselbus: "
+									+ getObjekt()
+									+ ") duerfen nur Steuermodule definiert sein. Aber: "
+									+ steuerModul + " (Typ: "
+									+ steuerModul.getType() + ")");
 						}
 					} else {
 						AnschlussPunkt.LOGGER.warning("An " + komPartner
@@ -254,12 +254,12 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
 				.keySet().size()) {
 			getEinzelPublikator()
-			.publiziere(
-					MessageGrade.ERROR,
-					getObjekt(),
-					"Modem am Inselbus "
-							+ getObjekt()
-							+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
+					.publiziere(
+							MessageGrade.ERROR,
+							getObjekt(),
+							"Modem am Inselbus "
+									+ getObjekt()
+									+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
 
 			for (final TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (final De de : timeOutSteuerModuleMitTimeOutDes
@@ -302,10 +302,10 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 					MessageGrade.ERROR,
 					getObjekt(),
 					"Inselbus " + getObjekt()
-					+ " gestört: Für die DE der Steuermodule "
-					+ steuerModule
-					+ " sind keine Daten verfügbar. Inselbus "
-					+ getObjekt() + " instand setzen");
+							+ " gestört: Für die DE der Steuermodule "
+							+ steuerModule
+							+ " sind keine Daten verfügbar. Inselbus "
+							+ getObjekt() + " instand setzen");
 
 			for (final TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
 				for (final De de : timeOutSteuerModuleMitTimeOutDes

@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -53,7 +53,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * @version $Id$
  */
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
-		IZyklusSteuerungsParameterListener {
+IZyklusSteuerungsParameterListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -234,10 +234,10 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 						this.grund = DeErfassungsZustand.GRUND_PRAEFIX
 								+ "DE-Fehler("
 								+ DeErfassungsZustand.this.deFehlerStatus
-										.toString()
+								.toString()
 								+ "): "
 								+ DeErfassungsZustand.this.deFehlerStatus
-										.getText();
+								.getText();
 					}
 				} else {
 					this.initialisiert = false;
@@ -325,8 +325,8 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 					s += "erfasst (Intervalldauer: "
 							+ new SimpleDateFormat(
 									DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(this.intervallDauer))
-							+ ")";
+					.format(new Date(this.intervallDauer))
+					+ ")";
 				} else {
 					s += this.grund;
 				}

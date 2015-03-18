@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -67,8 +67,8 @@ public class Kri extends TlsHierarchieElement {
 				MessageGrade.ERROR,
 				getObjekt(),
 				"Verbindung zum KRI " + getObjekt()
-						+ " oder KRI selbst defekt."
-						+ " Verbindung zum KRI oder KRI instand setzen");
+				+ " oder KRI selbst defekt."
+				+ " Verbindung zum KRI oder KRI instand setzen");
 
 		for (final De de : this.getErfassteDes()) {
 			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.KRI_DEFEKT);

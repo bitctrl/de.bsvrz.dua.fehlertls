@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -82,15 +82,15 @@ public class Eak extends TlsHierarchieElement {
 							addKind(de);
 						} else {
 							Eak.LOGGER
-									.info("DE "
-											+ deObj
-											+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
+							.info("DE "
+									+ deObj
+									+ " ist als Sammelkanal konfiguriert und wird daher ignoriert.");
 						}
 					} else {
 						Eak.LOGGER
-								.warning("DE "
-								+ deObj
-								+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
+						.warning("DE "
+										+ deObj
+										+ " besitzt keine Konfigurationsdaten (innerhalb von ATG \"atg.de\") und wird ignoriert.");
 					}
 				} catch (final DeTypUnsupportedException e) {
 					Eak.LOGGER.warning(e.getMessage(), deObj);

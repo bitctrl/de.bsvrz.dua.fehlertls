@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -68,8 +68,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * @version $Id$
  */
 public class De extends TlsHierarchieElement implements
-		ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
-		IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
+ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
+IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -170,7 +170,7 @@ public class De extends TlsHierarchieElement implements
 		}
 
 		new DeErfassungsZustand(TlsHierarchieElement.getDav(), this.getObjekt())
-		.addListener(this);
+				.addListener(this);
 		ParameterTlsFehlerAnalyse.getInstanz(dav,
 				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
 		initialisiert = true;
@@ -299,8 +299,8 @@ public class De extends TlsHierarchieElement implements
 						+ ": "
 						+ new SimpleDateFormat(
 								DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
-								.format(new Date(nachsterErwarteterZeitpunkt
-										+ De.STANDARD_ZEIT_ABSTAND)));
+						.format(new Date(nachsterErwarteterZeitpunkt
+								+ De.STANDARD_ZEIT_ABSTAND)));
 				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
 						+ De.STANDARD_ZEIT_ABSTAND);
 			} else {
@@ -322,10 +322,10 @@ public class De extends TlsHierarchieElement implements
 								+ getObjekt() + " ist (noch) nicht bekannt");
 					} else {
 						De.LOGGER
-						.info("DE "
-								+ getObjekt()
-								+ " ist (noch) nicht vollstaendig initialisiert:\n"
-								+ this.aktuellerZustand);
+								.info("DE "
+										+ getObjekt()
+										+ " ist (noch) nicht vollstaendig initialisiert:\n"
+										+ this.aktuellerZustand);
 					}
 				}
 			}
@@ -346,8 +346,8 @@ public class De extends TlsHierarchieElement implements
 			System.exit(-1);
 		} else if (state == ClientSenderInterface.STOP_SENDING_NO_RIGHTS) {
 			De.LOGGER
-			.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
-					+ object + ": " + dataDescription + " hat");
+					.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
+							+ object + ": " + dataDescription + " hat");
 			System.exit(-1);
 		}
 	}
@@ -379,11 +379,11 @@ public class De extends TlsHierarchieElement implements
 							+ zeitVerzugFehlerErkennung
 							+ zeitVerzugFehlerErmittlung
 							+ (2 * De.STANDARD_ZEIT_ABSTAND)))
-					+ "\nFehlerzeit: "
-					+ zeitFormat.format(new Date(fehlerZeit))
-							+ "\nVerzug (Erkennung): " + zeitVerzugFehlerErkennung
-							+ "\nVerzug (Ermittlung): " + zeitVerzugFehlerErmittlung
-							+ "\nZusatzverzug: " + (2 * De.STANDARD_ZEIT_ABSTAND));
+							+ "\nFehlerzeit: "
+							+ zeitFormat.format(new Date(fehlerZeit))
+					+ "\nVerzug (Erkennung): " + zeitVerzugFehlerErkennung
+					+ "\nVerzug (Ermittlung): " + zeitVerzugFehlerErmittlung
+					+ "\nZusatzverzug: " + (2 * De.STANDARD_ZEIT_ABSTAND));
 
 			De.analyseWecker.setWecker(new IObjektWeckerListener() {
 
@@ -395,8 +395,8 @@ public class De extends TlsHierarchieElement implements
 				}
 
 			}, fehlerZeit + zeitVerzugFehlerErkennung
-					+ zeitVerzugFehlerErmittlung
-			+ (2 * De.STANDARD_ZEIT_ABSTAND));
+			+ zeitVerzugFehlerErmittlung
+					+ (2 * De.STANDARD_ZEIT_ABSTAND));
 		} else {
 			if (zustand.isInitialisiert()) {
 				getEinzelPublikator().publiziere(MessageGrade.WARNING,

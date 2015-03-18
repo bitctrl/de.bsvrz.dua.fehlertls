@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -44,9 +44,9 @@ public final class DAVTest {
 	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] {
-		"-datenverteiler=localhost:8083", "-benutzer=Tester",
-			"-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
-			"-debugLevelFileText=OFF" };
+			"-datenverteiler=localhost:8083", "-benutzer=Tester",
+		"-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
+	"-debugLevelFileText=OFF" };
 
 	// /**
 	// * Verbindungsdaten.

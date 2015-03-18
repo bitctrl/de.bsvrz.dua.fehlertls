@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -48,7 +48,8 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
- * @version $Id$
+ * @version $Id: ParameterTlsFehlerAnalyse.java 53686 2015-03-16 11:30:02Z
+ *          peuker $
  */
 public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface {
 
@@ -120,7 +121,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
 						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-								ReceiveOptions.normal(), ReceiverRole.receiver());
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

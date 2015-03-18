@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -184,7 +184,7 @@ public final class TestKEx implements ClientSenderInterface {
 								.getAttributeGroup("atg.tlsGloDeFehler"), dav
 								.getDataModel().getAspect(
 										DUAKonstanten.ASP_TLS_ANTWORT)),
-						SenderRole.source());
+										SenderRole.source());
 			}
 		}
 		dav.subscribeSender(
@@ -193,7 +193,7 @@ public final class TestKEx implements ClientSenderInterface {
 				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
 						.getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
-				SenderRole.sender());
+						SenderRole.sender());
 
 		/**
 		 * Warten bis alle Anmeldungen durchgefuehrt sein sollten
@@ -222,7 +222,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 */
 	public void setAnalyseParameter(final long zeitverzugFehlerErkennung,
 			final long zeitverzugFehlerErmittlung)
-			throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
+					throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
 		final Data datum = TestKEx.sDav.createData(TestKEx.sDav.getDataModel()
 				.getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
 
@@ -237,7 +237,7 @@ public final class TestKEx implements ClientSenderInterface {
 						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
 						TestKEx.sDav.getDataModel().getAspect(
 								DaVKonstanten.ASP_PARAMETER_VORGABE)),
-				System.currentTimeMillis(), datum);
+								System.currentTimeMillis(), datum);
 
 		TestKEx.sDav.sendData(resultat);
 	}
@@ -258,7 +258,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 */
 	public void setDeFehlerStatus(final SystemObject de,
 			final int fehlerStatus, final boolean passiviert)
-			throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
+					throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
 		final AttributeGroup atg = TestKEx.sDav.getDataModel()
 				.getAttributeGroup("atg.tlsGloDeFehler");
 		final Data datum = TestKEx.sDav.createData(atg);
@@ -271,7 +271,7 @@ public final class TestKEx implements ClientSenderInterface {
 				TestKEx.sDav.getDataModel().getAttributeGroup(
 						"atg.tlsGloDeFehler"), TestKEx.sDav.getDataModel()
 						.getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
-				System.currentTimeMillis(), datum);
+						System.currentTimeMillis(), datum);
 
 		TestKEx.sDav.sendData(resultat);
 	}
@@ -390,7 +390,7 @@ public final class TestKEx implements ClientSenderInterface {
 						.getDeFaIntervallParameterDataDescription(TestKEx.sDav)
 						.getAttributeGroup(), TestKEx.sDav.getDataModel()
 						.getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
-						System.currentTimeMillis(), datenSatz);
+				System.currentTimeMillis(), datenSatz);
 		TestKEx.sDav.sendData(neuerParameter);
 		System.out.println("Sende Betriebsparameter:\n" + neuerParameter);
 	}

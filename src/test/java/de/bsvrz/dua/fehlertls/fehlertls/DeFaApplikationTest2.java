@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -115,11 +115,11 @@ public class DeFaApplikationTest2 {
 
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ new SimpleDateFormat(
-							DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer alle ausser DE2, DE4 und DE6 starten und auf Ergebnisse warten\n");
+			.println("\n"
+					+ new SimpleDateFormat(
+									DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer alle ausser DE2, DE4 und DE6 starten und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 3; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -143,11 +143,11 @@ public class DeFaApplikationTest2 {
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ new SimpleDateFormat(
-									DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE1 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ new SimpleDateFormat(
+							DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE1 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -171,11 +171,11 @@ public class DeFaApplikationTest2 {
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ new SimpleDateFormat(
-									DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE3 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ new SimpleDateFormat(
+							DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE3 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -200,11 +200,11 @@ public class DeFaApplikationTest2 {
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ new SimpleDateFormat(
-									DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE5, DE7 und DE8 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ new SimpleDateFormat(
+							DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE5, DE7 und DE8 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			final long jetzt = System.currentTimeMillis();
@@ -230,11 +230,11 @@ public class DeFaApplikationTest2 {
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ new SimpleDateFormat(
-									DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer DE9,..., DE16 stoppen und auf Ergebnisse warten\n");
+			.println("\n"
+					+ new SimpleDateFormat(
+							DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer DE9,..., DE16 stoppen und auf Ergebnisse warten\n");
 		}
 		for (int r = 0; r < 6; r++) {
 			try {
@@ -250,11 +250,11 @@ public class DeFaApplikationTest2 {
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out
-					.println("\n"
-							+ new SimpleDateFormat(
-									DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
-									.format(new Date(System.currentTimeMillis()))
-							+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
+			.println("\n"
+					+ new SimpleDateFormat(
+							DUAKonstanten.NUR_ZEIT_FORMAT_GENAU_STR)
+					.format(new Date(System.currentTimeMillis()))
+					+ "\nDatengenerator fuer alle ausser DE2, DE4, DE6, DE13,..., DE16 wieder anschalten und auf Ergebnisse werden\n");
 		}
 		for (int r = 0; r < 20; r++) {
 			final long jetzt = System.currentTimeMillis();

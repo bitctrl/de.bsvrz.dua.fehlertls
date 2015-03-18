@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -72,9 +72,9 @@ public class Sm extends TlsHierarchieElement {
 				MessageGrade.ERROR,
 				getObjekt(),
 				"Modem am Steuermodul " + getObjekt()
-				+ " oder Steuermodul defekt. "
-				+ "Modem am Steuermodul " + getObjekt()
-				+ " oder Steuermodul instand setzen");
+						+ " oder Steuermodul defekt. "
+						+ "Modem am Steuermodul " + getObjekt()
+						+ " oder Steuermodul instand setzen");
 
 		for (final De de : this.getErfassteDes()) {
 			de.publiziereFehlerUrsache(zeitStempel,

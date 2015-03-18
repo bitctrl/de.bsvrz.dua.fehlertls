@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -111,7 +111,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.tlsGloKanalSteuerung"), dav.getDataModel()
 						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

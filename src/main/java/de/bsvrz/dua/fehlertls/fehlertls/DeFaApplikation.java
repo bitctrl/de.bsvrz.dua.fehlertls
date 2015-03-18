@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -107,15 +107,16 @@ public class DeFaApplikation implements StandardApplication {
 	}
 
 	@Override
-	public void initialize(final ClientDavInterface connection) throws Exception {
+	public void initialize(final ClientDavInterface connection)
+			throws Exception {
 		this.dav = connection;
 
 		MessageSender.getInstance().setApplicationLabel(
 				"Ueberpruefung fehlende Messdaten TLS-LVE");
 
 		for (final String pidVonGeraet : this.geraetePids) {
-			final SystemObject geraeteObjekt = connection.getDataModel().getObject(
-					pidVonGeraet);
+			final SystemObject geraeteObjekt = connection.getDataModel()
+					.getObject(pidVonGeraet);
 			if (geraeteObjekt != null) {
 				if (geraeteObjekt.isOfType("typ.gerät")) {
 					this.geraete.add(geraeteObjekt);
@@ -135,13 +136,14 @@ public class DeFaApplikation implements StandardApplication {
 				if (obj.isValid()) {
 					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
 						DeFaApplikation.LOGGER
-						.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
+								.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
 						break;
 					}
 					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
 					if (obj.getConfigurationArea().equals(
-							connection.getDataModel().getConfigurationAuthority()
-							.getConfigurationArea())) {
+							connection.getDataModel()
+									.getConfigurationAuthority()
+									.getConfigurationArea())) {
 						break;
 					}
 				}
@@ -165,7 +167,7 @@ public class DeFaApplikation implements StandardApplication {
 
 		if (this.geraete.isEmpty()) {
 			DeFaApplikation.LOGGER
-					.warning("Es wurden keine gueltigen Geraete uebergeben");
+			.warning("Es wurden keine gueltigen Geraete uebergeben");
 		} else {
 			TlsHierarchie.initialisiere(connection, geraete);
 		}
@@ -189,7 +191,7 @@ public class DeFaApplikation implements StandardApplication {
 					.asNonEmptyString();
 		} else {
 			DeFaApplikation.LOGGER
-			.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+					.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
 		this.geraetePids = argumente.fetchArgument("-geraet")

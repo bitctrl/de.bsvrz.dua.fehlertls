@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -137,7 +137,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 					for (final SystemObject komPartner : anschlussPunktKonObj
 							.getNonMutableSet(
 									"AnschlussPunkteKommunikationsPartner")
-							.getElements()) {
+									.getElements()) {
 
 						final Data konfigDatum = komPartner
 								.getConfigurationData(TlsHierarchie.apKonfigAtg);
@@ -181,7 +181,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 						} else {
 							for (final SystemObject unterGeraet : unterGeraete) {
 								TlsHierarchie
-								.initialisiere((ConfigurationObject) unterGeraet);
+										.initialisiere((ConfigurationObject) unterGeraet);
 							}
 						}
 					}

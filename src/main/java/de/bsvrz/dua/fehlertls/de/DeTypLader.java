@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -97,9 +97,9 @@ public final class DeTypLader {
 				try {
 					klasse = ClassLoader.getSystemClassLoader().loadClass(
 							DeTypLader.PACKAGE
-							+ "."
-									+ DeTypLader.getKlassenNameVonPid(deTypObj
-									.getPid()));
+									+ "."
+							+ DeTypLader.getKlassenNameVonPid(deTypObj
+											.getPid()));
 					deTyp = (IDeTyp) klasse.newInstance();
 					DeTypLader.typen.put(deTypObj, deTyp);
 				} catch (final Exception e) {

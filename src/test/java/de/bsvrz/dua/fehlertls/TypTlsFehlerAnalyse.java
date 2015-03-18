@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -102,7 +102,7 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
 
 		data.getItem("Urlasser").getReferenceValue("BenutzerReferenz")
-				.setSystemObject(null);
+		.setSystemObject(null);
 		data.getItem("Urlasser").getTextValue("Ursache").setText("");
 		data.getItem("Urlasser").getTextValue("Veranlasser").setText("");
 
@@ -116,7 +116,7 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
 						TypTlsFehlerAnalyse.dav.getDataModel().getAspect(
 								"asp.parameterVorgabe")),
-				System.currentTimeMillis(), data);
+								System.currentTimeMillis(), data);
 		try {
 			TypTlsFehlerAnalyse.dav.sendData(resultat);
 			if (DeFaApplikationTest2.DEBUG) {

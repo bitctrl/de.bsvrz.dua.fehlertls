@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -34,7 +34,8 @@ import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
- * @version $Id$
+ * @version $Id: IAtgTlsFehlerAnalyseListener.java 53686 2015-03-16 11:30:02Z
+ *          peuker $
  */
 public interface IAtgTlsFehlerAnalyseListener {
 

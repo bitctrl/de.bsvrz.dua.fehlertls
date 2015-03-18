@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -89,13 +89,13 @@ public class SingleMessageSender {
 						SingleMessageSender.KONVERTER.konvertiere(
 								new BetriebsmeldungDaten(obj), null,
 								new Object[0]),
-						MessageType.APPLICATION_DOMAIN,
-						null,
-						grade,
-						obj,
-						MessageState.MESSAGE,
-						new MessageCauser(localUser, Constants.EMPTY_STRING,
-								DeFaApplikation.getAppName()), text);
+								MessageType.APPLICATION_DOMAIN,
+								null,
+								grade,
+								obj,
+								MessageState.MESSAGE,
+								new MessageCauser(localUser, Constants.EMPTY_STRING,
+										DeFaApplikation.getAppName()), text);
 			} else {
 				MessageSender.getInstance().sendMessage(
 						MessageType.APPLICATION_DOMAIN,

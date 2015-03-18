@@ -1,4 +1,4 @@
-/**
+/*
  * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
@@ -32,7 +32,8 @@ package de.bsvrz.dua.fehlertls.parameter;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  *
- * @version $Id$
+ * @version $Id: ITlsGloKanalSteuerungsListener.java 53686 2015-03-16 11:30:02Z
+ *          peuker $
  */
 public interface ITlsGloKanalSteuerungsListener {
 
