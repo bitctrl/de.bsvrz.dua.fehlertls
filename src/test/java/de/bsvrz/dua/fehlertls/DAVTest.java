@@ -44,9 +44,9 @@ public final class DAVTest {
 	 * Verbindungsdaten.
 	 */
 	private static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083", "-benutzer=Tester",
-		"-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
-	"-debugLevelFileText=OFF" };
+		"-datenverteiler=localhost:8083", "-benutzer=Tester",
+			"-authentifizierung=passwd", "-debugLevelStdErrText=OFF",
+			"-debugLevelFileText=OFF" };
 
 	// /**
 	// * Verbindungsdaten.
@@ -110,8 +110,6 @@ public final class DAVTest {
 	 * Extra-Test.
 	 *
 	 * @return die Datenverteiler-Verbindung
-	 * @throws Exception
-	 *             falls die Verbindung nicht hergestellt werden konnte
 	 */
 	public static ClientDavInterface getDav() {
 
