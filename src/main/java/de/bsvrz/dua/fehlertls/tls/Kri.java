@@ -35,8 +35,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * TLS-Hierarchieelement KRI.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class Kri extends TlsHierarchieElement {
 
@@ -50,8 +48,7 @@ public class Kri extends TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Kri(final ClientDavInterface dav, final SystemObject objekt,
-			final TlsHierarchieElement vater) {
+	protected Kri(final ClientDavInterface dav, final SystemObject objekt, final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 
 	}
@@ -63,12 +60,8 @@ public class Kri extends TlsHierarchieElement {
 
 	@Override
 	public void publiziereFehler(final long zeitStempel) {
-		getEinzelPublikator().publiziere(
-				MessageGrade.ERROR,
-				getObjekt(),
-				"Verbindung zum KRI " + getObjekt()
-				+ " oder KRI selbst defekt."
-				+ " Verbindung zum KRI oder KRI instand setzen");
+		getEinzelPublikator().publiziere(MessageGrade.ERROR, getObjekt(), "Verbindung zum KRI " + getObjekt()
+				+ " oder KRI selbst defekt." + " Verbindung zum KRI oder KRI instand setzen");
 
 		for (final De de : this.getErfassteDes()) {
 			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.KRI_DEFEKT);

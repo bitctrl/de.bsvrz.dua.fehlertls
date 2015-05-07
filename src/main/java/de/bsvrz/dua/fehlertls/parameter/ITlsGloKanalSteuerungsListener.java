@@ -31,9 +31,6 @@ package de.bsvrz.dua.fehlertls.parameter;
  * <code>atg.tlsGloKanalSteuerung</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: ITlsGloKanalSteuerungsListener.java 53686 2015-03-16 11:30:02Z
- *          peuker $
  */
 public interface ITlsGloKanalSteuerungsListener {
 

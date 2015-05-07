@@ -44,8 +44,6 @@ import de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikationTest2;
  * Assoziiert mit <code>typ.tlsFehlerAnalyse</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 
@@ -73,12 +71,10 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	public static TypTlsFehlerAnalyse getInstanz(final ClientDavInterface dav1)
-			throws Exception {
+	public static TypTlsFehlerAnalyse getInstanz(final ClientDavInterface dav1) throws Exception {
 		if (TypTlsFehlerAnalyse.instanz == null) {
 			TypTlsFehlerAnalyse.dav = dav1;
-			TypTlsFehlerAnalyse.instanz = new TypTlsFehlerAnalyse(
-					TypTlsFehlerAnalyse.dav);
+			TypTlsFehlerAnalyse.instanz = new TypTlsFehlerAnalyse(TypTlsFehlerAnalyse.dav);
 
 		}
 		return TypTlsFehlerAnalyse.instanz;
@@ -95,28 +91,22 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	 *            der zusaetzliche Zeitverzug, der nach der Fehlererkennung bis
 	 *            zur Fehlerermittlung abgewartet werden muss
 	 */
-	public void setParameter(final long verzugErkennung,
-			final long verzugErmittlung) {
+	public void setParameter(final long verzugErkennung, final long verzugErmittlung) {
 		final Data data = TypTlsFehlerAnalyse.dav
-				.createData(TypTlsFehlerAnalyse.dav.getDataModel()
-						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
+				.createData(TypTlsFehlerAnalyse.dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
 
-		data.getItem("Urlasser").getReferenceValue("BenutzerReferenz")
-		.setSystemObject(null);
+		data.getItem("Urlasser").getReferenceValue("BenutzerReferenz").setSystemObject(null);
 		data.getItem("Urlasser").getTextValue("Ursache").setText("");
 		data.getItem("Urlasser").getTextValue("Veranlasser").setText("");
 
-		data.getTimeValue("ZeitverzugFehlerErkennung").setMillis(
-				verzugErkennung);
-		data.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(
-				verzugErmittlung);
+		data.getTimeValue("ZeitverzugFehlerErkennung").setMillis(verzugErkennung);
+		data.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(verzugErmittlung);
 
 		final ResultData resultat = new ResultData(this.objekt,
-				new DataDescription(TypTlsFehlerAnalyse.dav.getDataModel()
-						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
-						TypTlsFehlerAnalyse.dav.getDataModel().getAspect(
-								"asp.parameterVorgabe")),
-								System.currentTimeMillis(), data);
+				new DataDescription(
+						TypTlsFehlerAnalyse.dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
+						TypTlsFehlerAnalyse.dav.getDataModel().getAspect("asp.parameterVorgabe")),
+				System.currentTimeMillis(), data);
 		try {
 			TypTlsFehlerAnalyse.dav.sendData(resultat);
 			if (DeFaApplikationTest2.DEBUG) {
@@ -140,16 +130,12 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	 *             wenn bereits eine lokale Sendeanmeldung fuer die gleichen
 	 *             Daten von einem anderen Anwendungsobjekt vorliegt
 	 */
-	private TypTlsFehlerAnalyse(final ClientDavInterface dav)
-			throws OneSubscriptionPerSendData {
+	private TypTlsFehlerAnalyse(final ClientDavInterface dav) throws OneSubscriptionPerSendData {
 		this.objekt = dav.getDataModel().getObject("DeFa");
-		dav.subscribeSender(
-				this,
-				this.objekt,
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
-						.getAspect("asp.parameterVorgabe")), SenderRole
-						.sender());
+		dav.subscribeSender(this, this.objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
+						dav.getDataModel().getAspect("asp.parameterVorgabe")),
+				SenderRole.sender());
 		try {
 			Thread.sleep(2L * Constants.MILLIS_PER_SECOND);
 		} catch (final InterruptedException e) {
@@ -158,14 +144,12 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 	}
 
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		//
 	}
 
 	@Override
-	public boolean isRequestSupported(final SystemObject object,
-			final DataDescription dataDescription) {
+	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 		return false;
 	}
 

@@ -36,8 +36,6 @@ import de.bsvrz.dav.daf.main.DataDescription;
  * beschreiben.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public interface IDeTyp {
 
@@ -54,8 +52,7 @@ public interface IDeTyp {
 	 *             wird geworfen, wenn z.B. eine <code>DataDescription</code>
 	 *             nicht erzeugt werden konnte, oder wenn es sonst Probleme gab
 	 */
-	DataDescription[] getDeFaMesswertDataDescriptions(
-			final ClientDavInterface dav) throws DeFaException;
+	DataDescription[] getDeFaMesswertDataDescriptions(final ClientDavInterface dav) throws DeFaException;
 
 	/**
 	 * Erfragt die Datenidentifikation, in der sich die Parameter für die
@@ -69,8 +66,7 @@ public interface IDeTyp {
 	 *             wird geworfen, wenn z.B. die <code>DataDescription</code>
 	 *             nicht erzeugt werden konnte, oder wenn es sonst Probleme gab
 	 */
-	DataDescription getDeFaIntervallParameterDataDescription(
-			final ClientDavInterface dav) throws DeFaException;
+	DataDescription getDeFaIntervallParameterDataDescription(final ClientDavInterface dav) throws DeFaException;
 
 	/**
 	 * Liest aus einem Parameterdatensatz die aktuelle Erfassungsintervalldauer

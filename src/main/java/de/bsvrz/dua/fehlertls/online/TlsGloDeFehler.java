@@ -46,8 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Korrespondiert mit der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class TlsGloDeFehler implements ClientReceiverInterface {
 
@@ -82,8 +80,7 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static TlsGloDeFehler getInstanz(final ClientDavInterface dav,
-			final SystemObject objekt) {
+	public static TlsGloDeFehler getInstanz(final ClientDavInterface dav, final SystemObject objekt) {
 		TlsGloDeFehler instanz = null;
 
 		synchronized (TlsGloDeFehler.instanzen) {
@@ -108,11 +105,10 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private TlsGloDeFehler(final ClientDavInterface dav,
-			final SystemObject objekt) {
-		dav.subscribeReceiver(this, objekt, new DataDescription(dav
-				.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+	private TlsGloDeFehler(final ClientDavInterface dav, final SystemObject objekt) {
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"),
+						dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
@@ -134,15 +130,11 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						this.aktiv = resultat.getData()
-								.getUnscaledValue("DEKanalStatus").intValue() == 0;
+						this.aktiv = resultat.getData().getUnscaledValue("DEKanalStatus").intValue() == 0;
 						this.deFehlerStatus = TlsDeFehlerStatus
-								.getZustand(resultat.getData()
-										.getUnscaledValue("DEFehlerStatus")
-										.intValue());
+								.getZustand(resultat.getData().getUnscaledValue("DEFehlerStatus").intValue());
 						for (final ITlsGloDeFehlerListener listener : this.listenerMenge) {
-							listener.aktualisiereTlsGloDeFehler(this.aktiv,
-									this.deFehlerStatus);
+							listener.aktualisiereTlsGloDeFehler(this.aktiv, this.deFehlerStatus);
 						}
 					}
 				}

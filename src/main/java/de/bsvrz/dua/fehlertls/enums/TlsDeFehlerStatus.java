@@ -36,8 +36,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
  * .
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class TlsDeFehlerStatus extends AbstractDavZustand {
 
@@ -49,25 +47,23 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 	/**
 	 * Der Wertebereich dieses DAV-Enumerationstypen.
 	 */
-	private static Map<Integer, TlsDeFehlerStatus> werteBereich = new HashMap<Integer, TlsDeFehlerStatus>();
+	private static Map<Integer, TlsDeFehlerStatus> werteBereich = new HashMap<>();
 
 	/**
 	 * DE in Ordnung.
 	 */
-	public static final TlsDeFehlerStatus OK = new TlsDeFehlerStatus("ok", 0,
-			"DE in Ordnung");
+	public static final TlsDeFehlerStatus OK = new TlsDeFehlerStatus("ok", 0, "DE in Ordnung");
 
 	/**
 	 * Störung vom E/A-Konzentrator erkannt.
 	 */
-	public static final TlsDeFehlerStatus STOER_EAK = new TlsDeFehlerStatus(
-			"StörEAK", 1, "Störung vom E/A-Konzentrator erkannt");
+	public static final TlsDeFehlerStatus STOER_EAK = new TlsDeFehlerStatus("StörEAK", 1,
+			"Störung vom E/A-Konzentrator erkannt");
 
 	/**
 	 * Störung vom SM erkannt.
 	 */
-	public static final TlsDeFehlerStatus STOER_SM = new TlsDeFehlerStatus(
-			"StörSM", 2, "Störung vom SM erkannt");
+	public static final TlsDeFehlerStatus STOER_SM = new TlsDeFehlerStatus("StörSM", 2, "Störung vom SM erkannt");
 
 	/**
 	 * der Text der die Natur des DE-Fehlers illustriert.
@@ -84,8 +80,7 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 	 * @param text
 	 *            der Text der die Natur des DE-Fehlers illustriert
 	 */
-	private TlsDeFehlerStatus(final String name, final int kode,
-			final String text) {
+	private TlsDeFehlerStatus(final String name, final int kode, final String text) {
 		super(kode, name);
 		this.text = text;
 		TlsDeFehlerStatus.werteBereich.put(kode, this);

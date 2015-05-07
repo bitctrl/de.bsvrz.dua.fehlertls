@@ -36,8 +36,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * (PID: typ.deTest)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class TypDeTest extends AbstraktDeTyp {
 
@@ -46,8 +44,7 @@ public class TypDeTest extends AbstraktDeTyp {
 		long erfassungsIntervallDauer = -1;
 
 		if (parameter.getUnscaledValue("Übertragungsverfahren").intValue() == 1) {
-			erfassungsIntervallDauer = parameter.getTimeValue(
-					"Erfassungsperiodendauer").getMillis();
+			erfassungsIntervallDauer = parameter.getTimeValue("Erfassungsperiodendauer").getMillis();
 		}
 
 		return erfassungsIntervallDauer;
@@ -60,8 +57,8 @@ public class TypDeTest extends AbstraktDeTyp {
 
 	@Override
 	public DataDescriptionPid[] getDataIdentifikations() {
-		return new DataDescriptionPid[] { new DataDescriptionPid("atg.test",
-				DUAKonstanten.ASP_TLS_ANTWORT, (short) 0), };
+		return new DataDescriptionPid[] {
+				new DataDescriptionPid("atg.test", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0), };
 	}
 
 }

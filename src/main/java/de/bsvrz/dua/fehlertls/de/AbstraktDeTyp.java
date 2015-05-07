@@ -39,8 +39,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  * Von diesem Typ sollten alle finalen DE-Typ-Beschreibungen abgeleitet sein.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public abstract class AbstraktDeTyp implements IDeTyp {
 
@@ -63,49 +61,38 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	protected abstract String getBetriebsParameterAtgPid();
 
 	@Override
-	public DataDescription[] getDeFaMesswertDataDescriptions(
-			final ClientDavInterface dav) throws DeFaException {
+	public DataDescription[] getDeFaMesswertDataDescriptions(final ClientDavInterface dav) throws DeFaException {
 		final List<DataDescription> dataDescriptions = new ArrayList<DataDescription>();
 
-		for (final DataDescriptionPid dataIdentifikation : this
-				.getDataIdentifikations()) {
-			final AttributeGroup atg = dav.getDataModel().getAttributeGroup(
-					dataIdentifikation.getAtgPid());
+		for (final DataDescriptionPid dataIdentifikation : this.getDataIdentifikations()) {
+			final AttributeGroup atg = dav.getDataModel().getAttributeGroup(dataIdentifikation.getAtgPid());
 			if (atg == null) {
-				throw new DeFaException("Attributgruppe "
-						+ dataIdentifikation.getAtgPid()
-						+ " existiert nicht im Datenkatalog");
+				throw new DeFaException(
+						"Attributgruppe " + dataIdentifikation.getAtgPid() + " existiert nicht im Datenkatalog");
 			}
 
-			final Aspect asp = dav.getDataModel().getAspect(
-					dataIdentifikation.getAspPid());
+			final Aspect asp = dav.getDataModel().getAspect(dataIdentifikation.getAspPid());
 			if (asp == null) {
-				throw new DeFaException("Aspekt "
-						+ dataIdentifikation.getAspPid()
-						+ " existiert nicht im Datenkatalog");
+				throw new DeFaException(
+						"Aspekt " + dataIdentifikation.getAspPid() + " existiert nicht im Datenkatalog");
 			}
 
-			dataDescriptions.add(new DataDescription(atg, asp,
-					dataIdentifikation.getSimVar()));
+			dataDescriptions.add(new DataDescription(atg, asp, dataIdentifikation.getSimVar()));
 		}
 
 		return dataDescriptions.toArray(new DataDescription[0]);
 	}
 
 	@Override
-	public DataDescription getDeFaIntervallParameterDataDescription(
-			final ClientDavInterface dav) throws DeFaException {
-		final AttributeGroup atg = dav.getDataModel().getAttributeGroup(
-				this.getBetriebsParameterAtgPid());
+	public DataDescription getDeFaIntervallParameterDataDescription(final ClientDavInterface dav) throws DeFaException {
+		final AttributeGroup atg = dav.getDataModel().getAttributeGroup(this.getBetriebsParameterAtgPid());
 
 		if (atg == null) {
-			throw new DeFaException("Die Parameter-Attributgruppe "
-					+ this.getBetriebsParameterAtgPid()
+			throw new DeFaException("Die Parameter-Attributgruppe " + this.getBetriebsParameterAtgPid()
 					+ " konnte nicht identifiziert werden");
 		}
 
-		return new DataDescription(atg, dav.getDataModel().getAspect(
-				DaVKonstanten.ASP_PARAMETER_SOLL));
+		return new DataDescription(atg, dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL));
 	}
 
 	/**
@@ -155,8 +142,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 		 * @param simVar
 		 *            Simulationsvariante
 		 */
-		public DataDescriptionPid(final String atgPid, final String aspPid,
-				final short simVar) {
+		public DataDescriptionPid(final String atgPid, final String aspPid, final short simVar) {
 			this(atgPid, aspPid);
 			this.simVar = simVar;
 		}

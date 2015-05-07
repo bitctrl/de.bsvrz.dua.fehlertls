@@ -30,8 +30,6 @@ package de.bsvrz.dua.fehlertls;
  * Zustaende, die eine DE bzgl. der DeFa annehmen kann
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public enum DeStatus {
 

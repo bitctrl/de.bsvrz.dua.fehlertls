@@ -47,9 +47,6 @@ import de.bsvrz.dua.fehlertls.de.IDeTyp;
  * Zyklussteuerung eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: ZyklusSteuerungsParameter.java 53686 2015-03-16 11:30:02Z
- *          peuker $
  */
 public final class ZyklusSteuerungsParameter implements ClientReceiverInterface {
 
@@ -87,9 +84,8 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	public static ZyklusSteuerungsParameter getInstanz(
-			final ClientDavInterface dav, final SystemObject objekt)
-					throws DeFaException {
+	public static ZyklusSteuerungsParameter getInstanz(final ClientDavInterface dav, final SystemObject objekt)
+			throws DeFaException {
 		ZyklusSteuerungsParameter instanz = null;
 
 		synchronized (ZyklusSteuerungsParameter.instanzen) {
@@ -117,12 +113,10 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	private ZyklusSteuerungsParameter(final ClientDavInterface dav,
-			final SystemObject objekt) throws DeFaException {
+	private ZyklusSteuerungsParameter(final ClientDavInterface dav, final SystemObject objekt) throws DeFaException {
 		this.deTyp = DeTypLader.getDeTyp(objekt.getType());
 
-		dav.subscribeReceiver(this, objekt,
-				this.deTyp.getDeFaIntervallParameterDataDescription(dav),
+		dav.subscribeReceiver(this, objekt, this.deTyp.getDeFaIntervallParameterDataDescription(dav),
 				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
@@ -132,10 +126,8 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public synchronized void addListener(
-			final IZyklusSteuerungsParameterListener listener) {
-		if (listenerMenge.add(listener)
-				&& (this.erfassungsIntervallDauer != null)) {
+	public synchronized void addListener(final IZyklusSteuerungsParameterListener listener) {
+		if (listenerMenge.add(listener) && (this.erfassungsIntervallDauer != null)) {
 			listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 		}
 	}
@@ -146,8 +138,7 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						this.erfassungsIntervallDauer = this.deTyp
-								.getErfassungsIntervall(resultat.getData());
+						this.erfassungsIntervallDauer = this.deTyp.getErfassungsIntervall(resultat.getData());
 						for (final IZyklusSteuerungsParameterListener listener : this.listenerMenge) {
 							listener.aktualisiereZyklusSteuerungsParameter(this.erfassungsIntervallDauer);
 						}

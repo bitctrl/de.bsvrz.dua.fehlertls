@@ -49,11 +49,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * kann die Werte <code>erfasst</code> und <code>nicht erfasst</code> annehmen
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
-IZyklusSteuerungsParameterListener {
+public class DeErfassungsZustand implements ITlsGloDeFehlerListener, IZyklusSteuerungsParameterListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -87,7 +84,7 @@ IZyklusSteuerungsParameterListener {
 	/**
 	 * Menge aller Listener dieses Objektes.
 	 */
-	private final Set<IDeErfassungsZustandListener> listenerMenge = new HashSet<IDeErfassungsZustandListener>();
+	private final Set<IDeErfassungsZustandListener> listenerMenge = new HashSet<>();
 
 	/**
 	 * das erfasste DE.
@@ -105,19 +102,16 @@ IZyklusSteuerungsParameterListener {
 	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	public DeErfassungsZustand(final ClientDavInterface dav,
-			final SystemObject objekt) throws DeFaException {
+	public DeErfassungsZustand(final ClientDavInterface dav, final SystemObject objekt) throws DeFaException {
 		this.obj = objekt;
 		this.aktuellerZustand = new Zustand();
 		TlsGloDeFehler.getInstanz(dav, objekt).addListener(this);
 		ZyklusSteuerungsParameter.getInstanz(dav, objekt).addListener(this);
-		DeErfassungsZustand.LOGGER.info("DeFa-Zustand von " + objekt
-				+ " wird ab sofort ueberwacht");
+		DeErfassungsZustand.LOGGER.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht");
 	}
 
 	@Override
-	public void aktualisiereTlsGloDeFehler(final boolean aktiv1,
-			final TlsDeFehlerStatus deFehlerStatus1) {
+	public void aktualisiereTlsGloDeFehler(final boolean aktiv1, final TlsDeFehlerStatus deFehlerStatus1) {
 		synchronized (this) {
 			this.aktiv = aktiv1;
 			this.deFehlerStatus = deFehlerStatus1;
@@ -126,8 +120,7 @@ IZyklusSteuerungsParameterListener {
 	}
 
 	@Override
-	public void aktualisiereZyklusSteuerungsParameter(
-			final long erfassungsIntervallDauer1) {
+	public void aktualisiereZyklusSteuerungsParameter(final long erfassungsIntervallDauer1) {
 		synchronized (this) {
 			this.erfassungsIntervallDauer = erfassungsIntervallDauer1;
 			informiereListener();
@@ -170,8 +163,7 @@ IZyklusSteuerungsParameterListener {
 	 * @param listener
 	 *            ein neuer Listener
 	 */
-	public final synchronized void addListener(
-			final IDeErfassungsZustandListener listener) {
+	public final synchronized void addListener(final IDeErfassungsZustandListener listener) {
 		if (this.listenerMenge.add(listener)) {
 			listener.aktualisiereErfassungsZustand(this.aktuellerZustand);
 		}
@@ -224,20 +216,15 @@ IZyklusSteuerungsParameterListener {
 									this.initialisiert = false;
 								}
 							} else {
-								this.grund = DeErfassungsZustand.GRUND_PRAEFIX
-										+ "DE-Kanal ist passiviert";
+								this.grund = DeErfassungsZustand.GRUND_PRAEFIX + "DE-Kanal ist passiviert";
 							}
 						} else {
 							this.initialisiert = false;
 						}
 					} else {
-						this.grund = DeErfassungsZustand.GRUND_PRAEFIX
-								+ "DE-Fehler("
-								+ DeErfassungsZustand.this.deFehlerStatus
-								.toString()
-								+ "): "
-								+ DeErfassungsZustand.this.deFehlerStatus
-								.getText();
+						this.grund = DeErfassungsZustand.GRUND_PRAEFIX + "DE-Fehler("
+								+ DeErfassungsZustand.this.deFehlerStatus.toString() + "): "
+								+ DeErfassungsZustand.this.deFehlerStatus.getText();
 					}
 				} else {
 					this.initialisiert = false;
@@ -302,8 +289,7 @@ IZyklusSteuerungsParameterListener {
 
 			if ((obj1 != null) && (obj1 instanceof Zustand)) {
 				final Zustand that = (Zustand) obj1;
-				gleich = (this.initialisiert == that.initialisiert)
-						&& (this.intervallDauer == that.intervallDauer);
+				gleich = (this.initialisiert == that.initialisiert) && (this.intervallDauer == that.intervallDauer);
 				if (gleich) {
 					if ((this.grund != null) && (that.grund != null)) {
 						gleich &= this.grund.equals(that.grund);
@@ -322,17 +308,13 @@ IZyklusSteuerungsParameterListener {
 
 			if (initialisiert) {
 				if (this.intervallDauer >= 0) {
-					s += "erfasst (Intervalldauer: "
-							+ new SimpleDateFormat(
-									DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
-					.format(new Date(this.intervallDauer))
-					+ ")";
+					s += "erfasst (Intervalldauer: " + new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
+							.format(new Date(this.intervallDauer)) + ")";
 				} else {
 					s += this.grund;
 				}
 			} else {
-				s += "nicht initialisiert (T = " + intervallDauer + ", Grund: "
-						+ this.grund + ")";
+				s += "nicht initialisiert (T = " + intervallDauer + ", Grund: " + this.grund + ")";
 			}
 
 			return s;
@@ -343,11 +325,9 @@ IZyklusSteuerungsParameterListener {
 			final int prime = 31;
 			int result = 1;
 			result = (prime * result) + getOuterType().hashCode();
-			result = (prime * result)
-					+ ((grund == null) ? 0 : grund.hashCode());
+			result = (prime * result) + ((grund == null) ? 0 : grund.hashCode());
 			result = (prime * result) + (initialisiert ? 1231 : 1237);
-			result = (prime * result)
-					+ (int) (intervallDauer ^ (intervallDauer >>> 32));
+			result = (prime * result) + (int) (intervallDauer ^ (intervallDauer >>> 32));
 			return result;
 		}
 

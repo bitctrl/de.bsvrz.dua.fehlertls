@@ -32,9 +32,6 @@ package de.bsvrz.dua.fehlertls.tls;
  * <code>nicht erfasst</code> annehmen
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: IDeErfassungsZustandListener.java 53686 2015-03-16 11:30:02Z
- *          peuker $
  */
 public interface IDeErfassungsZustandListener {
 

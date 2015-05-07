@@ -33,9 +33,6 @@ import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
  * <code>atg.tlsGloDeFehler</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: ITlsGloDeFehlerListener.java 53686 2015-03-16 11:30:02Z peuker
- *          $
  */
 public interface ITlsGloDeFehlerListener {
 
@@ -49,7 +46,6 @@ public interface ITlsGloDeFehlerListener {
 	 * @param deFehlerStatus
 	 *            TLS-DE-Fehler-Status
 	 */
-	void aktualisiereTlsGloDeFehler(boolean aktiv,
-			TlsDeFehlerStatus deFehlerStatus);
+	void aktualisiereTlsGloDeFehler(boolean aktiv, TlsDeFehlerStatus deFehlerStatus);
 
 }

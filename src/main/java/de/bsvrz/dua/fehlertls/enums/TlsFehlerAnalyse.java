@@ -35,8 +35,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
  * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsFehlerAnalyse</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class TlsFehlerAnalyse extends AbstractDavZustand {
 
@@ -48,20 +46,18 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 	/**
 	 * Der Wertebereich dieses DAV-Enumerationstypen.
 	 */
-	private static Map<Integer, TlsFehlerAnalyse> werteBereich = new HashMap<Integer, TlsFehlerAnalyse>();
+	private static Map<Integer, TlsFehlerAnalyse> werteBereich = new HashMap<>();
 
 	/**
 	 * Fehlerursache konnte nicht ermittelt werden.
 	 */
-	public static final TlsFehlerAnalyse UNBEKANNT = new TlsFehlerAnalyse(
-			"unbekannte Ursache", 0);
+	public static final TlsFehlerAnalyse UNBEKANNT = new TlsFehlerAnalyse("unbekannte Ursache", 0);
 
 	/**
 	 * Verbindung zum KRI xxx oder KRI selbst defekt. Verbindung zum KRI oder
 	 * KRI instand setzen
 	 */
-	public static final TlsFehlerAnalyse KRI_DEFEKT = new TlsFehlerAnalyse(
-			"KRI oder Verbindung zum KRI defekt", 1);
+	public static final TlsFehlerAnalyse KRI_DEFEKT = new TlsFehlerAnalyse("KRI oder Verbindung zum KRI defekt", 1);
 
 	/**
 	 * Modem am Inselbus xxx oder Inselbus selbst defekt. Modem oder Inselbus
@@ -74,8 +70,7 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 	 * Inselbus xxx gestört: Für die DE der Steuermodule x1, x2,.. sind keine
 	 * Daten verfügbar. Inselbus xxx instand setzen
 	 */
-	public static final TlsFehlerAnalyse INSELBUS_DEFEKT = new TlsFehlerAnalyse(
-			"Inselbus defekt", 3);
+	public static final TlsFehlerAnalyse INSELBUS_DEFEKT = new TlsFehlerAnalyse("Inselbus defekt", 3);
 
 	/**
 	 * Modem am Steuermodul x oder Steuermodul defekt. Modem am Steuermodul x
@@ -87,8 +82,7 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 	/**
 	 * EAK x am Steuermodul y defekt. EAK x am Steuermodul y instand setzen
 	 */
-	public static final TlsFehlerAnalyse EAK_AN_SM_DEFEKT = new TlsFehlerAnalyse(
-			"EAK am Steuermodul defekt", 5);
+	public static final TlsFehlerAnalyse EAK_AN_SM_DEFEKT = new TlsFehlerAnalyse("EAK am Steuermodul defekt", 5);
 
 	/**
 	 * Standardkonstruktor.

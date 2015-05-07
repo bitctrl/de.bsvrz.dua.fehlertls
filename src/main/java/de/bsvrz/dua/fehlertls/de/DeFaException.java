@@ -32,8 +32,6 @@ package de.bsvrz.dua.fehlertls.de;
  * Klasse nicht ermittelt oder instanziiert werden konnte.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DeFaException extends Exception {
 

@@ -32,9 +32,6 @@ package de.bsvrz.dua.fehlertls.parameter;
  * Fehleranalyse).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: IParameterTlsFehlerAnalyseListener.java 53686 2015-03-16
- *          11:30:02Z peuker $
  */
 public interface IParameterTlsFehlerAnalyseListener {
 
@@ -50,7 +47,6 @@ public interface IParameterTlsFehlerAnalyseListener {
 	 *            Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis
 	 *            zur Fehlerermittlung abgewartet werden muss
 	 */
-	void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung,
-			long zeitverzugFehlerErmittlung);
+	void aktualisiereParameterTlsFehlerAnalyse(long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung);
 
 }

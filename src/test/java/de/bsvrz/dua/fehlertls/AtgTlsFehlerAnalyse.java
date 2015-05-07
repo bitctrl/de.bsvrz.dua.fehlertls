@@ -45,15 +45,13 @@ import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
  * <code>asp.analyse</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 
 	/**
 	 * statische Instanzen dieser Klasse.
 	 */
-	private static Map<SystemObject, AtgTlsFehlerAnalyse> instanzen = new HashMap<SystemObject, AtgTlsFehlerAnalyse>();
+	private static Map<SystemObject, AtgTlsFehlerAnalyse> instanzen = new HashMap<>();
 
 	/**
 	 * Listenermenge.
@@ -75,8 +73,7 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	public static AtgTlsFehlerAnalyse getInstanz(final SystemObject obj)
-			throws Exception {
+	public static AtgTlsFehlerAnalyse getInstanz(final SystemObject obj) throws Exception {
 		AtgTlsFehlerAnalyse instanz = AtgTlsFehlerAnalyse.instanzen.get(obj);
 
 		if (instanz == null) {
@@ -96,12 +93,11 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	 *             wird weitergereicht
 	 */
 	private AtgTlsFehlerAnalyse(final SystemObject obj) throws Exception {
-		final DataDescription datenBeschreibung = new DataDescription(DAVTest
-				.getDav().getDataModel()
-				.getAttributeGroup("atg.tlsFehlerAnalyse"), DAVTest.getDav()
-				.getDataModel().getAspect("asp.analyse"));
-		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung,
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		final DataDescription datenBeschreibung = new DataDescription(
+				DAVTest.getDav().getDataModel().getAttributeGroup("atg.tlsFehlerAnalyse"),
+				DAVTest.getDav().getDataModel().getAspect("asp.analyse"));
+		DAVTest.getDav().subscribeReceiver(this, obj, datenBeschreibung, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
 	}
 
 	/**
@@ -110,8 +106,7 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 	 * @param listener
 	 *            neuer Listener
 	 */
-	public synchronized void addListener(
-			final IAtgTlsFehlerAnalyseListener listener) {
+	public synchronized void addListener(final IAtgTlsFehlerAnalyseListener listener) {
 		if (this.listenerMenge.add(listener) && (this.aktuellerFehler != null)) {
 			listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 		}
@@ -124,9 +119,7 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 				if ((result != null) && (result.getData() != null)) {
 					synchronized (this) {
 						this.aktuellerFehler = TlsFehlerAnalyse
-								.getZustand(result.getData()
-										.getUnscaledValue("TlsFehlerAnalyse")
-										.intValue());
+								.getZustand(result.getData().getUnscaledValue("TlsFehlerAnalyse").intValue());
 						for (final IAtgTlsFehlerAnalyseListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsFehlerAnalyse(this.aktuellerFehler);
 						}

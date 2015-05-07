@@ -64,11 +64,9 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * meldet sich auf alle Daten an, auf die von dem DE gewartet werden soll.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class De extends TlsHierarchieElement implements ClientReceiverInterface, ClientSenderInterface,
-		IObjektWeckerListener, IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
+IObjektWeckerListener, IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -202,13 +200,13 @@ public class De extends TlsHierarchieElement implements ClientReceiverInterface,
 		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode());
 		try {
 			TlsHierarchieElement.getDav()
-					.sendData(new ResultData(getObjekt(), De.fehlerDatenBeschreibung, fehlerZeit, datum));
+			.sendData(new ResultData(getObjekt(), De.fehlerDatenBeschreibung, fehlerZeit, datum));
 		} catch (final DataNotSubscribedException e) {
 			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt() + " nicht publiziert werden. Grund:\n"
-			+ e.getLocalizedMessage());
+					+ e.getLocalizedMessage());
 		} catch (final SendSubscriptionNotConfirmed e) {
 			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt() + " nicht publiziert werden. Grund:\n"
-			+ e.getLocalizedMessage());
+					+ e.getLocalizedMessage());
 		}
 
 		this.versucheErwartung();
@@ -280,7 +278,7 @@ public class De extends TlsHierarchieElement implements ClientReceiverInterface,
 
 				De.LOGGER.info("Plane Erwartung fuer " + De.this.getObjekt() + ": "
 						+ new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
-								.format(new Date(nachsterErwarteterZeitpunkt + De.STANDARD_ZEIT_ABSTAND)));
+						.format(new Date(nachsterErwarteterZeitpunkt + De.STANDARD_ZEIT_ABSTAND)));
 				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt + De.STANDARD_ZEIT_ABSTAND);
 			} else {
 				if ((this.aktuellerZustand != null) && this.aktuellerZustand.isInitialisiert()) {
@@ -302,7 +300,7 @@ public class De extends TlsHierarchieElement implements ClientReceiverInterface,
 
 		} else {
 			De.LOGGER.warning("Kann keine Daten fuer " + getObjekt() + " erwarten, da noch keine (sinnvollen) "
-			+ "Parameter zur TLS-Fehleranalyse empfangen wurden");
+					+ "Parameter zur TLS-Fehleranalyse empfangen wurden");
 		}
 	}
 

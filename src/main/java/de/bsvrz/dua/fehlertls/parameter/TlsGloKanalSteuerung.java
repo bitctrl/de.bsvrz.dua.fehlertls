@@ -46,8 +46,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  * (Kanalsteuerung (FG alle / Typ 29)).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 
@@ -77,8 +75,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static TlsGloKanalSteuerung getInstanz(final ClientDavInterface dav,
-			final SystemObject objekt) {
+	public static TlsGloKanalSteuerung getInstanz(final ClientDavInterface dav, final SystemObject objekt) {
 		TlsGloKanalSteuerung instanz = null;
 
 		synchronized (TlsGloKanalSteuerung.instanzen) {
@@ -103,15 +100,11 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.de</code>
 	 */
-	private TlsGloKanalSteuerung(final ClientDavInterface dav,
-			final SystemObject objekt) {
-		dav.subscribeReceiver(
-				this,
-				objekt,
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.tlsGloKanalSteuerung"), dav.getDataModel()
-						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+	private TlsGloKanalSteuerung(final ClientDavInterface dav, final SystemObject objekt) {
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.tlsGloKanalSteuerung"),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -120,8 +113,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public synchronized void addListener(
-			final ITlsGloKanalSteuerungsListener listener) {
+	public synchronized void addListener(final ITlsGloKanalSteuerungsListener listener) {
 		if (listenerMenge.add(listener) && (this.aktiv != null)) {
 			listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 		}
@@ -133,8 +125,7 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						this.aktiv = resultat.getData()
-								.getUnscaledValue("DEKanalStatus").intValue() == 0;
+						this.aktiv = resultat.getData().getUnscaledValue("DEKanalStatus").intValue() == 0;
 						for (final ITlsGloKanalSteuerungsListener listener : this.listenerMenge) {
 							listener.aktualisiereTlsGloKanalSteuerung(this.aktiv);
 						}

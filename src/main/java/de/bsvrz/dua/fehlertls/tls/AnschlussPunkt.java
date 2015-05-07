@@ -45,8 +45,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * TLS-Hierarchieelement Inselbus.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AnschlussPunkt extends TlsHierarchieElement {
 
@@ -63,46 +61,35 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected AnschlussPunkt(final ClientDavInterface dav,
-			final SystemObject objekt, final TlsHierarchieElement vater) {
+	protected AnschlussPunkt(final ClientDavInterface dav, final SystemObject objekt,
+			final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
 
 		/**
 		 * Initialisiere Steuermodule
 		 */
-		for (final SystemObject komPartner : getObjekt().getNonMutableSet(
-				"AnschlussPunkteKommunikationsPartner").getElements()) {
+		for (final SystemObject komPartner : getObjekt().getNonMutableSet("AnschlussPunkteKommunikationsPartner")
+				.getElements()) {
 			if (komPartner.isValid()) {
-				final Data konfigDatum = komPartner
-						.getConfigurationData(TlsHierarchie.getWurzel()
-								.getApKonfigAtg());
+				final Data konfigDatum = komPartner.getConfigurationData(TlsHierarchie.getWurzel().getApKonfigAtg());
 				if (konfigDatum != null) {
-					final SystemObject steuerModul = konfigDatum
-							.getReferenceValue("KommunikationsPartner")
+					final SystemObject steuerModul = konfigDatum.getReferenceValue("KommunikationsPartner")
 							.getSystemObject();
 					if (steuerModul != null) {
 						if (steuerModul.isOfType("typ.steuerModul")) {
 							addKind(new Sm(dav, steuerModul, this));
 						} else {
-							AnschlussPunkt.LOGGER
-									.warning("An "
-									+ komPartner
-									+ " (Inselbus: "
-									+ getObjekt()
-									+ ") duerfen nur Steuermodule definiert sein. Aber: "
-									+ steuerModul + " (Typ: "
+							AnschlussPunkt.LOGGER.warning("An " + komPartner + " (Inselbus: " + getObjekt()
+									+ ") duerfen nur Steuermodule definiert sein. Aber: " + steuerModul + " (Typ: "
 									+ steuerModul.getType() + ")");
 						}
 					} else {
-						AnschlussPunkt.LOGGER.warning("An " + komPartner
-								+ " (Inselbus: " + getObjekt()
-								+ ") ist kein Steuermodul definiert");
+						AnschlussPunkt.LOGGER.warning(
+								"An " + komPartner + " (Inselbus: " + getObjekt() + ") ist kein Steuermodul definiert");
 					}
 				} else {
-					AnschlussPunkt.LOGGER.warning("Konfiguration von "
-							+ komPartner + " (Inselbus: " + getObjekt()
-							+ ") konnte nicht ausgelesen werden. "
-							+ "Das assoziierte Steuermodul wird ignoriert");
+					AnschlussPunkt.LOGGER.warning("Konfiguration von " + komPartner + " (Inselbus: " + getObjekt()
+							+ ") konnte nicht ausgelesen werden. " + "Das assoziierte Steuermodul wird ignoriert");
 				}
 			}
 		}
@@ -129,16 +116,14 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		 * ermittle alle Steuermodule, die unterhalb dieses Inselbusses liegen
 		 * und wenigstens ein erfasstes DE haben (mit ihren erfassten DE)
 		 */
-		final Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<Sm, Set<De>>();
+		final Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<>();
 
 		for (final De erfassteDe : this.getErfassteDes()) {
 			final Sm steuerModulVonDe = (Sm) erfassteDe.getVater().getVater();
-			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes
-					.get(steuerModulVonDe);
+			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes.get(steuerModulVonDe);
 			if (erfassteDesAmSteuerModul == null) {
-				erfassteDesAmSteuerModul = new HashSet<De>();
-				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe,
-						erfassteDesAmSteuerModul);
+				erfassteDesAmSteuerModul = new HashSet<>();
+				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe, erfassteDesAmSteuerModul);
 			}
 			erfassteDesAmSteuerModul.add(erfassteDe);
 		}
@@ -146,18 +131,14 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		/**
 		 * Ermittle alle erfassten Steuermodule, die teilweise ausgefallen sind
 		 */
-		final Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<Sm, Set<De>>();
-		for (final Sm erfasstesSm : erfassteSteuerModuleMitErfasstenDes
-				.keySet()) {
-			for (final De erfassteDe : erfassteSteuerModuleMitErfasstenDes
-					.get(erfasstesSm)) {
+		final Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<>();
+		for (final Sm erfasstesSm : erfassteSteuerModuleMitErfasstenDes.keySet()) {
+			for (final De erfassteDe : erfassteSteuerModuleMitErfasstenDes.get(erfasstesSm)) {
 				if (!erfassteDe.isInTime()) {
-					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes
-							.get(erfasstesSm);
+					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes.get(erfasstesSm);
 					if (alleTimeOutDesVonSteuerModul == null) {
-						alleTimeOutDesVonSteuerModul = new HashSet<De>();
-						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm,
-								alleTimeOutDesVonSteuerModul);
+						alleTimeOutDesVonSteuerModul = new HashSet<>();
+						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm, alleTimeOutDesVonSteuerModul);
 					}
 					alleTimeOutDesVonSteuerModul.add(erfassteDe);
 				}
@@ -168,23 +149,20 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen
 		 * sind
 		 */
-		final Set<Sm> totalAusfallSteuerModule = new HashSet<Sm>();
-		for (final Sm timeOutSteuerModul : timeOutSteuerModuleMitTimeOutDes
-				.keySet()) {
+		final Set<Sm> totalAusfallSteuerModule = new HashSet<>();
+		for (final Sm timeOutSteuerModul : timeOutSteuerModuleMitTimeOutDes.keySet()) {
 			/**
 			 * ist das Steuermodul vollstaendig aufgefallen?
 			 */
-			final int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(
-					timeOutSteuerModul).size();
-			final int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(
-					timeOutSteuerModul).size();
+			final int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(timeOutSteuerModul).size();
+			final int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(timeOutSteuerModul).size();
 			if (erfassteDes == timeoutDes) {
 				totalAusfallSteuerModule.add(timeOutSteuerModul);
 			}
 		}
 
-		if ((totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
-				.keySet().size()) || (totalAusfallSteuerModule.size() > 1)) {
+		if ((totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes.keySet().size())
+				|| (totalAusfallSteuerModule.size() > 1)) {
 			kannHierPublizieren = true;
 		}
 
@@ -197,16 +175,14 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		 * ermittle alle Steuermodule, die unterhalb dieses Inselbusses liegen
 		 * und wenigstens ein erfasstes DE haben (mit ihren erfassten DE)
 		 */
-		final Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<Sm, Set<De>>();
+		final Map<Sm, Set<De>> erfassteSteuerModuleMitErfasstenDes = new HashMap<>();
 
 		for (final De erfassteDe : this.getErfassteDes()) {
 			final Sm steuerModulVonDe = (Sm) erfassteDe.getVater().getVater();
-			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes
-					.get(steuerModulVonDe);
+			Set<De> erfassteDesAmSteuerModul = erfassteSteuerModuleMitErfasstenDes.get(steuerModulVonDe);
 			if (erfassteDesAmSteuerModul == null) {
-				erfassteDesAmSteuerModul = new HashSet<De>();
-				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe,
-						erfassteDesAmSteuerModul);
+				erfassteDesAmSteuerModul = new HashSet<>();
+				erfassteSteuerModuleMitErfasstenDes.put(steuerModulVonDe, erfassteDesAmSteuerModul);
 			}
 			erfassteDesAmSteuerModul.add(erfassteDe);
 		}
@@ -214,18 +190,14 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		/**
 		 * Ermittle alle erfassten Steuermodule, die teilweise ausgefallen sind
 		 */
-		final Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<Sm, Set<De>>();
-		for (final Sm erfasstesSm : erfassteSteuerModuleMitErfasstenDes
-				.keySet()) {
-			for (final De erfassteDe : erfassteSteuerModuleMitErfasstenDes
-					.get(erfasstesSm)) {
+		final Map<Sm, Set<De>> timeOutSteuerModuleMitTimeOutDes = new HashMap<>();
+		for (final Sm erfasstesSm : erfassteSteuerModuleMitErfasstenDes.keySet()) {
+			for (final De erfassteDe : erfassteSteuerModuleMitErfasstenDes.get(erfasstesSm)) {
 				if (!erfassteDe.isInTime()) {
-					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes
-							.get(erfasstesSm);
+					Set<De> alleTimeOutDesVonSteuerModul = timeOutSteuerModuleMitTimeOutDes.get(erfasstesSm);
 					if (alleTimeOutDesVonSteuerModul == null) {
-						alleTimeOutDesVonSteuerModul = new HashSet<De>();
-						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm,
-								alleTimeOutDesVonSteuerModul);
+						alleTimeOutDesVonSteuerModul = new HashSet<>();
+						timeOutSteuerModuleMitTimeOutDes.put(erfasstesSm, alleTimeOutDesVonSteuerModul);
 					}
 					alleTimeOutDesVonSteuerModul.add(erfassteDe);
 				}
@@ -236,37 +208,25 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 		 * Ermittle alle erfassten Steuermodule, die vollstaendig ausgefallen
 		 * sind
 		 */
-		final Set<Sm> totalAusfallSteuerModule = new HashSet<Sm>();
-		for (final Sm timeOutSteuerModul : timeOutSteuerModuleMitTimeOutDes
-				.keySet()) {
+		final Set<Sm> totalAusfallSteuerModule = new HashSet<>();
+		for (final Sm timeOutSteuerModul : timeOutSteuerModuleMitTimeOutDes.keySet()) {
 			/**
 			 * ist das Steuermodul vollstaendig aufgefallen?
 			 */
-			final int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(
-					timeOutSteuerModul).size();
-			final int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(
-					timeOutSteuerModul).size();
+			final int erfassteDes = erfassteSteuerModuleMitErfasstenDes.get(timeOutSteuerModul).size();
+			final int timeoutDes = timeOutSteuerModuleMitTimeOutDes.get(timeOutSteuerModul).size();
 			if (erfassteDes == timeoutDes) {
 				totalAusfallSteuerModule.add(timeOutSteuerModul);
 			}
 		}
 
-		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes
-				.keySet().size()) {
-			getEinzelPublikator()
-					.publiziere(
-							MessageGrade.ERROR,
-							getObjekt(),
-							"Modem am Inselbus "
-									+ getObjekt()
-									+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
+		if (totalAusfallSteuerModule.size() == erfassteSteuerModuleMitErfasstenDes.keySet().size()) {
+			getEinzelPublikator().publiziere(MessageGrade.ERROR, getObjekt(), "Modem am Inselbus " + getObjekt()
+					+ " oder Inselbus selbst defekt. Modem oder Inselbus instand setzen");
 
 			for (final TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
-				for (final De de : timeOutSteuerModuleMitTimeOutDes
-						.get(steuerModulOhneDaten)) {
-					de.publiziereFehlerUrsache(
-							zeitStempel,
-							TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
+				for (final De de : timeOutSteuerModuleMitTimeOutDes.get(steuerModulOhneDaten)) {
+					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_MODEM_ODER_INSELBUS_DEFEKT);
 				}
 			}
 		} else {
@@ -274,14 +234,12 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 			 * Nach Pid und Name sortierte Ausgabe der Steuermodule wegen
 			 * JUnit-Tests
 			 */
-			final SortedSet<TlsHierarchieElement> totalAusfallSteuerModuleSortiert = new TreeSet<TlsHierarchieElement>(
+			final SortedSet<TlsHierarchieElement> totalAusfallSteuerModuleSortiert = new TreeSet<>(
 					new Comparator<TlsHierarchieElement>() {
 
 						@Override
-						public int compare(final TlsHierarchieElement o1,
-								final TlsHierarchieElement o2) {
-							return o1.getObjekt().toString()
-									.compareTo(o2.getObjekt().toString());
+						public int compare(final TlsHierarchieElement o1, final TlsHierarchieElement o2) {
+							return o1.getObjekt().toString().compareTo(o2.getObjekt().toString());
 						}
 
 					});
@@ -293,25 +251,17 @@ public class AnschlussPunkt extends TlsHierarchieElement {
 			if (steuerModulArray.length > 0) {
 				steuerModule = steuerModulArray[0].getObjekt().toString();
 				for (int i = 1; i < steuerModulArray.length; i++) {
-					steuerModule += ", "
-							+ steuerModulArray[i].getObjekt().toString();
+					steuerModule += ", " + steuerModulArray[i].getObjekt().toString();
 				}
 			}
 
-			getEinzelPublikator().publiziere(
-					MessageGrade.ERROR,
-					getObjekt(),
-					"Inselbus " + getObjekt()
-							+ " gestört: Für die DE der Steuermodule "
-							+ steuerModule
-							+ " sind keine Daten verfügbar. Inselbus "
-							+ getObjekt() + " instand setzen");
+			getEinzelPublikator().publiziere(MessageGrade.ERROR, getObjekt(),
+					"Inselbus " + getObjekt() + " gestört: Für die DE der Steuermodule " + steuerModule
+					+ " sind keine Daten verfügbar. Inselbus " + getObjekt() + " instand setzen");
 
 			for (final TlsHierarchieElement steuerModulOhneDaten : totalAusfallSteuerModule) {
-				for (final De de : timeOutSteuerModuleMitTimeOutDes
-						.get(steuerModulOhneDaten)) {
-					de.publiziereFehlerUrsache(zeitStempel,
-							TlsFehlerAnalyse.INSELBUS_DEFEKT);
+				for (final De de : timeOutSteuerModuleMitTimeOutDes.get(steuerModulOhneDaten)) {
+					de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.INSELBUS_DEFEKT);
 				}
 			}
 		}

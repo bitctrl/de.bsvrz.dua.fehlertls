@@ -49,8 +49,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Simuliert KEx.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class TestKEx implements ClientSenderInterface {
 
@@ -123,8 +121,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	public static TestKEx getInstanz(final ClientDavInterface dav)
-			throws Exception {
+	public static TestKEx getInstanz(final ClientDavInterface dav) throws Exception {
 		if (TestKEx.instanz == null) {
 			TestKEx.instanz = new TestKEx(dav);
 		}
@@ -142,58 +139,38 @@ public final class TestKEx implements ClientSenderInterface {
 	private TestKEx(final ClientDavInterface dav) throws Exception {
 		TestKEx.sDav = dav;
 
-		iB1SM1UFD1DE1 = dav.getDataModel()
-				.getObject("kri1.ib1.sm1.eakufd1.de1");
-		iB1SM1UFD1DE2 = dav.getDataModel()
-				.getObject("kri1.ib1.sm1.eakufd1.de2");
-		iB1SM1LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib1.sm1.eaklve1.de1");
+		iB1SM1UFD1DE1 = dav.getDataModel().getObject("kri1.ib1.sm1.eakufd1.de1");
+		iB1SM1UFD1DE2 = dav.getDataModel().getObject("kri1.ib1.sm1.eakufd1.de2");
+		iB1SM1LVE1DE1 = dav.getDataModel().getObject("kri1.ib1.sm1.eaklve1.de1");
 
-		iB2SM3LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm3.eaklve1.de1");
-		iB2SM1LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm1.eaklve1.de1");
-		iB2SM1UFD1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm1.eakufd1.de1");
-		iB2SM1UFD1DE2 = dav.getDataModel()
-				.getObject("kri1.ib2.sm1.eakufd1.de2");
-		iB2SM2LVE1DE1 = dav.getDataModel()
-				.getObject("kri1.ib2.sm2.eaklve1.de1");
-		iB2SM2LVE1DE2 = dav.getDataModel()
-				.getObject("kri1.ib2.sm2.eaklve1.de2");
+		iB2SM3LVE1DE1 = dav.getDataModel().getObject("kri1.ib2.sm3.eaklve1.de1");
+		iB2SM1LVE1DE1 = dav.getDataModel().getObject("kri1.ib2.sm1.eaklve1.de1");
+		iB2SM1UFD1DE1 = dav.getDataModel().getObject("kri1.ib2.sm1.eakufd1.de1");
+		iB2SM1UFD1DE2 = dav.getDataModel().getObject("kri1.ib2.sm1.eakufd1.de2");
+		iB2SM2LVE1DE1 = dav.getDataModel().getObject("kri1.ib2.sm2.eaklve1.de1");
+		iB2SM2LVE1DE2 = dav.getDataModel().getObject("kri1.ib2.sm2.eaklve1.de2");
 
-		for (final SystemObject de : dav.getDataModel().getType("typ.de")
-				.getElements()) {
+		for (final SystemObject de : dav.getDataModel().getType("typ.de").getElements()) {
 			if (!"typ.deTest".equals(de.getType().getPid())) {
 				final IDeTyp deTyp = DeTypLader.getDeTyp(de.getType());
-				for (final DataDescription datenBeschreibung : deTyp
-						.getDeFaMesswertDataDescriptions(dav)) {
-					dav.subscribeSender(this, de, datenBeschreibung,
-							SenderRole.source());
+				for (final DataDescription datenBeschreibung : deTyp.getDeFaMesswertDataDescriptions(dav)) {
+					dav.subscribeSender(this, de, datenBeschreibung, SenderRole.source());
 				}
 
-				dav.subscribeSender(this, de, new DataDescription(deTyp
-						.getDeFaIntervallParameterDataDescription(dav)
-						.getAttributeGroup(), TestKEx.sDav.getDataModel()
-						.getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				dav.subscribeSender(this, de,
+						new DataDescription(deTyp.getDeFaIntervallParameterDataDescription(dav).getAttributeGroup(),
+								TestKEx.sDav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
 						SenderRole.sender());
-				dav.subscribeSender(
-						this,
-						de,
-						new DataDescription(dav.getDataModel()
-								.getAttributeGroup("atg.tlsGloDeFehler"), dav
-								.getDataModel().getAspect(
-										DUAKonstanten.ASP_TLS_ANTWORT)),
-										SenderRole.source());
+				dav.subscribeSender(this, de,
+						new DataDescription(dav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"),
+								dav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+						SenderRole.source());
 			}
 		}
-		dav.subscribeSender(
-				this,
-				dav.getDataModel().getObject("DeFa"),
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
-						.getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
-						SenderRole.sender());
+		dav.subscribeSender(this, dav.getDataModel().getObject("DeFa"),
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				SenderRole.sender());
 
 		/**
 		 * Warten bis alle Anmeldungen durchgefuehrt sein sollten
@@ -220,24 +197,18 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
-	public void setAnalyseParameter(final long zeitverzugFehlerErkennung,
-			final long zeitverzugFehlerErmittlung)
-					throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
-		final Data datum = TestKEx.sDav.createData(TestKEx.sDav.getDataModel()
-				.getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
+	public void setAnalyseParameter(final long zeitverzugFehlerErkennung, final long zeitverzugFehlerErmittlung)
+			throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
+		final Data datum = TestKEx.sDav
+				.createData(TestKEx.sDav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"));
 
-		datum.getTimeValue("ZeitverzugFehlerErkennung").setMillis(
-				zeitverzugFehlerErkennung);
-		datum.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(
-				zeitverzugFehlerErmittlung);
+		datum.getTimeValue("ZeitverzugFehlerErkennung").setMillis(zeitverzugFehlerErkennung);
+		datum.getTimeValue("ZeitverzugFehlerErmittlung").setMillis(zeitverzugFehlerErmittlung);
 
-		final ResultData resultat = new ResultData(TestKEx.sDav.getDataModel()
-				.getObject("DeFa"),
-				new DataDescription(TestKEx.sDav.getDataModel()
-						.getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
-						TestKEx.sDav.getDataModel().getAspect(
-								DaVKonstanten.ASP_PARAMETER_VORGABE)),
-								System.currentTimeMillis(), datum);
+		final ResultData resultat = new ResultData(TestKEx.sDav.getDataModel().getObject("DeFa"),
+				new DataDescription(TestKEx.sDav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
+						TestKEx.sDav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+				System.currentTimeMillis(), datum);
 
 		TestKEx.sDav.sendData(resultat);
 	}
@@ -256,22 +227,19 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
-	public void setDeFehlerStatus(final SystemObject de,
-			final int fehlerStatus, final boolean passiviert)
-					throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
-		final AttributeGroup atg = TestKEx.sDav.getDataModel()
-				.getAttributeGroup("atg.tlsGloDeFehler");
+	public void setDeFehlerStatus(final SystemObject de, final int fehlerStatus, final boolean passiviert)
+			throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
+		final AttributeGroup atg = TestKEx.sDav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler");
 		final Data datum = TestKEx.sDav.createData(atg);
 		datum.getUnscaledValue("DEFehlerStatus").set(fehlerStatus);
 		datum.getUnscaledValue("DEKanalStatus").set(passiviert ? 1 : 0);
 		datum.getUnscaledValue("DEProjektierungsStatus").set(0);
 		datum.getUnscaledValue("HerstellerDefinierterCode").set(0);
 		datum.getUnscaledValue("Hersteller").set(0);
-		final ResultData resultat = new ResultData(de, new DataDescription(
-				TestKEx.sDav.getDataModel().getAttributeGroup(
-						"atg.tlsGloDeFehler"), TestKEx.sDav.getDataModel()
-						.getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
-						System.currentTimeMillis(), datum);
+		final ResultData resultat = new ResultData(de,
+				new DataDescription(TestKEx.sDav.getDataModel().getAttributeGroup("atg.tlsGloDeFehler"),
+						TestKEx.sDav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+				System.currentTimeMillis(), datum);
 
 		TestKEx.sDav.sendData(resultat);
 	}
@@ -287,7 +255,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 *             die Sendeanmeldung wurde nicht bestätigt
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
-	 * */
+	 */
 	public void sendeDatum(final SystemObject de, final long zeitStempel)
 			throws DataNotSubscribedException, SendSubscriptionNotConfirmed {
 		Data datum = null;
@@ -296,28 +264,24 @@ public final class TestKEx implements ClientSenderInterface {
 		if (de.isOfType("typ.deUfd")) {
 			switch (TestKEx.RANDOM.nextInt(3)) {
 			case 0:
-				atg = TestKEx.sDav.getDataModel().getAttributeGroup(
-						"atg.tlsUfdErgebnisMeldungHelligkeitHK");
+				atg = TestKEx.sDav.getDataModel().getAttributeGroup("atg.tlsUfdErgebnisMeldungHelligkeitHK");
 				datum = TestKEx.sDav.createData(atg);
 				datum.getUnscaledValue("Helligkeit").set(0);
 				break;
 			case 1:
-				atg = TestKEx.sDav.getDataModel().getAttributeGroup(
-						"atg.tlsUfdErgebnisMeldungNiederschlag");
+				atg = TestKEx.sDav.getDataModel().getAttributeGroup("atg.tlsUfdErgebnisMeldungNiederschlag");
 				datum = TestKEx.sDav.createData(atg);
 				datum.getUnscaledValue("Niederschlag").set(0);
 				break;
 			case 2:
-				atg = TestKEx.sDav.getDataModel().getAttributeGroup(
-						"atg.tlsUfdErgebnisMeldungLuftTemperaturLT");
+				atg = TestKEx.sDav.getDataModel().getAttributeGroup("atg.tlsUfdErgebnisMeldungLuftTemperaturLT");
 				datum = TestKEx.sDav.createData(atg);
 				datum.getUnscaledValue("Lufttemperatur").set(0);
 				break;
 			default:
 			}
 		} else {
-			atg = TestKEx.sDav.getDataModel().getAttributeGroup(
-					"atg.tlsLveErgebnisMeldungVersion0Bis4");
+			atg = TestKEx.sDav.getDataModel().getAttributeGroup("atg.tlsLveErgebnisMeldungVersion0Bis4");
 			datum = TestKEx.sDav.createData(atg);
 
 			datum.getTimeValue("T").setMillis(0);
@@ -333,9 +297,9 @@ public final class TestKEx implements ClientSenderInterface {
 			datum.getArray("qLkwÄGeschwKlasse").setLength(0);
 		}
 
-		final ResultData sendeDatum = new ResultData(de, new DataDescription(
-				atg, TestKEx.sDav.getDataModel().getAspect(
-						DUAKonstanten.ASP_TLS_ANTWORT)), zeitStempel, datum);
+		final ResultData sendeDatum = new ResultData(de,
+				new DataDescription(atg, TestKEx.sDav.getDataModel().getAspect(DUAKonstanten.ASP_TLS_ANTWORT)),
+				zeitStempel, datum);
 
 		TestKEx.sDav.sendData(sendeDatum);
 	}
@@ -355,22 +319,19 @@ public final class TestKEx implements ClientSenderInterface {
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
 	public void setBetriebsParameter(final SystemObject de, final long zyklus)
-			throws DeFaException, DataNotSubscribedException,
-			SendSubscriptionNotConfirmed {
+			throws DeFaException, DataNotSubscribedException, SendSubscriptionNotConfirmed {
 		Data datenSatz;
 		try {
-			datenSatz = TestKEx.sDav.createData(DeTypLader
-					.getDeTyp(de.getType())
-					.getDeFaIntervallParameterDataDescription(TestKEx.sDav)
-					.getAttributeGroup());
+			datenSatz = TestKEx.sDav.createData(DeTypLader.getDeTyp(de.getType())
+					.getDeFaIntervallParameterDataDescription(TestKEx.sDav).getAttributeGroup());
 		} catch (final DeFaException e1) {
 			throw new RuntimeException(e1);
 		}
 
 		if (de.isOfType("typ.deLve")) {
 			datenSatz.getUnscaledValue("VersionKurzZeitDaten").set(0);
-			datenSatz.getUnscaledValue("IntervallDauerKurzZeitDaten").set(
-					zyklus >= 0 ? zyklus / (15L * 1000L) : 15L * 1000L);
+			datenSatz.getUnscaledValue("IntervallDauerKurzZeitDaten")
+					.set(zyklus >= 0 ? zyklus / (15L * 1000L) : 15L * 1000L);
 			datenSatz.getUnscaledValue("VersionLangZeitDaten").set(10);
 			datenSatz.getUnscaledValue("IntervallDauerLangZeit").set(129);
 			datenSatz.getUnscaledValue("alpha1").set(1);
@@ -379,18 +340,16 @@ public final class TestKEx implements ClientSenderInterface {
 			datenSatz.getUnscaledValue("ArtMittelWertBildung").set(0);
 			datenSatz.getUnscaledValue("StartMittelWertBildung").set(0);
 		} else {
-			datenSatz.getUnscaledValue("Erfassungsperiodendauer").set(
-					zyklus >= 0 ? zyklus / 1000L : 60);
-			datenSatz.getUnscaledValue("Übertragungsverfahren").set(
-					zyklus >= 0 ? 1 : 0);
+			datenSatz.getUnscaledValue("Erfassungsperiodendauer").set(zyklus >= 0 ? zyklus / 1000L : 60);
+			datenSatz.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0);
 		}
 
 		final ResultData neuerParameter = new ResultData(de,
-				new DataDescription(DeTypLader.getDeTyp(de.getType())
-						.getDeFaIntervallParameterDataDescription(TestKEx.sDav)
-						.getAttributeGroup(), TestKEx.sDav.getDataModel()
-						.getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
-				System.currentTimeMillis(), datenSatz);
+				new DataDescription(
+						DeTypLader.getDeTyp(de.getType()).getDeFaIntervallParameterDataDescription(TestKEx.sDav)
+								.getAttributeGroup(),
+						TestKEx.sDav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE)),
+						System.currentTimeMillis(), datenSatz);
 		TestKEx.sDav.sendData(neuerParameter);
 		System.out.println("Sende Betriebsparameter:\n" + neuerParameter);
 	}
@@ -411,17 +370,14 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @throws DeFaException
 	 *             allgemeiner Fehler beim Bewerten der TLS-Daten
 	 */
-	public void setDe(final SystemObject de, final long zeitStempel,
-			final DeStatus status) throws DataNotSubscribedException,
-			SendSubscriptionNotConfirmed, DeFaException {
+	public void setDe(final SystemObject de, final long zeitStempel, final DeStatus status)
+			throws DataNotSubscribedException, SendSubscriptionNotConfirmed, DeFaException {
 		if (status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AN)) {
-			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(),
-					false);
+			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(), false);
 		} else if (status.equals(DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS)) {
 			this.setDeFehlerStatus(de, 0, false);
 		} else if (status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AN)) {
-			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(),
-					true);
+			this.setDeFehlerStatus(de, TlsDeFehlerStatus.STOER_EAK.getCode(), true);
 		} else if (status.equals(DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS)) {
 			this.setDeFehlerStatus(de, 0, true);
 		} else if (status.equals(DeStatus.NUTZ_DATEN)) {
@@ -443,9 +399,8 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @return alle Test-Des
 	 */
 	public SystemObject[] getAlleDes() {
-		return new SystemObject[] { iB1SM1UFD1DE1, iB1SM1UFD1DE2,
-				iB1SM1LVE1DE1, iB2SM3LVE1DE1, iB2SM1LVE1DE1, iB2SM1UFD1DE1,
-				iB2SM1UFD1DE2, iB2SM2LVE1DE1, iB2SM2LVE1DE2 };
+		return new SystemObject[] { iB1SM1UFD1DE1, iB1SM1UFD1DE2, iB1SM1LVE1DE1, iB2SM3LVE1DE1, iB2SM1LVE1DE1,
+				iB2SM1UFD1DE1, iB2SM1UFD1DE2, iB2SM2LVE1DE1, iB2SM2LVE1DE2 };
 	}
 
 	/**
@@ -454,8 +409,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @return alle Test-LVE-Des
 	 */
 	public SystemObject[] getAlleLveDes() {
-		return new SystemObject[] { iB1SM1LVE1DE1, iB2SM3LVE1DE1,
-				iB2SM1LVE1DE1, iB2SM2LVE1DE1, iB2SM2LVE1DE2 };
+		return new SystemObject[] { iB1SM1LVE1DE1, iB2SM3LVE1DE1, iB2SM1LVE1DE1, iB2SM2LVE1DE1, iB2SM2LVE1DE2 };
 	}
 
 	/**
@@ -464,19 +418,16 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @return alle Test-UFD-Des
 	 */
 	public SystemObject[] getAlleUFDDes() {
-		return new SystemObject[] { iB1SM1UFD1DE1, iB1SM1UFD1DE2,
-				iB2SM1UFD1DE1, iB2SM1UFD1DE2 };
+		return new SystemObject[] { iB1SM1UFD1DE1, iB1SM1UFD1DE2, iB2SM1UFD1DE1, iB2SM1UFD1DE2 };
 	}
 
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		// Quellenanmeldung
 	}
 
 	@Override
-	public boolean isRequestSupported(final SystemObject object,
-			final DataDescription dataDescription) {
+	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 		return false;
 	}
 

@@ -41,8 +41,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * weiterhin im Package <code>de.bsvrz.dua.DeFa</code> definiert sein.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class DeTypLader {
 

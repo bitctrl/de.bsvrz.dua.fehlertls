@@ -52,8 +52,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * verfügbar zu machen
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
 
@@ -71,7 +69,7 @@ public class DeFaApplikation implements StandardApplication {
 	/**
 	 * Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
-	private final Set<SystemObject> geraete = new HashSet<SystemObject>();
+	private final Set<SystemObject> geraete = new HashSet<>();
 
 	/**
 	 * die PIDs der Geraete, die in der Kommandozeile uebergeben wurden.
@@ -107,67 +105,56 @@ public class DeFaApplikation implements StandardApplication {
 	}
 
 	@Override
-	public void initialize(final ClientDavInterface connection)
-			throws Exception {
+	public void initialize(final ClientDavInterface connection) throws Exception {
 		this.dav = connection;
 
-		MessageSender.getInstance().setApplicationLabel(
-				"Ueberpruefung fehlende Messdaten TLS-LVE");
+		MessageSender.getInstance().setApplicationLabel("Ueberpruefung fehlende Messdaten TLS-LVE");
 
 		for (final String pidVonGeraet : this.geraetePids) {
-			final SystemObject geraeteObjekt = connection.getDataModel()
-					.getObject(pidVonGeraet);
+			final SystemObject geraeteObjekt = connection.getDataModel().getObject(pidVonGeraet);
 			if (geraeteObjekt != null) {
 				if (geraeteObjekt.isOfType("typ.gerät")) {
 					this.geraete.add(geraeteObjekt);
 				} else {
-					DeFaApplikation.LOGGER.warning("Das uebergebene Objekt "
-							+ pidVonGeraet + " ist nicht vom Typ Geraet");
+					DeFaApplikation.LOGGER
+							.warning("Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet");
 				}
 			} else {
-				DeFaApplikation.LOGGER.warning("Das uebergebene Geraet "
-						+ pidVonGeraet + " existiert nicht");
+				DeFaApplikation.LOGGER.warning("Das uebergebene Geraet " + pidVonGeraet + " existiert nicht");
 			}
 		}
 
 		if (this.parameterModulPid == null) {
-			for (final SystemObject obj : connection.getDataModel()
-					.getType("typ.tlsFehlerAnalyse").getElements()) {
+			for (final SystemObject obj : connection.getDataModel().getType("typ.tlsFehlerAnalyse").getElements()) {
 				if (obj.isValid()) {
 					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
 						DeFaApplikation.LOGGER
-								.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
+						.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
 						break;
 					}
 					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
-					if (obj.getConfigurationArea().equals(
-							connection.getDataModel()
-									.getConfigurationAuthority()
-									.getConfigurationArea())) {
+					if (obj.getConfigurationArea()
+							.equals(connection.getDataModel().getConfigurationAuthority().getConfigurationArea())) {
 						break;
 					}
 				}
 			}
 		} else {
-			final SystemObject dummy = connection.getDataModel().getObject(
-					this.parameterModulPid);
+			final SystemObject dummy = connection.getDataModel().getObject(this.parameterModulPid);
 			if ((dummy != null) && dummy.isValid()) {
 				DeFaApplikation.tlsFehlerAnalyseObjekte = dummy;
 			}
 		}
 
 		if (DeFaApplikation.tlsFehlerAnalyseObjekte == null) {
-			throw new RuntimeException(
-					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\"");
+			throw new RuntimeException("Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\"");
 		}
-		ParameterTlsFehlerAnalyse.getInstanz(connection,
-				DeFaApplikation.tlsFehlerAnalyseObjekte);
-		DeFaApplikation.LOGGER.config("Es werden die Parameter von "
-				+ DeFaApplikation.tlsFehlerAnalyseObjekte + " verwendet");
+		ParameterTlsFehlerAnalyse.getInstanz(connection, DeFaApplikation.tlsFehlerAnalyseObjekte);
+		DeFaApplikation.LOGGER
+				.config("Es werden die Parameter von " + DeFaApplikation.tlsFehlerAnalyseObjekte + " verwendet");
 
 		if (this.geraete.isEmpty()) {
-			DeFaApplikation.LOGGER
-			.warning("Es wurden keine gueltigen Geraete uebergeben");
+			DeFaApplikation.LOGGER.warning("Es wurden keine gueltigen Geraete uebergeben");
 		} else {
 			TlsHierarchie.initialisiere(connection, geraete);
 		}
@@ -179,23 +166,20 @@ public class DeFaApplikation implements StandardApplication {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(final Thread t, final Throwable e) {
-				DeFaApplikation.LOGGER.error("Applikation wird wegen"
-						+ " unerwartetem Fehler beendet", e);
+				DeFaApplikation.LOGGER.error("Applikation wird wegen" + " unerwartetem Fehler beendet", e);
 				e.printStackTrace();
 				Runtime.getRuntime().exit(-1);
 			}
 		});
 
 		if (argumente.hasArgument("-param")) {
-			this.parameterModulPid = argumente.fetchArgument("-param")
-					.asNonEmptyString();
+			this.parameterModulPid = argumente.fetchArgument("-param").asNonEmptyString();
 		} else {
-			DeFaApplikation.LOGGER
-					.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+			DeFaApplikation.LOGGER.warning(
+					"Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
-		this.geraetePids = argumente.fetchArgument("-geraet")
-				.asNonEmptyString().split(",");
+		this.geraetePids = argumente.fetchArgument("-geraet").asNonEmptyString().split(",");
 
 		argumente.fetchUnusedArguments();
 	}

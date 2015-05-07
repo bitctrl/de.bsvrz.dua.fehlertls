@@ -44,8 +44,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  * Klasse zur einmaligen Publikation von Betriebsmeldungen.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class SingleMessageSender {
 
@@ -79,36 +77,22 @@ public class SingleMessageSender {
 	 * @param text
 	 *            der Text der Fehlermeldung
 	 */
-	public final void publiziere(final MessageGrade grade,
-			final SystemObject obj, final String text) {
+	public final void publiziere(final MessageGrade grade, final SystemObject obj, final String text) {
 		if (!this.letzteEinmaligeNachricht.equals(text)) {
 			this.letzteEinmaligeNachricht = text;
 
 			if (obj != null) {
 				MessageSender.getInstance().sendMessage(
-						SingleMessageSender.KONVERTER.konvertiere(
-								new BetriebsmeldungDaten(obj), null,
-								new Object[0]),
-								MessageType.APPLICATION_DOMAIN,
-								null,
-								grade,
-								obj,
-								MessageState.MESSAGE,
-								new MessageCauser(localUser, Constants.EMPTY_STRING,
-										DeFaApplikation.getAppName()), text);
+						SingleMessageSender.KONVERTER.konvertiere(new BetriebsmeldungDaten(obj), null, new Object[0]),
+						MessageType.APPLICATION_DOMAIN, null, grade, obj, MessageState.MESSAGE,
+						new MessageCauser(localUser, Constants.EMPTY_STRING, DeFaApplikation.getAppName()), text);
 			} else {
-				MessageSender.getInstance().sendMessage(
-						MessageType.APPLICATION_DOMAIN,
-						null,
-						grade,
-						obj,
-						new MessageCauser(localUser, Constants.EMPTY_STRING,
-								DeFaApplikation.getAppName()), text);
+				MessageSender.getInstance().sendMessage(MessageType.APPLICATION_DOMAIN, null, grade, obj,
+						new MessageCauser(localUser, Constants.EMPTY_STRING, DeFaApplikation.getAppName()), text);
 			}
 			SingleMessageSender.LOGGER.info(text);
 		} else {
-			SingleMessageSender.LOGGER.info(obj
-					+ ", Keine doppelte Ausgabe von: " + text);
+			SingleMessageSender.LOGGER.info(obj + ", Keine doppelte Ausgabe von: " + text);
 		}
 	}
 

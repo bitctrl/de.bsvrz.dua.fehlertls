@@ -18,7 +18,6 @@
     <module name="JavadocType">
       <property name="scope" value="protected"/>
       <property name="authorFormat" value="BitCtrl Systems GmbH, \S"/>
-      <property name="versionFormat" value="\$Id(\s|\S)*\$"/>
     </module>
     <module name="JavadocVariable">
       <property name="scope" value="protected"/>

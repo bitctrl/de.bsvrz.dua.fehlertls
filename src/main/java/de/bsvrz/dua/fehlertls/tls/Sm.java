@@ -35,8 +35,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  * TLS-Hierarchieelement Steuermodul.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class Sm extends TlsHierarchieElement {
 
@@ -50,11 +48,9 @@ public class Sm extends TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected Sm(final ClientDavInterface dav, final SystemObject objekt,
-			final TlsHierarchieElement vater) {
+	protected Sm(final ClientDavInterface dav, final SystemObject objekt, final TlsHierarchieElement vater) {
 		super(dav, objekt, vater);
-		for (final SystemObject eak : getObjekt().getNonMutableSet("Eak")
-				.getElements()) {
+		for (final SystemObject eak : getObjekt().getNonMutableSet("Eak").getElements()) {
 			if (eak.isValid()) {
 				addKind(new Eak(dav, eak, this));
 			}
@@ -68,17 +64,12 @@ public class Sm extends TlsHierarchieElement {
 
 	@Override
 	public void publiziereFehler(final long zeitStempel) {
-		getEinzelPublikator().publiziere(
-				MessageGrade.ERROR,
-				getObjekt(),
-				"Modem am Steuermodul " + getObjekt()
-						+ " oder Steuermodul defekt. "
-						+ "Modem am Steuermodul " + getObjekt()
-						+ " oder Steuermodul instand setzen");
+		getEinzelPublikator().publiziere(MessageGrade.ERROR, getObjekt(),
+				"Modem am Steuermodul " + getObjekt() + " oder Steuermodul defekt. " + "Modem am Steuermodul "
+						+ getObjekt() + " oder Steuermodul instand setzen");
 
 		for (final De de : this.getErfassteDes()) {
-			de.publiziereFehlerUrsache(zeitStempel,
-					TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT);
+			de.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT);
 		}
 	}
 

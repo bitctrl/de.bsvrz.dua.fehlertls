@@ -47,9 +47,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  * Fehleranalyse).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: ParameterTlsFehlerAnalyse.java 53686 2015-03-16 11:30:02Z
- *          peuker $
  */
 public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface {
 
@@ -87,8 +84,7 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	 *            ein Objekt vom Typ <code>typ.tlsFehlerAnalyse</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static ParameterTlsFehlerAnalyse getInstanz(
-			final ClientDavInterface dav, final SystemObject objekt) {
+	public static ParameterTlsFehlerAnalyse getInstanz(final ClientDavInterface dav, final SystemObject objekt) {
 		ParameterTlsFehlerAnalyse instanz = null;
 
 		synchronized (ParameterTlsFehlerAnalyse.instanzen) {
@@ -113,15 +109,11 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.tlsFehlerAnalyse</code>
 	 */
-	private ParameterTlsFehlerAnalyse(final ClientDavInterface dav,
-			final SystemObject objekt) {
-		dav.subscribeReceiver(
-				this,
-				objekt,
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.parameterTlsFehlerAnalyse"), dav.getDataModel()
-						.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+	private ParameterTlsFehlerAnalyse(final ClientDavInterface dav, final SystemObject objekt) {
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterTlsFehlerAnalyse"),
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -130,12 +122,9 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public synchronized void addListener(
-			final IParameterTlsFehlerAnalyseListener listener) {
-		if (listenerMenge.add(listener)
-				&& (this.zeitverzugFehlerErkennung != Long.MIN_VALUE)) {
-			listener.aktualisiereParameterTlsFehlerAnalyse(
-					zeitverzugFehlerErkennung, zeitverzugFehlerErmittlung);
+	public synchronized void addListener(final IParameterTlsFehlerAnalyseListener listener) {
+		if (listenerMenge.add(listener) && (this.zeitverzugFehlerErkennung != Long.MIN_VALUE)) {
+			listener.aktualisiereParameterTlsFehlerAnalyse(zeitverzugFehlerErkennung, zeitverzugFehlerErmittlung);
 		}
 	}
 
@@ -145,15 +134,12 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						this.zeitverzugFehlerErkennung = resultat.getData()
-								.getTimeValue("ZeitverzugFehlerErkennung")
+						this.zeitverzugFehlerErkennung = resultat.getData().getTimeValue("ZeitverzugFehlerErkennung")
 								.getMillis();
-						this.zeitverzugFehlerErmittlung = resultat.getData()
-								.getTimeValue("ZeitverzugFehlerErmittlung")
+						this.zeitverzugFehlerErmittlung = resultat.getData().getTimeValue("ZeitverzugFehlerErmittlung")
 								.getMillis();
 						for (final IParameterTlsFehlerAnalyseListener listener : this.listenerMenge) {
-							listener.aktualisiereParameterTlsFehlerAnalyse(
-									this.zeitverzugFehlerErkennung,
+							listener.aktualisiereParameterTlsFehlerAnalyse(this.zeitverzugFehlerErkennung,
 									this.zeitverzugFehlerErmittlung);
 						}
 					}

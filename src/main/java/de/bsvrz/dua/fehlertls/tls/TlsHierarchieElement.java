@@ -40,8 +40,6 @@ import de.bsvrz.dua.fehlertls.fehlertls.SingleMessageSender;
  * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.gerät</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public abstract class TlsHierarchieElement {
 
@@ -98,7 +96,7 @@ public abstract class TlsHierarchieElement {
 	/**
 	 * die in der TLS-Hierarchie unter diesem Geraet liegenden Geraete.
 	 */
-	private final Set<TlsHierarchieElement> kinder = new HashSet<TlsHierarchieElement>();
+	private final Set<TlsHierarchieElement> kinder = new HashSet<>();
 
 	/**
 	 * das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet.
@@ -167,8 +165,8 @@ public abstract class TlsHierarchieElement {
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
-	protected TlsHierarchieElement(final ClientDavInterface dav,
-			final SystemObject objekt, final TlsHierarchieElement vater) {
+	protected TlsHierarchieElement(final ClientDavInterface dav, final SystemObject objekt,
+			final TlsHierarchieElement vater) {
 		if (TlsHierarchieElement.dav == null) {
 			TlsHierarchieElement.dav = dav;
 		}
@@ -178,8 +176,7 @@ public abstract class TlsHierarchieElement {
 
 		if ((objekt != null) && objekt.isOfType("typ.gerät")) {
 			/** Initialisiere Anschlusspunkte. */
-			for (final SystemObject ap : this.objekt.getNonMutableSet(
-					"AnschlussPunkteGerät").getElements()) {
+			for (final SystemObject ap : this.objekt.getNonMutableSet("AnschlussPunkteGerät").getElements()) {
 				if (ap.isValid()) {
 					addKind(new AnschlussPunkt(dav, ap, this));
 				}
@@ -274,20 +271,17 @@ public abstract class TlsHierarchieElement {
 		String k = "keine";
 
 		if (this.vater != null) {
-			v = this.vater.getObjekt() == null ? "WURZEL" : this.vater
-					.getObjekt().getPid();
+			v = this.vater.getObjekt() == null ? "WURZEL" : this.vater.getObjekt().getPid();
 		}
 		if (!this.kinder.isEmpty()) {
-			final TlsHierarchieElement[] dummy = this.kinder
-					.toArray(new TlsHierarchieElement[0]);
+			final TlsHierarchieElement[] dummy = this.kinder.toArray(new TlsHierarchieElement[0]);
 			k = dummy[0].getObjekt().getPid();
 			for (int i = 1; i < dummy.length; i++) {
 				k += ", " + dummy[i].getObjekt().getPid();
 			}
 		}
 
-		return this.objekt == null ? "WURZEL" : this.objekt.toString()
-				+ " (Vater: " + v + ", Kinder:[" + k + "])";
+		return this.objekt == null ? "WURZEL" : this.objekt.toString() + " (Vater: " + v + ", Kinder:[" + k + "])";
 	}
 
 	/**
@@ -298,7 +292,7 @@ public abstract class TlsHierarchieElement {
 	 *         DEs, die von der DeFa im Moment erfasst sind (ggf. leere Liste)
 	 */
 	public final Set<De> getErfassteDes() {
-		final Set<De> erfassteDes = new HashSet<De>();
+		final Set<De> erfassteDes = new HashSet<>();
 
 		for (final De de : getDes()) {
 			if ((de.getZustand() != null) && de.getZustand().isErfasst()) {
@@ -319,7 +313,7 @@ public abstract class TlsHierarchieElement {
 	public final Set<De> getDes() {
 		if (this.des == null) {
 			synchronized (this) {
-				this.des = new HashSet<De>();
+				this.des = new HashSet<>();
 				sammleDes(this.des);
 			}
 		}

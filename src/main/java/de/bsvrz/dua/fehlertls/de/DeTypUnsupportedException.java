@@ -31,9 +31,6 @@ package de.bsvrz.dua.fehlertls.de;
  * implementierendes Plugin gibt.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
- *
- * @version $Id: DeTypUnsupportedException.java 53686 2015-03-16 11:30:02Z
- *          peuker $
  */
 public class DeTypUnsupportedException extends DeFaException {
 
