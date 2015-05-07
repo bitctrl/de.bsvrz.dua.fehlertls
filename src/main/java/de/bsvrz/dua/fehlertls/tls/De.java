@@ -67,9 +67,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
  *
  * @version $Id$
  */
-public class De extends TlsHierarchieElement implements
-ClientReceiverInterface, ClientSenderInterface, IObjektWeckerListener,
-IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
+public class De extends TlsHierarchieElement implements ClientReceiverInterface, ClientSenderInterface,
+		IObjektWeckerListener, IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -143,36 +142,30 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	 * @throws DeFaException
 	 *             wird nach oben weitergereicht
 	 */
-	protected De(final ClientDavInterface dav, final SystemObject objekt,
-			final TlsHierarchieElement vater) throws DeFaException {
+	protected De(final ClientDavInterface dav, final SystemObject objekt, final TlsHierarchieElement vater)
+			throws DeFaException {
 		super(dav, objekt, vater);
 
 		if (De.fehlerDatenBeschreibung == null) {
-			De.fehlerDatenBeschreibung = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.tlsFehlerAnalyse"), dav
-					.getDataModel().getAspect("asp.analyse"));
+			De.fehlerDatenBeschreibung = new DataDescription(
+					dav.getDataModel().getAttributeGroup("atg.tlsFehlerAnalyse"),
+					dav.getDataModel().getAspect("asp.analyse"));
 		}
 
-		for (final DataDescription messWertBeschreibung : DeTypLader.getDeTyp(
-				objekt.getType()).getDeFaMesswertDataDescriptions(dav)) {
-			dav.subscribeReceiver(this, objekt, messWertBeschreibung,
-					ReceiveOptions.normal(), ReceiverRole.receiver());
-			De.LOGGER.info("Ueberwache " + getObjekt().getPid() + ", "
-					+ messWertBeschreibung);
+		for (final DataDescription messWertBeschreibung : DeTypLader.getDeTyp(objekt.getType())
+				.getDeFaMesswertDataDescriptions(dav)) {
+			dav.subscribeReceiver(this, objekt, messWertBeschreibung, ReceiveOptions.normal(), ReceiverRole.receiver());
+			De.LOGGER.info("Ueberwache " + getObjekt().getPid() + ", " + messWertBeschreibung);
 		}
 
 		try {
-			dav.subscribeSender(this, objekt, De.fehlerDatenBeschreibung,
-					SenderRole.source());
+			dav.subscribeSender(this, objekt, De.fehlerDatenBeschreibung, SenderRole.source());
 		} catch (final OneSubscriptionPerSendData e) {
-			throw new IllegalStateException("Quellenanmeldung für DE" + objekt
-					+ " nicht möglich", e);
+			throw new IllegalStateException("Quellenanmeldung für DE" + objekt + " nicht möglich", e);
 		}
 
-		new DeErfassungsZustand(TlsHierarchieElement.getDav(), this.getObjekt())
-				.addListener(this);
-		ParameterTlsFehlerAnalyse.getInstanz(dav,
-				DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
+		new DeErfassungsZustand(TlsHierarchieElement.getDav(), this.getObjekt()).addListener(this);
+		ParameterTlsFehlerAnalyse.getInstanz(dav, DeFaApplikation.getTlsFehlerAnalyseObjekt()).addListener(this);
 		initialisiert = true;
 	}
 
@@ -202,25 +195,20 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	 * @param tlsFehler
 	 *            die Fehlerursache
 	 */
-	public final void publiziereFehlerUrsache(final long fehlerZeit,
-			final TlsFehlerAnalyse tlsFehler) {
+	public final void publiziereFehlerUrsache(final long fehlerZeit, final TlsFehlerAnalyse tlsFehler) {
 		this.zeitStempelLetzterPublizierterFehler = fehlerZeit;
 
-		final Data datum = TlsHierarchieElement.getDav().createData(
-				De.fehlerDatenBeschreibung.getAttributeGroup());
+		final Data datum = TlsHierarchieElement.getDav().createData(De.fehlerDatenBeschreibung.getAttributeGroup());
 		datum.getUnscaledValue("TlsFehlerAnalyse").set(tlsFehler.getCode());
 		try {
-			TlsHierarchieElement.getDav().sendData(
-					new ResultData(getObjekt(), De.fehlerDatenBeschreibung,
-							fehlerZeit, datum));
+			TlsHierarchieElement.getDav()
+					.sendData(new ResultData(getObjekt(), De.fehlerDatenBeschreibung, fehlerZeit, datum));
 		} catch (final DataNotSubscribedException e) {
-			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt()
-					+ " nicht publiziert werden. Grund:\n"
-					+ e.getLocalizedMessage());
+			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt() + " nicht publiziert werden. Grund:\n"
+			+ e.getLocalizedMessage());
 		} catch (final SendSubscriptionNotConfirmed e) {
-			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt()
-					+ " nicht publiziert werden. Grund:\n"
-					+ e.getLocalizedMessage());
+			De.LOGGER.error("Datum " + datum + " konnte fuer " + getObjekt() + " nicht publiziert werden. Grund:\n"
+			+ e.getLocalizedMessage());
 		}
 
 		this.versucheErwartung();
@@ -256,8 +244,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	}
 
 	@Override
-	public synchronized void aktualisiereParameterTlsFehlerAnalyse(
-			final long zeitverzugFehlerErkennung,
+	public synchronized void aktualisiereParameterTlsFehlerAnalyse(final long zeitverzugFehlerErkennung,
 			final long zeitverzugFehlerErmittlung) {
 		this.zeitVerzugFehlerErkennung = zeitverzugFehlerErkennung;
 		this.zeitVerzugFehlerErmittlung = zeitverzugFehlerErmittlung;
@@ -284,77 +271,56 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 
 		if (this.zeitVerzugFehlerErkennung >= 0) {
 
-			if ((this.aktuellerZustand != null)
-					&& (this.aktuellerZustand.getErfassungsIntervallDauer() > 0)) {
+			if ((this.aktuellerZustand != null) && (this.aktuellerZustand.getErfassungsIntervallDauer() > 0)) {
 
-				this.letzterErwarteterDatenZeitpunkt = De
-						.getNaechstenIntervallZeitstempel(System
-								.currentTimeMillis(), this.aktuellerZustand
-								.getErfassungsIntervallDauer());
+				this.letzterErwarteterDatenZeitpunkt = De.getNaechstenIntervallZeitstempel(System.currentTimeMillis(),
+						this.aktuellerZustand.getErfassungsIntervallDauer());
 				final long nachsterErwarteterZeitpunkt = this.letzterErwarteterDatenZeitpunkt
 						+ zeitVerzugFehlerErkennung;
 
-				De.LOGGER.info("Plane Erwartung fuer "
-						+ De.this.getObjekt()
-						+ ": "
-						+ new SimpleDateFormat(
-								DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
-						.format(new Date(nachsterErwarteterZeitpunkt
-								+ De.STANDARD_ZEIT_ABSTAND)));
-				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt
-						+ De.STANDARD_ZEIT_ABSTAND);
+				De.LOGGER.info("Plane Erwartung fuer " + De.this.getObjekt() + ": "
+						+ new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR)
+								.format(new Date(nachsterErwarteterZeitpunkt + De.STANDARD_ZEIT_ABSTAND)));
+				De.fehlerWecker.setWecker(this, nachsterErwarteterZeitpunkt + De.STANDARD_ZEIT_ABSTAND);
 			} else {
-				if ((this.aktuellerZustand != null)
-						&& this.aktuellerZustand.isInitialisiert()) {
+				if ((this.aktuellerZustand != null) && this.aktuellerZustand.isInitialisiert()) {
 					if (this.aktuellerZustand.getErfassungsIntervallDauer() <= 0) {
-						De.LOGGER.info("Erwartung fuer " + De.this.getObjekt()
-								+ " ausgeplant.");
+						De.LOGGER.info("Erwartung fuer " + De.this.getObjekt() + " ausgeplant.");
 						De.fehlerWecker.setWecker(this, ObjektWecker.AUS);
-						getEinzelPublikator().publiziere(
-								MessageGrade.WARNING,
-								getObjekt(),
-								getObjekt() + ": "
-										+ this.aktuellerZustand.getGrund());
+						getEinzelPublikator().publiziere(MessageGrade.WARNING, getObjekt(),
+								getObjekt() + ": " + this.aktuellerZustand.getGrund());
 					}
 				} else {
 					if (this.aktuellerZustand == null) {
-						De.LOGGER.info("Aktueller Erfassungszustand von "
-								+ getObjekt() + " ist (noch) nicht bekannt");
+						De.LOGGER.info("Aktueller Erfassungszustand von " + getObjekt() + " ist (noch) nicht bekannt");
 					} else {
-						De.LOGGER
-								.info("DE "
-										+ getObjekt()
-										+ " ist (noch) nicht vollstaendig initialisiert:\n"
-										+ this.aktuellerZustand);
+						De.LOGGER.info("DE " + getObjekt() + " ist (noch) nicht vollstaendig initialisiert:\n"
+								+ this.aktuellerZustand);
 					}
 				}
 			}
 
 		} else {
-			De.LOGGER.warning("Kann keine Daten fuer " + getObjekt()
-					+ " erwarten, da noch keine (sinnvollen) "
-					+ "Parameter zur TLS-Fehleranalyse empfangen wurden");
+			De.LOGGER.warning("Kann keine Daten fuer " + getObjekt() + " erwarten, da noch keine (sinnvollen) "
+			+ "Parameter zur TLS-Fehleranalyse empfangen wurden");
 		}
 	}
 
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		if (state == ClientSenderInterface.STOP_SENDING_NOT_A_VALID_SUBSCRIPTION) {
-			De.LOGGER.error("SWE wird beendet, weil die Quellenanmeldung für "
-					+ object + ": " + dataDescription + " ungültig ist");
+			De.LOGGER.error("SWE wird beendet, weil die Quellenanmeldung für " + object + ": " + dataDescription
+					+ " ungültig ist");
 			System.exit(-1);
 		} else if (state == ClientSenderInterface.STOP_SENDING_NO_RIGHTS) {
-			De.LOGGER
-					.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von "
-							+ object + ": " + dataDescription + " hat");
+			De.LOGGER.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von " + object + ": "
+					+ dataDescription + " hat");
 			System.exit(-1);
 		}
 	}
 
 	@Override
-	public boolean isRequestSupported(final SystemObject object,
-			final DataDescription dataDescription) {
+	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 		return false;
 	}
 
@@ -370,19 +336,12 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
-			final SimpleDateFormat zeitFormat = new SimpleDateFormat(
-					DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
-			De.LOGGER.info("Plane Fehlerpublikation fuer "
-					+ De.this.getObjekt()
-					+ ": "
-					+ zeitFormat.format(new Date(fehlerZeit
-							+ zeitVerzugFehlerErkennung
-							+ zeitVerzugFehlerErmittlung
+			final SimpleDateFormat zeitFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+			De.LOGGER.info("Plane Fehlerpublikation fuer " + De.this.getObjekt() + ": "
+					+ zeitFormat.format(new Date(fehlerZeit + zeitVerzugFehlerErkennung + zeitVerzugFehlerErmittlung
 							+ (2 * De.STANDARD_ZEIT_ABSTAND)))
-							+ "\nFehlerzeit: "
-							+ zeitFormat.format(new Date(fehlerZeit))
-					+ "\nVerzug (Erkennung): " + zeitVerzugFehlerErkennung
-					+ "\nVerzug (Ermittlung): " + zeitVerzugFehlerErmittlung
+					+ "\nFehlerzeit: " + zeitFormat.format(new Date(fehlerZeit)) + "\nVerzug (Erkennung): "
+					+ zeitVerzugFehlerErkennung + "\nVerzug (Ermittlung): " + zeitVerzugFehlerErmittlung
 					+ "\nZusatzverzug: " + (2 * De.STANDARD_ZEIT_ABSTAND));
 
 			De.analyseWecker.setWecker(new IObjektWeckerListener() {
@@ -394,22 +353,19 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 					}
 				}
 
-			}, fehlerZeit + zeitVerzugFehlerErkennung
-			+ zeitVerzugFehlerErmittlung
-					+ (2 * De.STANDARD_ZEIT_ABSTAND));
+			}, fehlerZeit + zeitVerzugFehlerErkennung + zeitVerzugFehlerErmittlung + (2 * De.STANDARD_ZEIT_ABSTAND));
 		} else {
 			if (zustand.isInitialisiert()) {
-				getEinzelPublikator().publiziere(MessageGrade.WARNING,
-						getObjekt(), getObjekt() + ": " + zustand.getGrund());
+				getEinzelPublikator().publiziere(MessageGrade.WARNING, getObjekt(),
+						getObjekt() + ": " + zustand.getGrund());
 			} else {
-				De.LOGGER.warning(getObjekt()
-						+ " ist (noch) nicht vollstaendig initialisiert");
+				De.LOGGER.warning(getObjekt() + " ist (noch) nicht vollstaendig initialisiert");
 			}
 		}
 	}
 
 	/**
-	 * Erfragt den ersten Zeitstempel, der sich echt (> 500ms) nach dem
+	 * Erfragt den ersten Zeitstempel, der sich echt (&gt; 500ms) nach dem
 	 * Zeitstempel <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet und
 	 * der zur uebergebenen Erfassungsintervalllange passt.
 	 *
@@ -421,8 +377,7 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 	 *         <code>jetzt</code> befindet und der zur uebergebenen
 	 *         Erfassungsintervalllange passt (in ms)
 	 */
-	private static long getNaechstenIntervallZeitstempel(final long jetzt,
-			final long intervallLaenge) {
+	private static long getNaechstenIntervallZeitstempel(final long jetzt, final long intervallLaenge) {
 		final long jetztPlus = jetzt + 500L;
 		final GregorianCalendar stundenAnfang = new GregorianCalendar();
 		stundenAnfang.setTimeInMillis(jetztPlus);
@@ -433,17 +388,13 @@ IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseListener {
 		long naechsterIntervallZeitstempel;
 		if (intervallLaenge >= Constants.MILLIS_PER_HOUR) {
 			stundenAnfang.set(Calendar.HOUR_OF_DAY, 0);
-			final long msNachTagesAnfang = jetztPlus
-					- stundenAnfang.getTimeInMillis();
-			final long intervalleSeitTagesAnfang = msNachTagesAnfang
-					/ intervallLaenge;
+			final long msNachTagesAnfang = jetztPlus - stundenAnfang.getTimeInMillis();
+			final long intervalleSeitTagesAnfang = msNachTagesAnfang / intervallLaenge;
 			naechsterIntervallZeitstempel = stundenAnfang.getTimeInMillis()
 					+ ((intervalleSeitTagesAnfang + 1) * intervallLaenge);
 		} else {
-			final long msNachStundenAnfang = jetztPlus
-					- stundenAnfang.getTimeInMillis();
-			final long intervalleSeitStundenAnfang = msNachStundenAnfang
-					/ intervallLaenge;
+			final long msNachStundenAnfang = jetztPlus - stundenAnfang.getTimeInMillis();
+			final long intervalleSeitStundenAnfang = msNachStundenAnfang / intervallLaenge;
 			naechsterIntervallZeitstempel = stundenAnfang.getTimeInMillis()
 					+ ((intervalleSeitStundenAnfang + 1) * intervallLaenge);
 		}

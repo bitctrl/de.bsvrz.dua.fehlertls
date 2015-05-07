@@ -54,14 +54,12 @@ public final class DeTypLader {
 	 * beschreiben. Also alle Klassen die das Interface <code>IDeTyp</code>
 	 * unterstützen.
 	 */
-	private static final String PACKAGE = DeTypLader.class.getPackage()
-			.getName() + ".typen";
+	private static final String PACKAGE = DeTypLader.class.getPackage().getName() + ".typen";
 
 	/**
 	 * speichert alle statischen Instanzen von DE-Typen.
 	 */
-	private static Map<SystemObject, IDeTyp> typen = Collections
-			.synchronizedMap(new HashMap<SystemObject, IDeTyp>());
+	private static Map<SystemObject, IDeTyp> typen = Collections.synchronizedMap(new HashMap<SystemObject, IDeTyp>());
 
 	/**
 	 * Default-Konstruktor.
@@ -84,8 +82,7 @@ public final class DeTypLader {
 	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
 	 */
-	public static IDeTyp getDeTyp(final SystemObjectType deTypObj)
-			throws DeFaException {
+	public static IDeTyp getDeTyp(final SystemObjectType deTypObj) throws DeFaException {
 		IDeTyp deTyp = null;
 
 		synchronized (DeTypLader.typen) {
@@ -95,16 +92,12 @@ public final class DeTypLader {
 				Class<?> klasse = null;
 
 				try {
-					klasse = ClassLoader.getSystemClassLoader().loadClass(
-							DeTypLader.PACKAGE
-									+ "."
-							+ DeTypLader.getKlassenNameVonPid(deTypObj
-											.getPid()));
+					klasse = ClassLoader.getSystemClassLoader()
+							.loadClass(DeTypLader.PACKAGE + "." + DeTypLader.getKlassenNameVonPid(deTypObj.getPid()));
 					deTyp = (IDeTyp) klasse.newInstance();
 					DeTypLader.typen.put(deTypObj, deTyp);
 				} catch (final Exception e) {
-					DeTypLader.LOGGER.warning(e.getClass().getName() + ": "
-							+ e.getLocalizedMessage());
+					DeTypLader.LOGGER.warning(e.getClass().getName() + ": " + e.getLocalizedMessage());
 					throw new DeTypUnsupportedException(deTypObj.getPid());
 				}
 			}
@@ -118,10 +111,10 @@ public final class DeTypLader {
 	 * entfernt und alle Buchstaben hinter den Punkten in Großbuchstaben
 	 * umgewandelt. Weiterhin wird der erste Buchstabe in einen Großbuchstaben
 	 * umgewandelt. Alle Umlaute werden wie folgt verändert:<br>
-	 * ä -> ae, Ä -> Ae<br>
-	 * ü -> ue, Ü -> Ue<br>
-	 * ö -> oe, Ö -> Oe<br>
-	 * ß -> ss
+	 * ä -&gt; ae, Ä -&gt; Ae<br>
+	 * ü -&gt; ue, Ü -&gt; Ue<br>
+	 * ö -&gt; oe, Ö -&gt; Oe<br>
+	 * ß -&gt; ss
 	 *
 	 * @param pid
 	 *            eine PID eines DE-Typs
@@ -137,8 +130,7 @@ public final class DeTypLader {
 		dummy = dummy.replaceAll("ö", "oe");
 		dummy = dummy.replaceAll("Ö", "Oe");
 		dummy = dummy.replaceAll("ß", "ss");
-		dummy = dummy.substring(0, 1).toUpperCase()
-				+ dummy.substring(1, dummy.length());
+		dummy = dummy.substring(0, 1).toUpperCase() + dummy.substring(1, dummy.length());
 
 		String klassenName = "";
 		for (int i = 0; i < dummy.length();) {
