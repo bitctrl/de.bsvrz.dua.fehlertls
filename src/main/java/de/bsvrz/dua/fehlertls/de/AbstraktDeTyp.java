@@ -62,7 +62,7 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 
 	@Override
 	public DataDescription[] getDeFaMesswertDataDescriptions(final ClientDavInterface dav) throws DeFaException {
-		final List<DataDescription> dataDescriptions = new ArrayList<DataDescription>();
+		final List<DataDescription> dataDescriptions = new ArrayList<>();
 
 		for (final DataDescriptionPid dataIdentifikation : this.getDataIdentifikations()) {
 			final AttributeGroup atg = dav.getDataModel().getAttributeGroup(dataIdentifikation.getAtgPid());
