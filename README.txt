@@ -13,13 +13,20 @@ Messwerten an DE (Datenendgerät gemäß TLS). Im Rahmen der Erfassung von Daten üb
 TLS-Schnittstelle kann aus einer Reihe von Gründen ein erwarteter Messwert eines DE z. T. nicht
 ermittelt werden. Der fehlende Messwert muss dabei nicht zwangsläufig durch den Detektor verursacht
 werden. Fehlende Messwerte sind häufig auch durch Kommunikationsstörungen in der langen Kommunikationskette
-zwischen Detektor – EAK – SM – KRI – UZ und VRZ bedingt. Diese SWE versucht die Störung innerhalb dieser
+zwischen Detektor - EAK - SM - KRI - UZ und VRZ bedingt. Diese SWE versucht die Störung innerhalb dieser
 Kommunikationskette zu lokalisieren und über Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE verfügbar
 zu machen.
 
 
 Versionsgeschichte
 ==================
+
+1.4.0
+=====
+
+ - neue Kommadozeilenoption '-ignoriereSammelkanaele=<ja|nein>' (Standard: nein) 
+   zum Ignorieren der Sammelkanäle (DEKanal==255)
+
 
 1.3.0
 =====
