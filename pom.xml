@@ -32,7 +32,7 @@
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
 		<java.version>7</java.version>
 		<project.status>BETA</project.status>
-		<project.standDatum>2015-03-13</project.standDatum>
+		<project.standDatum>2016-02-03</project.standDatum>
 	</properties>
 
 	<repositories>
