@@ -2,8 +2,7 @@
 *  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten  *
 *****************************************************************************************************
 
-Version: @Version@
-
+Version: ${version}
 
 Übersicht
 =========
