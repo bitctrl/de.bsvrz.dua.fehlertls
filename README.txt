@@ -20,6 +20,10 @@ zu machen.
 Versionsgeschichte
 ==================
 
+1.5.0
+=====
+- Umstellung auf Funclib-Bitctrl-Dua
+
 1.4.0
 =====
 

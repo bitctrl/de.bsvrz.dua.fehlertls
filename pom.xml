@@ -5,7 +5,7 @@
 
 	<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.fehlertls</artifactId>
-	<version>1.4.0-SNAPSHOT</version>
+	<version>1.5.0-SNAPSHOT</version>
 
 	<name>SWE  DUA Fehleranalyse fehlende Messdaten TLS</name>
 	<description>
@@ -56,8 +56,8 @@
 		</dependency>
 		<dependency>
 			<groupId>de.bsvrz.sys</groupId>
-			<artifactId>de.bsvrz.sys.funclib.bitctrl</artifactId>
-			<version>[1.2.3,2.0.0)</version>
+			<artifactId>de.bsvrz.sys.funclib.bitctrl.dua</artifactId>
+			<version>[1.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
