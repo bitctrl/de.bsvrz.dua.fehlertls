@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -49,8 +49,8 @@ public class Eak extends TlsHierarchieElement {
 
 	private static final Debug LOGGER = Debug.getLogger();
 	/*
-	 * lokale Liste der PID von DE, die nicht ber¸cksichtigt werden, weil keine
-	 * Plugin verf¸gbar ist.
+	 * lokale Liste der PID von DE, die nicht ber√ºcksichtigt werden, weil keine
+	 * Plugin verf√ºgbar ist.
 	 */
 	private static Set<String> unsupportedDeTypes = new LinkedHashSet<>();
 
@@ -77,7 +77,7 @@ public class Eak extends TlsHierarchieElement {
 							.getDataModel().getAttributeGroup("atg.de"));
 					if (deKonfig != null) {
 						// Gieseler, BitCtrl 01/2016
-						// Sammelkan‰le ignorieren
+						// Sammelkan√§le ignorieren
 						if ((deKonfig.getUnscaledValue("DEKanal").intValue() == 255)
 								&& DeFaApplikation.isIgnoriereSammelkanaele()) {
 							Eak.LOGGER

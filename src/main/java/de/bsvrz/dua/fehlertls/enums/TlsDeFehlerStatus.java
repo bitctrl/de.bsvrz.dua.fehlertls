@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -55,15 +55,15 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 	public static final TlsDeFehlerStatus OK = new TlsDeFehlerStatus("ok", 0, "DE in Ordnung");
 
 	/**
-	 * Störung vom E/A-Konzentrator erkannt.
+	 * StÃ¶rung vom E/A-Konzentrator erkannt.
 	 */
-	public static final TlsDeFehlerStatus STOER_EAK = new TlsDeFehlerStatus("StörEAK", 1,
-			"Störung vom E/A-Konzentrator erkannt");
+	public static final TlsDeFehlerStatus STOER_EAK = new TlsDeFehlerStatus("StÃ¶rEAK", 1,
+			"StÃ¶rung vom E/A-Konzentrator erkannt");
 
 	/**
-	 * Störung vom SM erkannt.
+	 * StÃ¶rung vom SM erkannt.
 	 */
-	public static final TlsDeFehlerStatus STOER_SM = new TlsDeFehlerStatus("StörSM", 2, "Störung vom SM erkannt");
+	public static final TlsDeFehlerStatus STOER_SM = new TlsDeFehlerStatus("StÃ¶rSM", 2, "StÃ¶rung vom SM erkannt");
 
 	/**
 	 * der Text der die Natur des DE-Fehlers illustriert.
@@ -96,7 +96,7 @@ public final class TlsDeFehlerStatus extends AbstractDavZustand {
 	}
 
 	/**
-	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem Ã¼bergebenen Code.
 	 *
 	 * @param kode
 	 *            der Kode des Zustands

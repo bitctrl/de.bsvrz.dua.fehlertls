@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -67,8 +67,8 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 			"Modem-Inselbus oder Inselbus defekt", 2);
 
 	/**
-	 * Inselbus xxx gestört: Für die DE der Steuermodule x1, x2,.. sind keine
-	 * Daten verfügbar. Inselbus xxx instand setzen
+	 * Inselbus xxx gestÃ¶rt: FÃ¼r die DE der Steuermodule x1, x2,.. sind keine
+	 * Daten verfÃ¼gbar. Inselbus xxx instand setzen
 	 */
 	public static final TlsFehlerAnalyse INSELBUS_DEFEKT = new TlsFehlerAnalyse("Inselbus defekt", 3);
 
@@ -98,7 +98,7 @@ public final class TlsFehlerAnalyse extends AbstractDavZustand {
 	}
 
 	/**
-	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem Ã¼bergebenen Code.
 	 *
 	 * @param kode
 	 *            der Kode des Zustands

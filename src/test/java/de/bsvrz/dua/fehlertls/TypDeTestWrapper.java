@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -81,7 +81,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 *             wenn bereits eine lokale Sendeanmeldung fuer die gleichen
 	 *             Daten von einem anderen Anwendungsobjekt vorliegt
 	 * @throws DeFaException
-	 *             wenn es Probleme bei Abl‰ufen innerhalb einer einen DE-Typ
+	 *             wenn es Probleme bei Abl√§ufen innerhalb einer einen DE-Typ
 	 *             beschreibenden Klasse gibt. Oder insbesondere auch, wenn
 	 *             diese Klasse nicht ermittelt oder instanziiert werden konnte
 	 */
@@ -113,7 +113,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 *             wenn bereits eine lokale Sendeanmeldung fuer die gleichen
 	 *             Daten von einem anderen Anwendungsobjekt vorliegt
 	 * @throws DeFaException
-	 *             wenn es Probleme bei Abl‰ufen innerhalb einer einen DE-Typ
+	 *             wenn es Probleme bei Abl√§ufen innerhalb einer einen DE-Typ
 	 *             beschreibenden Klasse gibt. Oder insbesondere auch, wenn
 	 *             diese Klasse nicht ermittelt oder instanziiert werden konnte
 	 */
@@ -184,7 +184,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 *             allgemeiner Fehler bei der Initialisierung oder Auswertung
 	 *             der Testdaten
 	 * @throws SendSubscriptionNotConfirmed
-	 *             eine erforderliche Sendeanmeldung wurde nicht best‰tigt
+	 *             eine erforderliche Sendeanmeldung wurde nicht best√§tigt
 	 * @throws DataNotSubscribedException
 	 *             eine erfoderliche Datenanmeldung ist nicht erfolgt
 	 */
@@ -200,7 +200,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 		}
 
 		datenSatz.getTimeValue("Erfassungsperiodendauer").setMillis(zyklus >= 0 ? zyklus : 1L);
-		datenSatz.getUnscaledValue("‹bertragungsverfahren").set(zyklus >= 0 ? 1 : 0);
+		datenSatz.getUnscaledValue("√úbertragungsverfahren").set(zyklus >= 0 ? 1 : 0);
 
 		ResultData neuerParameter = null;
 		neuerParameter = new ResultData(this.objekt,
@@ -217,7 +217,7 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 	 * Setzt den DE-Fehler.
 	 *
 	 * @param fehlerStatus
-	 *            Zustand des DE-Fehlers 0 = ok, 1 = StˆrEAK, 2 = StˆrSM
+	 *            Zustand des DE-Fehlers 0 = ok, 1 = St√∂rEAK, 2 = St√∂rSM
 	 * @param passiviert
 	 *            ob der Kanal passiviert ist
 	 */

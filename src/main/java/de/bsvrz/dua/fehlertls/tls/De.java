@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -93,14 +93,14 @@ IObjektWeckerListener, IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseL
 	private static volatile DataDescription fehlerDatenBeschreibung;
 
 	/**
-	 * Der zusätzliche Zeitverzug, der nach dem erwarteten Empfangszeitpunkt
+	 * Der zusÃ¤tzliche Zeitverzug, der nach dem erwarteten Empfangszeitpunkt
 	 * noch bis zur Erkennung eines nicht gelieferten Messwertes abgewartet
 	 * werden muss.
 	 */
 	private long zeitVerzugFehlerErkennung = Long.MIN_VALUE;
 
 	/**
-	 * Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis zur
+	 * Der zusÃ¤tzliche Zeitverzug, der nach der Fehlererkennung bis zur
 	 * Fehlerermittlung abgewartet werden muss.
 	 */
 	private long zeitVerzugFehlerErmittlung = Long.MIN_VALUE;
@@ -159,7 +159,7 @@ IObjektWeckerListener, IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseL
 		try {
 			dav.subscribeSender(this, objekt, De.fehlerDatenBeschreibung, SenderRole.source());
 		} catch (final OneSubscriptionPerSendData e) {
-			throw new IllegalStateException("Quellenanmeldung für DE" + objekt + " nicht möglich", e);
+			throw new IllegalStateException("Quellenanmeldung fÃ¼r DE" + objekt + " nicht mÃ¶glich", e);
 		}
 
 		new DeErfassungsZustand(TlsHierarchieElement.getDav(), this.getObjekt()).addListener(this);
@@ -307,11 +307,11 @@ IObjektWeckerListener, IDeErfassungsZustandListener, IParameterTlsFehlerAnalyseL
 	@Override
 	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		if (state == ClientSenderInterface.STOP_SENDING_NOT_A_VALID_SUBSCRIPTION) {
-			De.LOGGER.error("SWE wird beendet, weil die Quellenanmeldung für " + object + ": " + dataDescription
-					+ " ungültig ist");
+			De.LOGGER.error("SWE wird beendet, weil die Quellenanmeldung fÃ¼r " + object + ": " + dataDescription
+					+ " ungÃ¼ltig ist");
 			System.exit(-1);
 		} else if (state == ClientSenderInterface.STOP_SENDING_NO_RIGHTS) {
-			De.LOGGER.error("SWE wird beendet, weil sie keine Rechte für die Quellenanmeldung von " + object + ": "
+			De.LOGGER.error("SWE wird beendet, weil sie keine Rechte fÃ¼r die Quellenanmeldung von " + object + ": "
 					+ dataDescription + " hat");
 			System.exit(-1);
 		}

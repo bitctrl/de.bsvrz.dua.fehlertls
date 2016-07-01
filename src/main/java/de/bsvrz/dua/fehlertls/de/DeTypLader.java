@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -36,8 +36,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Dient zum dynamischen Laden der einzelnen DE-Typ-Beschreibungen. Diese
- * Beschreibungen implementieren das Interface <code>IDeTyp</code>, müssen so
- * heißen, wie die DE-Typ-PID in der Konfiguration (ohne Punkte) und müssen
+ * Beschreibungen implementieren das Interface <code>IDeTyp</code>, mÃ¼ssen so
+ * heiÃŸen, wie die DE-Typ-PID in der Konfiguration (ohne Punkte) und mÃ¼ssen
  * weiterhin im Package <code>de.bsvrz.dua.DeFa</code> definiert sein.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -47,10 +47,10 @@ public final class DeTypLader {
 	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
-	 * Der Name dieses Packages. Hier müssen auch alle anderen Klassen liegen,
+	 * Der Name dieses Packages. Hier mÃ¼ssen auch alle anderen Klassen liegen,
 	 * die einen DE-Typ bzgl. der SWE "DE Fehleranalyse fehlende Messdaten"
 	 * beschreiben. Also alle Klassen die das Interface <code>IDeTyp</code>
-	 * unterstützen.
+	 * unterstÃ¼tzen.
 	 */
 	private static final String PACKAGE = DeTypLader.class.getPackage().getName() + ".typen";
 
@@ -68,14 +68,14 @@ public final class DeTypLader {
 
 	/**
 	 * Erfragt eine (statische) Instanz einer DE-Typ-Beschreibung, wie sie in
-	 * der SWE "DE Fehleranalyse fehlende Messdaten" benötigt wird, um die
+	 * der SWE "DE Fehleranalyse fehlende Messdaten" benÃ¶tigt wird, um die
 	 * Datenidentifikationen eines bestimmten DE-Typs zu ermitteln, die
 	 * Messwerte enthalten.
 	 *
 	 * @param deTypObj
 	 *            Systemobjekttyp des DE-Typs wie er in der Konfiguration steht
 	 * @return eine Instanz einer DE-Typ-Beschreibung des DE-Typs, dessen PID
-	 *         übergeben wurde
+	 *         Ã¼bergeben wurde
 	 * @throws DeFaException
 	 *             wird geworfen, wenn es Probleme beim Laden oder Instanziieren
 	 *             der Klasse gibt, die den erfragten DE-Typ beschreibt
@@ -106,28 +106,28 @@ public final class DeTypLader {
 
 	/**
 	 * Wandelt die DE-Typ-PID in einen Klassennamen um. Dabei werden alle Punkte
-	 * entfernt und alle Buchstaben hinter den Punkten in Großbuchstaben
-	 * umgewandelt. Weiterhin wird der erste Buchstabe in einen Großbuchstaben
-	 * umgewandelt. Alle Umlaute werden wie folgt verändert:<br>
-	 * ä -&gt; ae, Ä -&gt; Ae<br>
-	 * ü -&gt; ue, Ü -&gt; Ue<br>
-	 * ö -&gt; oe, Ö -&gt; Oe<br>
-	 * ß -&gt; ss
+	 * entfernt und alle Buchstaben hinter den Punkten in GroÃŸbuchstaben
+	 * umgewandelt. Weiterhin wird der erste Buchstabe in einen GroÃŸbuchstaben
+	 * umgewandelt. Alle Umlaute werden wie folgt verÃ¤ndert:<br>
+	 * Ã¤ -&gt; ae, Ã„ -&gt; Ae<br>
+	 * Ã¼ -&gt; ue, Ãœ -&gt; Ue<br>
+	 * Ã¶ -&gt; oe, Ã– -&gt; Oe<br>
+	 * ÃŸ -&gt; ss
 	 *
 	 * @param pid
 	 *            eine PID eines DE-Typs
-	 * @return den über die PID referenzierten Klassennamen
+	 * @return den Ã¼ber die PID referenzierten Klassennamen
 	 */
 	private static String getKlassenNameVonPid(final String pid) {
 		String dummy = pid;
 
-		dummy = dummy.replaceAll("ü", "ue");
-		dummy = dummy.replaceAll("Ü", "Ue");
-		dummy = dummy.replaceAll("ä", "ae");
-		dummy = dummy.replaceAll("Ä", "Ae");
-		dummy = dummy.replaceAll("ö", "oe");
-		dummy = dummy.replaceAll("Ö", "Oe");
-		dummy = dummy.replaceAll("ß", "ss");
+		dummy = dummy.replaceAll("Ã¼", "ue");
+		dummy = dummy.replaceAll("Ãœ", "Ue");
+		dummy = dummy.replaceAll("Ã¤", "ae");
+		dummy = dummy.replaceAll("Ã„", "Ae");
+		dummy = dummy.replaceAll("Ã¶", "oe");
+		dummy = dummy.replaceAll("Ã–", "Oe");
+		dummy = dummy.replaceAll("ÃŸ", "ss");
 		dummy = dummy.substring(0, 1).toUpperCase() + dummy.substring(1, dummy.length());
 
 		String klassenName = "";

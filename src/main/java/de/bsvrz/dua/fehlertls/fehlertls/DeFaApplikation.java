@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -41,15 +41,15 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 
 /**
  * Diese SWE dient zur Ermittlung der Fehlerursache bei fehlenden Messwerten an
- * DE (Datenendgerät gemäß TLS). Im Rahmen der Erfassung von Daten über eine
- * externe TLS-Schnittstelle kann aus einer Reihe von Gründen ein erwarteter
+ * DE (DatenendgerÃ¤t gemÃ¤ÃŸ TLS). Im Rahmen der Erfassung von Daten Ã¼ber eine
+ * externe TLS-Schnittstelle kann aus einer Reihe von GrÃ¼nden ein erwarteter
  * Messwert eines DE z. T. nicht ermittelt werden. Der fehlende Messwert muss
- * dabei nicht zwangsläufig durch den Detektor verursacht werden. Fehlende
- * Messwerte sind häufig auch durch Kommunikationsstörungen in der langen
- * Kommunikationskette zwischen Detektor – EAK – SM – KRI – UZ und VRZ bedingt.
- * Diese SWE versucht die Störung innerhalb dieser Kommunikationskette zu
- * lokalisieren und über Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE
- * verfügbar zu machen
+ * dabei nicht zwangslÃ¤ufig durch den Detektor verursacht werden. Fehlende
+ * Messwerte sind hÃ¤ufig auch durch KommunikationsstÃ¶rungen in der langen
+ * Kommunikationskette zwischen Detektor Â– EAK Â– SM Â– KRI Â– UZ und VRZ bedingt.
+ * Diese SWE versucht die StÃ¶rung innerhalb dieser Kommunikationskette zu
+ * lokalisieren und Ã¼ber Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE
+ * verfÃ¼gbar zu machen
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -118,7 +118,7 @@ public class DeFaApplikation implements StandardApplication {
 			final SystemObject geraeteObjekt = connection.getDataModel()
 					.getObject(pidVonGeraet);
 			if (geraeteObjekt != null) {
-				if (geraeteObjekt.isOfType("typ.gerät")) {
+				if (geraeteObjekt.isOfType("typ.gerÃ¤t")) {
 					this.geraete.add(geraeteObjekt);
 				} else {
 					DeFaApplikation.LOGGER.warning("Das uebergebene Objekt "

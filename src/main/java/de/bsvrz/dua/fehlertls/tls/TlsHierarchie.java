@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -38,7 +38,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Initialisiert alle Objekte im Teilmodel TLS, die (inklusive und) unterhalb
- * der uebergebenen Objekte vom Typ <code>typ.ger‰t</code> konfiguriert sind.
+ * der uebergebenen Objekte vom Typ <code>typ.ger√§t</code> konfiguriert sind.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -109,10 +109,10 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 	}
 
 	/**
-	 * Initialisiert ein einzelnes Objekt vom Typ <code>typ.ger‰t</code>.
+	 * Initialisiert ein einzelnes Objekt vom Typ <code>typ.ger√§t</code>.
 	 *
 	 * @param geraet
-	 *            ein Objekt vom Typ <code>typ.ger‰t</code>
+	 *            ein Objekt vom Typ <code>typ.ger√§t</code>
 	 */
 	private static void initialisiere(final ConfigurationObject geraet) {
 		if (geraet.isOfType("typ.steuerModul")) {
@@ -120,7 +120,7 @@ public final class TlsHierarchie extends TlsHierarchieElement {
 		} else if (geraet.isOfType("typ.kri")) {
 			TlsHierarchie.wurzel.addKind(new Kri(TlsHierarchie.sDav, geraet, TlsHierarchie.wurzel));
 		} else if (geraet.isOfType("typ.uz") || geraet.isOfType("typ.viz") || geraet.isOfType("typ.vrz")) {
-			for (final SystemObject anschlussPunktSysObj : geraet.getNonMutableSet("AnschlussPunkteGer‰t")
+			for (final SystemObject anschlussPunktSysObj : geraet.getNonMutableSet("AnschlussPunkteGer√§t")
 					.getElements()) {
 				if (anschlussPunktSysObj.isValid()) {
 					final ConfigurationObject anschlussPunktKonObj = (ConfigurationObject) anschlussPunktSysObj;

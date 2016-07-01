@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -37,7 +37,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.fehlertls.fehlertls.SingleMessageSender;
 
 /**
- * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.ger‰t</code>.
+ * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.ger√§t</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -89,7 +89,7 @@ public abstract class TlsHierarchieElement {
 	private final SingleMessageSender einzelPublikator;
 
 	/**
-	 * das Konfigurationsobjekt vom Typ <code>typ.ger‰t</code>.
+	 * das Konfigurationsobjekt vom Typ <code>typ.ger√§t</code>.
 	 */
 	private final ConfigurationObject objekt;
 
@@ -161,7 +161,7 @@ public abstract class TlsHierarchieElement {
 	 * @param dav
 	 *            Datenverteiler-Verbindund
 	 * @param objekt
-	 *            ein Systemobjekt vom Typ <code>typ.ger‰t</code>
+	 *            ein Systemobjekt vom Typ <code>typ.ger√§t</code>
 	 * @param vater
 	 *            das in der TLS-Hierarchie ueber diesem Geraet liegende Geraet
 	 */
@@ -174,9 +174,9 @@ public abstract class TlsHierarchieElement {
 		this.objekt = (ConfigurationObject) objekt;
 		this.vater = vater;
 
-		if ((objekt != null) && objekt.isOfType("typ.ger‰t")) {
+		if ((objekt != null) && objekt.isOfType("typ.ger√§t")) {
 			/** Initialisiere Anschlusspunkte. */
-			for (final SystemObject ap : this.objekt.getNonMutableSet("AnschlussPunkteGer‰t").getElements()) {
+			for (final SystemObject ap : this.objekt.getNonMutableSet("AnschlussPunkteGer√§t").getElements()) {
 				if (ap.isValid()) {
 					addKind(new AnschlussPunkt(dav, ap, this));
 				}

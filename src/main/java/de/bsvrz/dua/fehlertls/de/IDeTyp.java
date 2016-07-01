@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -32,7 +32,7 @@ import de.bsvrz.dav.daf.main.DataDescription;
 
 /**
  * Interface, dass von allen Klassen implementiert werden muss, die einen
- * konkreten DE-Typ für die SWE "DE Fehleranalyse fehlende Messdaten"
+ * konkreten DE-Typ fÃ¼r die SWE "DE Fehleranalyse fehlende Messdaten"
  * beschreiben.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -55,12 +55,12 @@ public interface IDeTyp {
 	DataDescription[] getDeFaMesswertDataDescriptions(final ClientDavInterface dav) throws DeFaException;
 
 	/**
-	 * Erfragt die Datenidentifikation, in der sich die Parameter für die
+	 * Erfragt die Datenidentifikation, in der sich die Parameter fÃ¼r die
 	 * Ermittlung der Erfassungsintervalldauer dieses DE-Typs befinden.
 	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
-	 * @return die Parameter-Datenidentifikation für die
+	 * @return die Parameter-Datenidentifikation fÃ¼r die
 	 *         Erfassungsintervalldauer (ueblicherweise Betriebsparameter)
 	 * @throws DeFaException
 	 *             wird geworfen, wenn z.B. die <code>DataDescription</code>
@@ -74,7 +74,7 @@ public interface IDeTyp {
 	 *
 	 * @param parameter
 	 *            der Parameterdatensatz, welcher der Datenidentifikation
-	 *            entspricht, die über die Methode
+	 *            entspricht, die Ã¼ber die Methode
 	 *            <code>getDeFaIntervallParameterDataDescription()</code>
 	 *            erfragt werden kann
 	 * @return die entsprechende Erassungsintervalldauer (in ms) wenn eine

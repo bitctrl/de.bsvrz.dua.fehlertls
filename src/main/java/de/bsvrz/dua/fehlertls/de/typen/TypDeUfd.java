@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -42,7 +42,7 @@ public class TypDeUfd extends AbstraktDeTyp {
 	public long getErfassungsIntervall(final Data parameter) {
 		long erfassungsIntervallDauer = -1;
 
-		if (parameter.getUnscaledValue("‹bertragungsverfahren").intValue() == 1) {
+		if (parameter.getUnscaledValue("√úbertragungsverfahren").intValue() == 1) {
 			erfassungsIntervallDauer = parameter.getUnscaledValue("Erfassungsperiodendauer").longValue() * 1000L;
 		}
 
@@ -59,15 +59,15 @@ public class TypDeUfd extends AbstraktDeTyp {
 		return new DataDescriptionPid[] {
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungLuftTemperaturLT", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnOberFl‰chenTemperaturFBT",
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnOberFl√§chenTemperaturFBT",
 						DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnFeuchteFBF", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnOberFl‰che", DUAKonstanten.ASP_TLS_ANTWORT,
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnOberFl√§che", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungRestSalzRS", DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
 
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungNiederschlagsIntensit‰tNI",
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungNiederschlagsIntensit√§tNI",
 						DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungLuftDruckLD", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
@@ -78,9 +78,9 @@ public class TypDeUfd extends AbstraktDeTyp {
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungWindGeschwindigkeitMittelWertWGM",
 						DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
 
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungSchneeHˆheSH", DUAKonstanten.ASP_TLS_ANTWORT,
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungSchneeH√∂heSH", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnGl‰tteFBG", DUAKonstanten.ASP_TLS_ANTWORT,
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungFahrbahnGl√§tteFBG", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungSichtWeiteSW", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
@@ -104,13 +104,13 @@ public class TypDeUfd extends AbstraktDeTyp {
 						(short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungTemperaturInTiefe3TT3", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungZustandDerFahrbahnOberFl‰cheFBZ",
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungZustandDerFahrbahnOberFl√§cheFBZ",
 						DUAKonstanten.ASP_TLS_ANTWORT, (short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungNiederschlagsArtNS", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
 				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungWasserFilmDickeWFD", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0),
-				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungZeitreserveGl‰tteZG", DUAKonstanten.ASP_TLS_ANTWORT,
+				new DataDescriptionPid("atg.tlsUfdErgebnisMeldungZeitreserveGl√§tteZG", DUAKonstanten.ASP_TLS_ANTWORT,
 						(short) 0) };
 	}
 

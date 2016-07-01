@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -80,7 +80,7 @@ public class DeFaApplikationTest2 {
 	public static final boolean SHOW_ZEITPUNKT = true;
 
 	/**
-	 * Testet analog PrüfSpez. (1.Teil).
+	 * Testet analog PrÃ¼fSpez. (1.Teil).
 	 *
 	 * @throws Exception
 	 *             wird weitergereicht
@@ -130,7 +130,7 @@ public class DeFaApplikationTest2 {
 		}
 
 		/**
-		 * Datengenerator für DE1 stoppen und auf Ergebnisse warten
+		 * Datengenerator fÃ¼r DE1 stoppen und auf Ergebnisse warten
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out.println("\n"
@@ -155,7 +155,7 @@ public class DeFaApplikationTest2 {
 		}
 
 		/**
-		 * Datengenerator für DE3 stoppen und 2 Minuten auf Ergebnisse warten
+		 * Datengenerator fÃ¼r DE3 stoppen und 2 Minuten auf Ergebnisse warten
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
 			System.out.println("\n"
@@ -180,7 +180,7 @@ public class DeFaApplikationTest2 {
 		}
 
 		/**
-		 * Datengenerator für DE5, DE7 und DE8 stoppen und 2 Minuten auf
+		 * Datengenerator fÃ¼r DE5, DE7 und DE8 stoppen und 2 Minuten auf
 		 * Ergebnisse warten
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
@@ -206,7 +206,7 @@ public class DeFaApplikationTest2 {
 		}
 
 		/**
-		 * Datengenerator für DE9,..., DE16 stoppen und 2 Minuten auf Ergebnisse
+		 * Datengenerator fÃ¼r DE9,..., DE16 stoppen und 2 Minuten auf Ergebnisse
 		 * warten
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {
@@ -224,7 +224,7 @@ public class DeFaApplikationTest2 {
 		}
 
 		/**
-		 * Datengenerator alle außer DE2, DE4, DE6, DE13,..., DE16 wieder
+		 * Datengenerator alle auÃŸer DE2, DE4, DE6, DE13,..., DE16 wieder
 		 * anschalten und 2 Minuten auf Ergebnisse warten
 		 */
 		if (DeFaApplikationTest2.DEBUG2) {

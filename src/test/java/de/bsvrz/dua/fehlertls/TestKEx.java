@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -186,14 +186,14 @@ public final class TestKEx implements ClientSenderInterface {
 	 * Setzt die Parameter der DeFa.
 	 *
 	 * @param zeitverzugFehlerErkennung
-	 *            Der zusätzliche Zeitverzug, der nach dem erwarteten
+	 *            Der zusÃ¤tzliche Zeitverzug, der nach dem erwarteten
 	 *            Empfangszeitpunkt noch bis zur Erkennung eines nicht
 	 *            gelieferten Messwertes abgewartet werden muss
 	 * @param zeitverzugFehlerErmittlung
-	 *            Der zusätzliche Zeitverzug, der nach der Fehlererkennung bis
+	 *            Der zusÃ¤tzliche Zeitverzug, der nach der Fehlererkennung bis
 	 *            zur Fehlerermittlung abgewartet werden muss
 	 * @throws SendSubscriptionNotConfirmed
-	 *             die Sendeanmeldung wurde nicht bestätigt
+	 *             die Sendeanmeldung wurde nicht bestÃ¤tigt
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
@@ -219,11 +219,11 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @param de
 	 *            das DE
 	 * @param fehlerStatus
-	 *            Zustand des DE-Fehlers 0 = ok, 1 = StörEAK, 2 = StörSM
+	 *            Zustand des DE-Fehlers 0 = ok, 1 = StÃ¶rEAK, 2 = StÃ¶rSM
 	 * @param passiviert
 	 *            ob der Kanal passiviert ist
 	 * @throws SendSubscriptionNotConfirmed
-	 *             die Sendeanmeldung wurde nicht bestätigt
+	 *             die Sendeanmeldung wurde nicht bestÃ¤tigt
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
@@ -252,7 +252,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @param zeitStempel
 	 *            der Zeitstempel des Nutzdatums
 	 * @throws SendSubscriptionNotConfirmed
-	 *             die Sendeanmeldung wurde nicht bestätigt
+	 *             die Sendeanmeldung wurde nicht bestÃ¤tigt
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
@@ -286,15 +286,15 @@ public final class TestKEx implements ClientSenderInterface {
 
 			datum.getTimeValue("T").setMillis(0);
 			datum.getUnscaledValue("qKfz").set(0);
-			datum.getUnscaledValue("qLkwÄ").set(0);
-			datum.getUnscaledValue("vPkwÄ").set(0);
-			datum.getUnscaledValue("vLkwÄ").set(0);
+			datum.getUnscaledValue("qLkwÃ„").set(0);
+			datum.getUnscaledValue("vPkwÃ„").set(0);
+			datum.getUnscaledValue("vLkwÃ„").set(0);
 			datum.getUnscaledValue("tNetto").set(0);
 			datum.getUnscaledValue("b").set(0);
 			datum.getUnscaledValue("sKfz").set(0);
 			datum.getUnscaledValue("vKfz").set(0);
-			datum.getArray("qPkwÄGeschwKlasse").setLength(0);
-			datum.getArray("qLkwÄGeschwKlasse").setLength(0);
+			datum.getArray("qPkwÃ„GeschwKlasse").setLength(0);
+			datum.getArray("qLkwÃ„GeschwKlasse").setLength(0);
 		}
 
 		final ResultData sendeDatum = new ResultData(de,
@@ -314,7 +314,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @throws DeFaException
 	 *             Allgemeiner Fehler beim Bewerten der TLS-Daten
 	 * @throws SendSubscriptionNotConfirmed
-	 *             die Sendeanmeldung wurde nicht bestätigt
+	 *             die Sendeanmeldung wurde nicht bestÃ¤tigt
 	 * @throws DataNotSubscribedException
 	 *             es ist keine Datenanmeldung vorhanden
 	 */
@@ -336,12 +336,12 @@ public final class TestKEx implements ClientSenderInterface {
 			datenSatz.getUnscaledValue("IntervallDauerLangZeit").set(129);
 			datenSatz.getUnscaledValue("alpha1").set(1);
 			datenSatz.getUnscaledValue("alpha2").set(1);
-			datenSatz.getUnscaledValue("LängenGrenzWert").set(400);
+			datenSatz.getUnscaledValue("LÃ¤ngenGrenzWert").set(400);
 			datenSatz.getUnscaledValue("ArtMittelWertBildung").set(0);
 			datenSatz.getUnscaledValue("StartMittelWertBildung").set(0);
 		} else {
 			datenSatz.getUnscaledValue("Erfassungsperiodendauer").set(zyklus >= 0 ? zyklus / 1000L : 60);
-			datenSatz.getUnscaledValue("Übertragungsverfahren").set(zyklus >= 0 ? 1 : 0);
+			datenSatz.getUnscaledValue("Ãœbertragungsverfahren").set(zyklus >= 0 ? 1 : 0);
 		}
 
 		final ResultData neuerParameter = new ResultData(de,
@@ -364,7 +364,7 @@ public final class TestKEx implements ClientSenderInterface {
 	 * @param status
 	 *            der neue Zustand
 	 * @throws SendSubscriptionNotConfirmed
-	 *             die Sendeanmeldung wurde nicht bestätigt
+	 *             die Sendeanmeldung wurde nicht bestÃ¤tigt
 	 * @throws DataNotSubscribedException
 	 *             es liegt keine Datenanmeldung vor
 	 * @throws DeFaException
@@ -432,7 +432,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B1SM1UFD1DE1.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B1SM1UFD1DE1.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -441,7 +441,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B1SM1UFD1DE2.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B1SM1UFD1DE2.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -450,7 +450,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B1SM1LVE1DE1.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B1SM1LVE1DE1.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -459,7 +459,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B2SM3LVE1DE1.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B2SM3LVE1DE1.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -468,7 +468,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B2SM1LVE1DE1.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B2SM1LVE1DE1.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -477,7 +477,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B2SM1UFD1DE1.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B2SM1UFD1DE1.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -486,7 +486,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B2SM1UFD1DE2.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B2SM1UFD1DE2.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -495,7 +495,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B2SM2LVE1DE1.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B2SM2LVE1DE1.
 	 *
 	 * @return das Systemobjekt
 	 */
@@ -504,7 +504,7 @@ public final class TestKEx implements ClientSenderInterface {
 	}
 
 	/**
-	 * liefert das Systemobjekt für die Test-DE B2SM2LVE1DE2.
+	 * liefert das Systemobjekt fÃ¼r die Test-DE B2SM2LVE1DE2.
 	 *
 	 * @return das Systemobjekt
 	 */

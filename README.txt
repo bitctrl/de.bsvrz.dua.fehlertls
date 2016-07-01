@@ -1,24 +1,28 @@
 *****************************************************************************************************
-*  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten  *
+*  Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten  *
 *****************************************************************************************************
 
 Version: ${version}
 
-Übersicht
+Ãœbersicht
 =========
 
 Die SWE DE Fehleranalyse fehlende Messdaten dient zur Ermittlung der Fehlerursache bei fehlenden
-Messwerten an DE (Datenendgerät gemäß TLS). Im Rahmen der Erfassung von Daten über eine externe
-TLS-Schnittstelle kann aus einer Reihe von Gründen ein erwarteter Messwert eines DE z. T. nicht
-ermittelt werden. Der fehlende Messwert muss dabei nicht zwangsläufig durch den Detektor verursacht
-werden. Fehlende Messwerte sind häufig auch durch Kommunikationsstörungen in der langen Kommunikationskette
-zwischen Detektor - EAK - SM - KRI - UZ und VRZ bedingt. Diese SWE versucht die Störung innerhalb dieser
-Kommunikationskette zu lokalisieren und über Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE verfügbar
+Messwerten an DE (DatenendgerÃ¤t gemÃ¤ÃŸ TLS). Im Rahmen der Erfassung von Daten Ã¼ber eine externe
+TLS-Schnittstelle kann aus einer Reihe von GrÃ¼nden ein erwarteter Messwert eines DE z. T. nicht
+ermittelt werden. Der fehlende Messwert muss dabei nicht zwangslÃ¤ufig durch den Detektor verursacht
+werden. Fehlende Messwerte sind hÃ¤ufig auch durch KommunikationsstÃ¶rungen in der langen Kommunikationskette
+zwischen Detektor - EAK - SM - KRI - UZ und VRZ bedingt. Diese SWE versucht die StÃ¶rung innerhalb dieser
+Kommunikationskette zu lokalisieren und Ã¼ber Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE verfÃ¼gbar
 zu machen.
 
 
 Versionsgeschichte
 ==================
+
+1.6.0
+=====
+- Umstellung auf Java 8 und UTF-8
 
 1.5.0
 =====
@@ -28,13 +32,13 @@ Versionsgeschichte
 =====
 
  - neue Kommadozeilenoption '-ignoriereSammelkanaele=<ja|nein>' (Standard: nein) 
-   zum Ignorieren der Sammelkanäle (DEKanal==255)
+   zum Ignorieren der SammelkanÃ¤le (DEKanal==255)
 
 
 1.3.0
 =====
 
-Auflösung der TlsHierarchie berücksichtigt Anschlusspunkte für beliebige Geräte (Kri2B).
+AuflÃ¶sung der TlsHierarchie berÃ¼cksichtigt Anschlusspunkte fÃ¼r beliebige GerÃ¤te (Kri2B).
 
 1.2.4
 
@@ -50,7 +54,7 @@ Auflösung der TlsHierarchie berücksichtigt Anschlusspunkte für beliebige Geräte 
 
 1.2.2
 
-  - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
+  - FIX: SÃ¤mtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
          DataDescription(atg, asp)
 
 1.2.0
@@ -70,15 +74,15 @@ Auflösung der TlsHierarchie berücksichtigt Anschlusspunkte für beliebige Geräte 
   - Erste Auslieferung
 
  
-Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
+Diese SWE ist eine eigenstÃ¤ndige Datenverteiler-Applikation, welche Ã¼ber die Klasse
 de.bsvrz.dua.fehlertls.fehlertls.DeFaApplikation mit folgenden Parametern gestartet
 werden kann (zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applikation):
 	-geraet=pid 
-	(PID eines Objekts vom Typ "Gerät" (typ.gerät) aus dem Teilmodell "TLS", z. B.
-	 uz.UZ.Xyz. Über diesen Aufrufparameter wird der Einstiegspunkt für die
+	(PID eines Objekts vom Typ "GerÃ¤t" (typ.gerÃ¤t) aus dem Teilmodell "TLS", z. B.
+	 uz.UZ.Xyz. Ãœber diesen Aufrufparameter wird der Einstiegspunkt fÃ¼r die
 	 Initialisierung festgelegt, ab dem die hierarchisch darunter liegenden DE
-	 zur Überwachung ermittelt werden. Dazu dient ein Objekt vom Typ "Gerät"
-	 (Steuermodul, KRI, UZ, VRZ, VIZ; i. d. R. eine UZ). Ab diesem Gerät wird 
+	 zur Ãœberwachung ermittelt werden. Dazu dient ein Objekt vom Typ "GerÃ¤t"
+	 (Steuermodul, KRI, UZ, VRZ, VIZ; i. d. R. eine UZ). Ab diesem GerÃ¤t wird 
 	 die komplette TLS-Hierarchie bis hinunter zu den DE ermittelt. Der Zusammenhang
 	 zwischen den einzelnen Ebenen wird zur Fehleranalyse verwendet)
 	-param=pid 
@@ -88,13 +92,13 @@ werden kann (zusaetzlich zu den normalen Parametern jeder Datenverteiler-Applika
 	
 - Tests:
 
-Alle Tests befinden sich unterhalb des Verzeichnisses junit und sind als JUnit-Tests ausführbar.
+Alle Tests befinden sich unterhalb des Verzeichnisses junit und sind als JUnit-Tests ausfÃ¼hrbar.
 Die Tests untergliedern sich wie folgt:
-	- DAV-Tests: die Tests, die die konkrete in Afo beschriebene Funktionalität der SWE testen (bei der
-	  Durchführung dieser Tests wird jeweils implizit eine Instanz der DE Fehleranalyse fehlende Messdaten
+	- DAV-Tests: die Tests, die die konkrete in Afo beschriebene FunktionalitÃ¤t der SWE testen (bei der
+	  DurchfÃ¼hrung dieser Tests wird jeweils implizit eine Instanz der DE Fehleranalyse fehlende Messdaten
 	  gestartet)
 
-Voraussetzungen für die DAV-Tests:
+Voraussetzungen fÃ¼r die DAV-Tests:
 - Start der Test-Konfiguration (extra/testKonfig.zip)
 - Anpassung der DAV-Start-Parameter (Variable CON_DATA) innerhalb von 
 	junit/de.bsvrz.dua.fehlertls.DAVTest.java
@@ -150,16 +154,16 @@ Legende:
      definierte Attributgruppe)
 
 Die dabei entstandenen Betriebsmeldungen bzw. Onlinedaten der DE-Fehleranalyse (pro DE)
-werden überprüft und mit den erwarteten verglichen.
+werden Ã¼berprÃ¼ft und mit den erwarteten verglichen.
 	
-Die Tests wurden so bereits erfolgreich ausgeführt.
+Die Tests wurden so bereits erfolgreich ausgefÃ¼hrt.
 
 
 
 Disclaimer
 ==========
 
-Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
 Copyright (C) 2007 BitCtrl Systems GmbH 
 
 This program is free software; you can redistribute it and/or modify it under
@@ -181,7 +185,7 @@ Kontakt
 =======
 
 BitCtrl Systems GmbH
-Weißenfelser Straße 67
+WeiÃŸenfelser StraÃŸe 67
 04229 Leipzig
 Phone: +49 341-490670
 mailto: info@bitctrl.de

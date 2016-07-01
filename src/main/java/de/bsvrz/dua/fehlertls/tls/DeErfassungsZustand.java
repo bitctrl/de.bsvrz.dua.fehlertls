@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -270,7 +270,7 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener, IZyklusSteu
 		 * Erfragt den Erfassungszustand dieses DE bezueglich der DeFa. Dieser
 		 * Zustand kann die Werte <code>erfasst</code> und
 		 * <code>nicht erfasst</code> annehmen. Der Zustand <code>erfasst</code>
-		 * wird angenommen wenn f¸r dieses DE gilt:<br>
+		 * wird angenommen wenn f√ºr dieses DE gilt:<br>
 		 * 1.) es liegt aktuell kein DE-Fehler vor,<br>
 		 * 2.) der DE-Kanalstatus hat den Wert <code>aktiv</code> und<br>
 		 * 3.) die Erfassungsart ist auf

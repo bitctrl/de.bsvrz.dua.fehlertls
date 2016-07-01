@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -51,7 +51,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.IBmListener;
 
 /**
- * Stellt eine Datenverteiler-Verbindung zur Verfügung.
+ * Stellt eine Datenverteiler-Verbindung zur VerfÃ¼gung.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -85,7 +85,7 @@ public class DeFaApplikationTest implements IBmListener {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	@Ignore("Test nach entsprechender Vorbereitung nur manuell ausführbar")
+	@Ignore("Test nach entsprechender Vorbereitung nur manuell ausfÃ¼hrbar")
 	@Test
 	public void test() throws Exception {
 		DAVTest.setTestParameter("kri1");
@@ -414,7 +414,7 @@ public class DeFaApplikationTest implements IBmListener {
 								new ErwarteteMeldung("kri1.ib2.sm1.eaklve1",
 										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"),
 								new ErwarteteMeldung("kri1.ib2",
-										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }),
+										"Inselbus kri1.ib2 (kri1.ib2) gestÃ¶rt: FÃ¼r die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfÃ¼gbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }),
 				new MeldungsZeitpunkt(
 						// Zeitpunkt Nr. 1.3
 						new ErwarteteMeldung[] { new ErwarteteMeldung("kri1.ib2.sm2",
@@ -431,7 +431,7 @@ public class DeFaApplikationTest implements IBmListener {
 						// Zeitpunkt Nr. 3.0
 						new ErwarteteMeldung[] {
 								new ErwarteteMeldung(null,
-										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"),
+										"Inselbus kri1.ib2 (kri1.ib2) gestÃ¶rt: FÃ¼r die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfÃ¼gbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"),
 								new ErwarteteMeldung(null,
 										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }),
 				/**

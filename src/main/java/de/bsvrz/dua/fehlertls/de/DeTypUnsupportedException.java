@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -27,7 +27,7 @@
 package de.bsvrz.dua.fehlertls.de;
 
 /**
- * Diese Exception wird geworfen, wenn es für einen De-Typ kein
+ * Diese Exception wird geworfen, wenn es fÃ¼r einen De-Typ kein
  * implementierendes Plugin gibt.
  *
  * @author BitCtrl Systems GmbH, Uwe Peuker
@@ -37,19 +37,19 @@ public class DeTypUnsupportedException extends DeFaException {
 	private final String deTypPid;
 
 	/**
-	 * Exception, die geworfen wird, wenn eine DE eines nicht unterstützten Typs
+	 * Exception, die geworfen wird, wenn eine DE eines nicht unterstÃ¼tzten Typs
 	 * initialisiert werden soll.
 	 *
 	 * @param deTypPid
-	 *            die PID des gewünschten Typs
+	 *            die PID des gewÃ¼nschten Typs
 	 */
 	public DeTypUnsupportedException(final String deTypPid) {
-		super("DE-Typ " + deTypPid + " wird nicht unterstützt");
+		super("DE-Typ " + deTypPid + " wird nicht unterstÃ¼tzt");
 		this.deTypPid = deTypPid;
 	}
 
 	/**
-	 * liefert die PID des nicht unterstützen DE-Typs.
+	 * liefert die PID des nicht unterstÃ¼tzen DE-Typs.
 	 *
 	 * @return die PID
 	 */
