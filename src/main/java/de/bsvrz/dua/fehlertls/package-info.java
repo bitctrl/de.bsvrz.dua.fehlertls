@@ -1,6 +1,5 @@
 /*
  * Segment Datenübernahme und Aufbereitung (DUA), Fehleranalyse fehlende Messdaten TLS
- * Copyright (C) 2007 BitCtrl Systems GmbH 
  * Copyright 2016 by Kappich Systemberatung Aachen
  * 
  * This file is part of de.bsvrz.dua.fehlertls.
@@ -27,8 +26,8 @@
  */
 
 /**
- * Klassen zur Beschreibung von abstrakten DE-Typen fuer die DeFa
+ * Segment Datenübernahme und Aufbereitung (DUA), Fehleranalyse fehlende Messdaten TLS
+ *
+ * @author Kappich Systemberatung
  */
-
-package de.bsvrz.dua.fehlertls.de;
-
+package de.bsvrz.dua.fehlertls;

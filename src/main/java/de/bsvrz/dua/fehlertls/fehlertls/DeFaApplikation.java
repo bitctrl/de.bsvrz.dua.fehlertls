@@ -1,33 +1,32 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), Fehleranalyse fehlende Messdaten TLS
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.fehlertls.
+ * 
+ * de.bsvrz.dua.fehlertls is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.fehlertls is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.fehlertls.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.fehlertls.fehlertls;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -38,6 +37,9 @@ import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Diese SWE dient zur Ermittlung der Fehlerursache bei fehlenden Messwerten an
@@ -50,137 +52,143 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * Diese SWE versucht die Störung innerhalb dieser Kommunikationskette zu
  * lokalisieren und über Betriebsmeldungen bzw. Fehlerstatusausgaben pro DE
  * verfügbar zu machen
- *
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
 
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/** Verbindung zum Datenverteiler. */
-	private ClientDavInterface dav;
+	/**
+	 * Statische Verbindung zum Datenverteiler.
+	 */
+	private static ClientDavInterface sDav = null;
 
 	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem diese
 	 * Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
 	 */
-	private static SystemObject tlsFehlerAnalyseObjekte;
-
-	private static boolean ignoriereSammelkanaele;
+	private static SystemObject tlsFehlerAnalyseObjekte = null;
 
 	/**
 	 * Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
-	private final Set<SystemObject> geraete = new HashSet<>();
+	private Set<SystemObject> geraete = new HashSet<SystemObject>();
 
 	/**
 	 * die PIDs der Geraete, die in der Kommandozeile uebergeben wurden.
 	 */
-	private String[] geraetePids;
+	private String[] geraetePids = null;
 
 	/**
 	 * die Pid des Objektes vom Typ <code>typ.tlsFehlerAnalyse</code> mit dem
 	 * diese Applikation assoziiert ist (aus der sie ihre Parameter bezieht).
 	 */
-	private String parameterModulPid;
+	private String parameterModulPid = null;
 
 	/**
 	 * Erfragt das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
 	 * dem diese Applikation assoziiert ist (aus der sie ihre Parameter
 	 * bezieht).
-	 *
+	 * 
 	 * @return das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit
 	 *         dem diese Applikation assoziiert ist (aus der sie ihre Parameter
 	 *         bezieht)
 	 */
 	public static final SystemObject getTlsFehlerAnalyseObjekt() {
-		return DeFaApplikation.tlsFehlerAnalyseObjekte;
+		return tlsFehlerAnalyseObjekte;
 	}
 
 	/**
 	 * Erfragt den Namen dieser Applikation.
-	 *
+	 * 
 	 * @return der Name dieser Applikation
 	 */
 	public static final String getAppName() {
-		return "DeFa";
+		return "DeFa"; //$NON-NLS-1$
 	}
 
-	@Override
-	public void initialize(final ClientDavInterface connection)
-			throws Exception {
-		this.dav = connection;
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(ClientDavInterface dav) throws Exception {
+		sDav = dav;
 
 		MessageSender.getInstance().setApplicationLabel(
-				"Ueberpruefung fehlende Messdaten TLS-LVE");
+				"Fehleranalyse fehlende Messdaten TLS");
 
-		for (final String pidVonGeraet : this.geraetePids) {
-			final SystemObject geraeteObjekt = connection.getDataModel()
-					.getObject(pidVonGeraet);
+		for (String pidVonGeraet : this.geraetePids) {
+			SystemObject geraeteObjekt = dav.getDataModel().getObject(
+					pidVonGeraet);
 			if (geraeteObjekt != null) {
-				if (geraeteObjekt.isOfType("typ.gerät")) {
+				if (geraeteObjekt.isOfType("typ.gerät")) { //$NON-NLS-1$
 					this.geraete.add(geraeteObjekt);
 				} else {
-					DeFaApplikation.LOGGER.warning("Das uebergebene Objekt "
-							+ pidVonGeraet + " ist nicht vom Typ Geraet");
+					Debug.getLogger()
+							.warning(
+									"Das uebergebene Objekt " + pidVonGeraet + " ist nicht vom Typ Geraet"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				DeFaApplikation.LOGGER.warning("Das uebergebene Geraet "
-						+ pidVonGeraet + " existiert nicht");
+				Debug.getLogger()
+						.warning(
+								"Das uebergebene Geraet " + pidVonGeraet + " existiert nicht"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		if (this.parameterModulPid == null) {
-			for (final SystemObject obj : connection.getDataModel()
-					.getType("typ.tlsFehlerAnalyse").getElements()) {
+			for (SystemObject obj : dav.getDataModel()
+					.getType("typ.tlsFehlerAnalyse").getElements()) { //$NON-NLS-1$
 				if (obj.isValid()) {
-					if (DeFaApplikation.tlsFehlerAnalyseObjekte != null) {
-						DeFaApplikation.LOGGER
-						.warning("Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\"");
+					if (tlsFehlerAnalyseObjekte != null) {
+						Debug.getLogger()
+								.warning(
+										"Es existieren mehrere Objekte vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
 						break;
 					}
-					DeFaApplikation.tlsFehlerAnalyseObjekte = obj;
+					tlsFehlerAnalyseObjekte = obj;
 					if (obj.getConfigurationArea().equals(
-							connection.getDataModel()
-							.getConfigurationAuthority()
-							.getConfigurationArea())) {
+							dav.getDataModel().getConfigurationAuthority()
+									.getConfigurationArea())) {
 						break;
 					}
 				}
 			}
 		} else {
-			final SystemObject dummy = connection.getDataModel().getObject(
+			SystemObject dummy = dav.getDataModel().getObject(
 					this.parameterModulPid);
-			if ((dummy != null) && dummy.isValid()) {
-				DeFaApplikation.tlsFehlerAnalyseObjekte = dummy;
+			if (dummy != null && dummy.isValid()) {
+				tlsFehlerAnalyseObjekte = dummy;
 			}
 		}
 
-		if (DeFaApplikation.tlsFehlerAnalyseObjekte == null) {
+		if (tlsFehlerAnalyseObjekte == null) {
 			throw new RuntimeException(
-					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\"");
+					"Es existiert kein Objekt vom Typ \"typ.tlsFehlerAnalyse\""); //$NON-NLS-1$
+		} else {
+			ParameterTlsFehlerAnalyse.getInstanz(dav, tlsFehlerAnalyseObjekte);
+			Debug.getLogger().config(
+					"Es werden die Parameter von " + tlsFehlerAnalyseObjekte //$NON-NLS-1$
+							+ " verwendet"); //$NON-NLS-1$
 		}
-		ParameterTlsFehlerAnalyse.getInstanz(connection,
-				DeFaApplikation.tlsFehlerAnalyseObjekte);
-		DeFaApplikation.LOGGER.config("Es werden die Parameter von "
-				+ DeFaApplikation.tlsFehlerAnalyseObjekte + " verwendet");
 
 		if (this.geraete.isEmpty()) {
-			DeFaApplikation.LOGGER
-			.warning("Es wurden keine gueltigen Geraete uebergeben");
+			Debug.getLogger().warning(
+					"Es wurden keine gueltigen Geraete uebergeben"); //$NON-NLS-1$
 		} else {
-			TlsHierarchie.initialisiere(connection, geraete);
+			TlsHierarchie.getInstance(dav, geraete);
 		}
 	}
 
-	@Override
-	public void parseArguments(final ArgumentList argumente) throws Exception {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void parseArguments(ArgumentList argumente) throws Exception {
 
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(final Thread t, final Throwable e) {
-				DeFaApplikation.LOGGER.error("Applikation wird wegen"
-						+ " unerwartetem Fehler beendet", e);
+			public void uncaughtException(@SuppressWarnings("unused") Thread t,
+					Throwable e) {
+				Debug.getLogger().error("Applikation wird wegen" + //$NON-NLS-1$
+						" unerwartetem Fehler beendet", e); //$NON-NLS-1$
 				e.printStackTrace();
 				Runtime.getRuntime().exit(-1);
 			}
@@ -190,46 +198,34 @@ public class DeFaApplikation implements StandardApplication {
 			this.parameterModulPid = argumente.fetchArgument("-param")
 					.asNonEmptyString();
 		} else {
-			DeFaApplikation.LOGGER
-			.warning("Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
+			Debug.getLogger()
+					.warning(
+							"Kein Objekt vom Typ \"typ.tlsFehlerAnalyse\" zur Parametrierung dieser Instanz uebergeben (-param=...)");
 		}
 
-		this.geraetePids = argumente.fetchArgument("-geraet")
-				.asNonEmptyString().split(",");
-
-		DeFaApplikation.ignoriereSammelkanaele = argumente.fetchArgument(
-				"-ignoriereSammelkanaele=nein").booleanValue();
+		this.geraetePids = argumente
+				.fetchArgument("-geraet").asNonEmptyString().split(","); //$NON-NLS-1$ //$NON-NLS-2$
 
 		argumente.fetchUnusedArguments();
 	}
 
 	/**
 	 * Erfragt die statische Verbindung zum Datenverteiler.
-	 *
+	 * 
 	 * @return die statische Verbindung zum Datenverteiler.
 	 */
-	public final ClientDavInterface getDav() {
-		return dav;
+	public static final ClientDavInterface getDav() {
+		return sDav;
 	}
 
 	/**
 	 * Startet diese Applikation.
-	 *
+	 * 
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
-	public static void main(final String[] argumente) {
+	public static void main(String[] argumente) {
 		StandardApplicationRunner.run(new DeFaApplikation(), argumente);
-	}
-
-	/**
-	 * Gibt die Information zur&uuml;ck, ob Sammelkan&auml;le ignoriert werden
-	 * sollen.
-	 *
-	 * @return <code>true</code> oder <code>false</code>
-	 */
-	public static boolean isIgnoriereSammelkanaele() {
-		return DeFaApplikation.ignoriereSammelkanaele;
 	}
 
 }
