@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.fehlertls.svg?branch=develop)](https://travis-ci.org/bitctrl/de.bsvrz.dua.fehlertls)
+[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.fehlertls.svg?branch=master)](https://travis-ci.org/bitctrl/de.bsvrz.dua.fehlertls)
 [![Build Status](https://api.bintray.com/packages/bitctrl/maven/de.bsvrz.dua.fehlertls/images/download.svg)](https://bintray.com/bitctrl/maven/de.bsvrz.dua.fehlertls)
 
 # Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
