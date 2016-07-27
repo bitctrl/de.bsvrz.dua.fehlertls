@@ -63,7 +63,7 @@ public class Eak extends AbstraktGeraet {
 			MessageTemplate.variable("sm"),
 			MessageTemplate.fixed(" instand setzen. "),
 			MessageTemplate.ids()
-	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-PP-FU]");
+	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-FT-FU]");
 	
 	/**
 	 * Standardkonstruktor.

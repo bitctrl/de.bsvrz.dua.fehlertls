@@ -54,7 +54,7 @@ public class Sm extends AbstraktGeraet {
             MessageTemplate.object(),
 			MessageTemplate.fixed(" oder Steuermodul instand setzen. "),
 			MessageTemplate.ids()
-	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-PP-FU]");
+	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-FT-FU]");
 	
 	/**
 	 * Standardkonstruktor.
