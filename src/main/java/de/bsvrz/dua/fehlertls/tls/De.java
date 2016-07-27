@@ -126,7 +126,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			MessageTemplate.variable("reason"),
 			MessageTemplate.fixed(". "),
 			MessageTemplate.ids()
-	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-PP-FU]");
+	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-FT-FU]");
 
 	/**
 	 * Standardkonstruktor.
