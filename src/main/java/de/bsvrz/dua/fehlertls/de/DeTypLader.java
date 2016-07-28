@@ -42,8 +42,6 @@ import java.util.Map;
  * weiterhin im Package <code>de.bsvrz.dua.DeFa</code> definiert sein.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class DeTypLader {
 
@@ -115,11 +113,14 @@ public final class DeTypLader {
 	 * Wandelt die DE-Typ-PID in einen Klassennamen um. Dabei werden alle Punkte
 	 * entfernt und alle Buchstaben hinter den Punkten in Großbuchstaben
 	 * umgewandelt. Weiterhin wird der erste Buchstabe in einen Großbuchstaben
-	 * umgewandelt. Alle Umlaute werden wie folgt verändert:<br>
-	 * ä -> ae, Ä -> Ae<br>
-	 * ü -> ue, Ü -> Ue<br>
-	 * ö -> oe, Ö -> Oe<br>
-	 * ß -> ss
+	 * umgewandelt. Alle Umlaute werden wie folgt verändert:
+	 * 
+	 * <ul>
+	 * <li>ä -&gt; ae, Ä -&gt; Ae</li>
+	 * <li>ü -&gt; ue, Ü -&gt; Ue</li>
+	 * <li>ö -&gt; oe, Ö -&gt; Oe</li>
+	 * <li>ß -&gt; ss</li>
+	 * </ul>
 	 * 
 	 * @param pid
 	 *            eine PID eines DE-Typs

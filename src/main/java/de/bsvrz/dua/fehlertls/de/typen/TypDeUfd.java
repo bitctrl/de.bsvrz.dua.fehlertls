@@ -37,14 +37,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * (PID: typ.deUfd)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class TypDeUfd extends AbstraktDeTyp {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public long getErfassungsIntervall(Data parameter) {
 		long erfassungsIntervallDauer = -1;
 
@@ -56,17 +51,11 @@ public class TypDeUfd extends AbstraktDeTyp {
 		return erfassungsIntervallDauer;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getBetriebsParameterAtgPid() {
 		return "atg.tlsUfdBetriebsParameter"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public DataDescriptionPid[] getDataIdentifikations() {
 		return new DataDescriptionPid[] {
 				new DataDescriptionPid(

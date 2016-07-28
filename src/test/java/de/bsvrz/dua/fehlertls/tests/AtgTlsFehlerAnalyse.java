@@ -37,8 +37,6 @@ import java.util.*;
  * <code>asp.analyse</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 
@@ -110,9 +108,6 @@ public final class AtgTlsFehlerAnalyse implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] results) {
 		if (results != null) {
 			for (ResultData result : results) {

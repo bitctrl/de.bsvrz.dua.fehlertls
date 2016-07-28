@@ -33,8 +33,6 @@ package de.bsvrz.dua.fehlertls.parameter;
  * allgemeinen Systemobjektes vom Typ <code>typ.de</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public interface IZyklusSteuerungsParameterListener {
 

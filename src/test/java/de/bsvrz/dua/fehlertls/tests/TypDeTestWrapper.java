@@ -45,8 +45,6 @@ import java.util.Map;
  * Korrespondiert mit <code>atg.test</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class TypDeTestWrapper implements ClientSenderInterface {
 
@@ -265,17 +263,11 @@ public final class TypDeTestWrapper implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;

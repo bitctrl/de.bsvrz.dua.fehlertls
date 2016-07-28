@@ -35,8 +35,6 @@ import de.bsvrz.dua.fehlertls.tests.fehlertls.TestDeFaApplikation1;
  * Assoziiert mit <code>typ.tlsFehlerAnalyse</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 
@@ -141,17 +139,11 @@ public final class TypTlsFehlerAnalyse implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		//
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;

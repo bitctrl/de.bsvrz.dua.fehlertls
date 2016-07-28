@@ -44,8 +44,6 @@ import de.bsvrz.sys.funclib.operatingMessage.OperatingMessage;
  * TLS-Hierarchieelement EAK.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class Eak extends AbstraktGeraet {
 	
@@ -113,17 +111,11 @@ public class Eak extends AbstraktGeraet {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.EAK;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
 		OperatingMessage message = TEMPLATE.newMessage(objekt);

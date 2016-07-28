@@ -38,8 +38,6 @@ import de.bsvrz.dav.daf.main.DataDescription;
  * beschreiben.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public interface IDeTyp {
 

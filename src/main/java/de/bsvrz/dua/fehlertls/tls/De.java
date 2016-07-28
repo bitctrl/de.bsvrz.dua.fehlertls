@@ -46,6 +46,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageTemplate;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 import de.bsvrz.sys.funclib.operatingMessage.OperatingMessage;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -55,8 +57,6 @@ import java.util.GregorianCalendar;
  * meldet sich auf alle Daten an, auf die von dem DE gewartet werden soll.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		ClientSenderInterface, IObjektWeckerListener,
@@ -173,9 +173,6 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		new DeErfassungsZustand(sDav, this.getObjekt()).addListener(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] erwarteteResultate) {
 		if (erwarteteResultate != null) {
 			for (ResultData erwartetesResultat : erwarteteResultate) {
@@ -194,9 +191,6 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.DE;
@@ -251,25 +245,16 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		return this.inTime;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean kannFehlerHierPublizieren(long zeitStempel) {
 		return zeitStempel > this.zeitStempelLetzterPublizierterFehler;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
 		this.publiziereFehlerUrsache(zeitStempel, TlsFehlerAnalyse.UNBEKANNT);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public synchronized void aktualisiereParameterTlsFehlerAnalyse(
 			long zeitverzugFehlerErkennung, long zeitverzugFehlerErmittlung) {
 		this.zeitVerzugFehlerErkennung = zeitverzugFehlerErkennung;
@@ -277,9 +262,6 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		this.versucheErwartung();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public synchronized void aktualisiereErfassungsZustand(Zustand zustand) {
 		this.aktuellerZustand = zustand;
 		this.versucheErwartung();
@@ -351,25 +333,16 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 		return message;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// wird ignoriert (Anmeldung als Quelle)
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void alarm() {
 		/**
 		 * Ueberpruefe Bedingungen nach Afo-9.0 DUA BW C1C2-21 (S. 45)
@@ -381,16 +354,18 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
+			DateFormat format = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+			
 			Debug.getLogger().info(
 					"Plane Fehlerpublikation fuer "
 							+ De.this.getObjekt()
 							+ ": "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							+ format.format(new Date(
 									fehlerZeit + zeitVerzugFehlerErkennung
 											+ zeitVerzugFehlerErmittlung + 2
 											* STANDARD_ZEIT_ABSTAND))
 							+ "\nFehlerzeit: "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							+ format.format(new Date(
 									fehlerZeit)) + "\nVerzug (Erkennung): "
 							+ zeitVerzugFehlerErkennung
 							+ "\nVerzug (Ermittlung): "
@@ -421,7 +396,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	}
 
 	/**
-	 * Erfragt den ersten Zeitstempel, der sich echt (> 500ms) nach dem
+	 * Erfragt den ersten Zeitstempel, der sich echt (&gt; 500ms) nach dem
 	 * Zeitstempel <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet
 	 * und der zur uebergebenen Erfassungsintervalllange passt.
 	 * 

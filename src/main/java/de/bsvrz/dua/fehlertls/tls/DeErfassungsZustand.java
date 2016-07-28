@@ -39,8 +39,11 @@ import de.bsvrz.dua.fehlertls.parameter.ZyklusSteuerungsParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -49,8 +52,6 @@ import java.util.Set;
  * annehmen
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		IZyklusSteuerungsParameterListener {
@@ -113,9 +114,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 				.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereTlsGloDeFehler(boolean aktiv1,
 			TlsDeFehlerStatus deFehlerStatus1) {
 		synchronized (this) {
@@ -125,9 +123,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereZyklusSteuerungsParameter(
 			long erfassungsIntervallDauer1) {
 		synchronized (this) {
@@ -191,24 +186,29 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		/**
 		 * indiziert, das die Parameter dieses DE initialisiert wurden.
 		 */
-		private boolean initialisiert = true;
+		private final boolean initialisiert;
 
 		/**
 		 * die entsprechende Erassungsintervalldauer (in ms), wenn das DE auf
 		 * zyklischen Abruf parametriert ist und -1 sonst.
 		 */
-		private long erfassungsIntervallDauer = -1;
+		private final long erfassungsIntervallDauer;
 
 		/**
 		 * Grund fuer die Tatsache, dass dieser Zustand den Wert nicht
 		 * <code>nicht erfasst</code> hat.
 		 */
-		private String grund = null;
+		private final String grund;
 
 		/**
 		 * Standardkonstruktor.
 		 */
 		protected Zustand() {
+			
+			boolean initialisierung = true;
+			long intervallDauer = -1;
+			String erfassungsGrund = null;
+			
 			String debug = "";
 			synchronized (DeErfassungsZustand.this) {
 				if (DeErfassungsZustand.this.deFehlerStatus != null) {
@@ -223,29 +223,29 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 									debug += "T != <<null>>\n";
 									if (DeErfassungsZustand.this.erfassungsIntervallDauer >= 0) {
 										debug += "T >= 0 (" + DeErfassungsZustand.this.erfassungsIntervallDauer + "s)\n";
-										this.erfassungsIntervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
+										intervallDauer = DeErfassungsZustand.this.erfassungsIntervallDauer;
 									} else {
 										debug += "T < 0 (" + DeErfassungsZustand.this.erfassungsIntervallDauer + "s)\n";
-										this.grund = "TLS-Fehlerueberwachung nicht moeglich, da keine " + //$NON-NLS-1$
+										erfassungsGrund = "TLS-Fehlerueberwachung nicht moeglich, da keine " + //$NON-NLS-1$
 												"zyklische Abgabe von Meldungen eingestellt"; //$NON-NLS-1$
 									}
 								} else {
 									debug += "T == <<null>>\n";
-									this.initialisiert = false;
+									initialisierung = false;
 								}
 							} else {
 								debug += "DE-Kanal ist passiviert\n";
-								this.grund = GRUND_PRAEFIX
+								erfassungsGrund = GRUND_PRAEFIX
 										+ "DE-Kanal ist passiviert"; //$NON-NLS-1$
 							}
 						} else {
 							debug += "DE-Kanalzustand ist == <<null>>\n";
-							this.initialisiert = false;
+							initialisierung = false;
 						}
 					} else {
 						debug += "DE-Fehlerstatus != TlsDeFehlerStatus.OK (" + DeErfassungsZustand.this.deFehlerStatus
 						.toString() + ")\n";
-						this.grund = GRUND_PRAEFIX
+						erfassungsGrund = GRUND_PRAEFIX
 								+ "DE-Fehler(" + //$NON-NLS-1$
 								DeErfassungsZustand.this.deFehlerStatus
 										.toString()
@@ -255,10 +255,14 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 					}
 				} else {
 					debug += "DE-Fehlerstatus == <<null>>\n";
-					this.initialisiert = false;
+					initialisierung = false;
 				}
 			}
 
+			initialisiert = initialisierung;
+			erfassungsIntervallDauer = intervallDauer;
+			grund = erfassungsGrund;
+			
 			Debug
 					.getLogger()
 					.info(
@@ -316,9 +320,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 			return this.erfassungsIntervallDauer >= 0;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean equals(Object obj1) {
 			boolean gleich = false;
@@ -338,19 +339,21 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 
 			return gleich;
 		}
+		
+		@Override
+		public int hashCode() {
+			return Objects.hash(initialisiert, erfassungsIntervallDauer, grund);
+		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public String toString() {
 			String s = "";
 
 			if (initialisiert) {
 				if (this.erfassungsIntervallDauer >= 0) {
-					s += "erfasst (Intervalldauer: " + //$NON-NLS-1$
-							DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-									this.erfassungsIntervallDauer)) + ")"; //$NON-NLS-1$
+					s += "erfasst (Intervalldauer: " + 
+							new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR).format(new Date(
+									this.erfassungsIntervallDauer)) + ")"; 
 				} else {
 					s += this.grund;
 				}
