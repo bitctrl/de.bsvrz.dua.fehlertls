@@ -40,8 +40,6 @@ import de.bsvrz.sys.funclib.operatingMessage.OperatingMessage;
  * TLS-Hierarchieelement KRI.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class Kri extends AbstraktGeraet {
 
@@ -79,17 +77,11 @@ public class Kri extends AbstraktGeraet {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.KRI;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
 		OperatingMessage message = TEMPLATE.newMessage(objekt);

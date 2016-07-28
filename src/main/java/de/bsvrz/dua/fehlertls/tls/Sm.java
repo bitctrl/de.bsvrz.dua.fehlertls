@@ -40,8 +40,6 @@ import de.bsvrz.sys.funclib.operatingMessage.OperatingMessage;
  * TLS-Hierarchieelement Steuermodul.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class Sm extends AbstraktGeraet {
 	
@@ -77,17 +75,11 @@ public class Sm extends AbstraktGeraet {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.SM;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
 		OperatingMessage message = TEMPLATE.newMessage(objekt);

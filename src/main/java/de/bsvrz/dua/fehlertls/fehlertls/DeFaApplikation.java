@@ -54,8 +54,6 @@ import java.util.Set;
  * verfügbar zu machen
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
 
@@ -108,9 +106,6 @@ public class DeFaApplikation implements StandardApplication {
 		return "DeFa"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
 		sDav = dav;
 
@@ -179,9 +174,6 @@ public class DeFaApplikation implements StandardApplication {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void parseArguments(ArgumentList argumente) throws Exception {
 
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

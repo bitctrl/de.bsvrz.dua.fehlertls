@@ -30,8 +30,6 @@ package de.bsvrz.dua.fehlertls.tests;
  * Zustaende, die eine DE bzgl. der DeFa annehmen kann
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class DeStatus {
 
@@ -89,9 +87,6 @@ public final class DeStatus {
 		this.name = name;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean gleich = false;
@@ -104,9 +99,6 @@ public final class DeStatus {
 		return gleich;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return name;

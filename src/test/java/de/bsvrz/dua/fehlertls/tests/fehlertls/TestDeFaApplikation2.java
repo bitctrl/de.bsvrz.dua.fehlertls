@@ -42,8 +42,6 @@ import java.util.Date;
  * Testet die Applikation nach PruefSpez (zweiter Teil - SM2).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class TestDeFaApplikation2 extends DeFaTestBase {
 

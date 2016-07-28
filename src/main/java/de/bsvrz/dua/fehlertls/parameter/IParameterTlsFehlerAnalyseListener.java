@@ -34,8 +34,6 @@ package de.bsvrz.dua.fehlertls.parameter;
  * Fehleranalyse).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public interface IParameterTlsFehlerAnalyseListener {
 

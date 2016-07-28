@@ -37,30 +37,19 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * (PID: typ.deLve).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class TypDeLve extends AbstraktDeTyp {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public long getErfassungsIntervall(Data parameter) {
 		return parameter
 				.getUnscaledValue("IntervallDauerKurzZeitDaten").longValue() * 15L * 1000L; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getBetriebsParameterAtgPid() {
 		return "atg.tlsLveBetriebsParameter"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected DataDescriptionPid[] getDataIdentifikations() {
 

@@ -41,8 +41,6 @@ import java.util.*;
  * Zyklussteuerung eines allgemeinen Systemobjektes vom Typ <code>typ.de</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class ZyklusSteuerungsParameter implements ClientReceiverInterface {
 
@@ -133,9 +131,6 @@ public final class ZyklusSteuerungsParameter implements ClientReceiverInterface 
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

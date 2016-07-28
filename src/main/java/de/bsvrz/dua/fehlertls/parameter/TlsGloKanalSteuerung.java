@@ -39,8 +39,6 @@ import java.util.*;
  * (Kanalsteuerung (FG alle / Typ 29)).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 
@@ -117,9 +115,6 @@ public final class TlsGloKanalSteuerung implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

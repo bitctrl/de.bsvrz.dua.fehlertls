@@ -41,8 +41,6 @@ import java.util.List;
  * Von diesem Typ sollten alle finalen DE-Typ-Beschreibungen abgeleitet sein.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public abstract class AbstraktDeTyp implements IDeTyp {
 
@@ -64,9 +62,6 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 	 */
 	protected abstract String getBetriebsParameterAtgPid();
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public DataDescription[] getDeFaMesswertDataDescriptions(
 			final ClientDavInterface dav) throws DeFaException {
 		List<DataDescription> dataDescriptions = new ArrayList<DataDescription>();
@@ -96,9 +91,6 @@ public abstract class AbstraktDeTyp implements IDeTyp {
 		return dataDescriptions.toArray(new DataDescription[0]);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public DataDescription getDeFaIntervallParameterDataDescription(
 			ClientDavInterface dav) throws DeFaException {
 		AttributeGroup atg = dav.getDataModel().getAttributeGroup(

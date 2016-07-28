@@ -42,8 +42,6 @@ import java.util.Map;
  * weiterhin im Package <code>de.bsvrz.dua.DeFa</code> definiert sein.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class DeTypLader {
 

@@ -43,8 +43,6 @@ import java.util.Set;
  * der uebergebenen Objekte vom Typ <code>typ.gerät</code> konfiguriert sind.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class TlsHierarchie extends AbstraktGeraet {
 
@@ -164,17 +162,11 @@ public final class TlsHierarchie extends AbstraktGeraet {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
 		assert (false);

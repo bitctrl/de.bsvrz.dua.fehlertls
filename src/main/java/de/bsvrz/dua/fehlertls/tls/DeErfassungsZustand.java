@@ -49,8 +49,6 @@ import java.util.Set;
  * annehmen
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		IZyklusSteuerungsParameterListener {
@@ -113,9 +111,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 				.info("DeFa-Zustand von " + objekt + " wird ab sofort ueberwacht"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereTlsGloDeFehler(boolean aktiv1,
 			TlsDeFehlerStatus deFehlerStatus1) {
 		synchronized (this) {
@@ -125,9 +120,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereZyklusSteuerungsParameter(
 			long erfassungsIntervallDauer1) {
 		synchronized (this) {
@@ -316,9 +308,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 			return this.erfassungsIntervallDauer >= 0;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean equals(Object obj1) {
 			boolean gleich = false;
@@ -339,9 +328,6 @@ public class DeErfassungsZustand implements ITlsGloDeFehlerListener,
 			return gleich;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public String toString() {
 			String s = "";

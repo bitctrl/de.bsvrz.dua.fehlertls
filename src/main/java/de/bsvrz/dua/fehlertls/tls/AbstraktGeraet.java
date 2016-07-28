@@ -40,8 +40,6 @@ import java.util.Set;
  * Abstrakte Repraesentation einer Objektes vom Typ <code>typ.gerät</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public abstract class AbstraktGeraet {
 
@@ -226,9 +224,6 @@ public abstract class AbstraktGeraet {
 		return this.vater == null || this.vater.getObjekt() == null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean ergebnis = false;
@@ -241,9 +236,6 @@ public abstract class AbstraktGeraet {
 		return ergebnis;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		if (TLS_BAUM) {
