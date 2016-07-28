@@ -54,15 +54,13 @@ import java.util.Set;
  * verfügbar zu machen
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DeFaApplikation implements StandardApplication {
 
 	/**
 	 * Statische Verbindung zum Datenverteiler.
 	 */
-	private static ClientDavInterface sDav = null;
+	private  ClientDavInterface sDav = null;
 
 	/**
 	 * das Systemobjekt vom Typ <code>typ.tlsFehlerAnalyse</code>, mit dem diese
@@ -108,10 +106,8 @@ public class DeFaApplikation implements StandardApplication {
 		return "DeFa"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
+
 		sDav = dav;
 
 		MessageSender.getInstance().setApplicationLabel(
@@ -179,9 +175,6 @@ public class DeFaApplikation implements StandardApplication {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void parseArguments(ArgumentList argumente) throws Exception {
 
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -209,14 +202,6 @@ public class DeFaApplikation implements StandardApplication {
 		argumente.fetchUnusedArguments();
 	}
 
-	/**
-	 * Erfragt die statische Verbindung zum Datenverteiler.
-	 * 
-	 * @return die statische Verbindung zum Datenverteiler.
-	 */
-	public static final ClientDavInterface getDav() {
-		return sDav;
-	}
 
 	/**
 	 * Startet diese Applikation.

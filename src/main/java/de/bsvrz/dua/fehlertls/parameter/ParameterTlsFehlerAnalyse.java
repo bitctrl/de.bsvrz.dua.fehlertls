@@ -40,8 +40,6 @@ import java.util.*;
  * Fehleranalyse).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface {
 
@@ -129,9 +127,6 @@ public final class ParameterTlsFehlerAnalyse implements ClientReceiverInterface 
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

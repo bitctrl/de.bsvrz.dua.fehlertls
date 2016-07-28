@@ -37,8 +37,6 @@ import java.util.Map;
  * Korrespondiert mit dem DAV-Enumerationstyp <code>att.tlsDEFehlerStatus</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class TlsDeFehlerStatus extends AbstractDavZustand {
 

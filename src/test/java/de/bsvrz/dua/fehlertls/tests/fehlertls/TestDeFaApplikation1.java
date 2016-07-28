@@ -42,8 +42,6 @@ import java.util.Date;
  * Testet die Applikation nach PruefSpez (erster Teil - UZ).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class TestDeFaApplikation1 extends DeFaTestBase {
 

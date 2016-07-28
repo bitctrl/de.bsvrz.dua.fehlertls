@@ -39,8 +39,6 @@ import java.util.*;
  * Korrespondiert mit der Online-Attributgruppe <code>atg.tlsGloDeFehler</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class TlsGloDeFehler implements ClientReceiverInterface {
 
@@ -122,9 +120,6 @@ public final class TlsGloDeFehler implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

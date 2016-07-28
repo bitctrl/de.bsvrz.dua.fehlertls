@@ -35,8 +35,6 @@ import de.bsvrz.dua.fehlertls.enums.TlsDeFehlerStatus;
  * <code>atg.tlsGloDeFehler</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public interface ITlsGloDeFehlerListener {
 

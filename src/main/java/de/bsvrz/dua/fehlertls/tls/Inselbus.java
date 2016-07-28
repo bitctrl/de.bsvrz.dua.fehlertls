@@ -44,8 +44,6 @@ import java.util.*;
  * TLS-Hierarchieelement Inselbus.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class Inselbus extends AbstraktGeraet {
 
@@ -133,9 +131,6 @@ public class Inselbus extends AbstraktGeraet {
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Art getGeraeteArt() {
 		return Art.INSELBUS;
@@ -219,9 +214,6 @@ public class Inselbus extends AbstraktGeraet {
 		return kannHierPublizieren;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void publiziereFehler(long zeitStempel) {
 		/**

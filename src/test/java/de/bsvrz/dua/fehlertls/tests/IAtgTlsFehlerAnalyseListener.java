@@ -33,8 +33,6 @@ import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
  * <code>asp.analyse</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public interface IAtgTlsFehlerAnalyseListener {
 
