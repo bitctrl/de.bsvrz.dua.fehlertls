@@ -26,6 +26,8 @@
 
 package de.bsvrz.dua.fehlertls.tests;
 
+import java.util.Objects;
+
 /**
  * Zustaende, die eine DE bzgl. der DeFa annehmen kann
  * 
@@ -75,7 +77,7 @@ public final class DeStatus {
 	/**
 	 * Name des Status.
 	 */
-	private String name = null;
+	private final String name;
 
 	/**
 	 * Standardkonstruktor.
@@ -99,6 +101,11 @@ public final class DeStatus {
 		return gleich;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name);
+	}
+	
 	@Override
 	public String toString() {
 		return name;

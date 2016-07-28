@@ -46,6 +46,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageTemplate;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 import de.bsvrz.sys.funclib.operatingMessage.OperatingMessage;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -352,16 +354,18 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 			De.this.inTime = false;
 			final long fehlerZeit = De.this.letzterErwarteterDatenZeitpunkt;
 
+			DateFormat format = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+			
 			Debug.getLogger().info(
 					"Plane Fehlerpublikation fuer "
 							+ De.this.getObjekt()
 							+ ": "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							+ format.format(new Date(
 									fehlerZeit + zeitVerzugFehlerErkennung
 											+ zeitVerzugFehlerErmittlung + 2
 											* STANDARD_ZEIT_ABSTAND))
 							+ "\nFehlerzeit: "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							+ format.format(new Date(
 									fehlerZeit)) + "\nVerzug (Erkennung): "
 							+ zeitVerzugFehlerErkennung
 							+ "\nVerzug (Ermittlung): "
@@ -392,7 +396,7 @@ public class De extends AbstraktGeraet implements ClientReceiverInterface,
 	}
 
 	/**
-	 * Erfragt den ersten Zeitstempel, der sich echt (> 500ms) nach dem
+	 * Erfragt den ersten Zeitstempel, der sich echt (&gt; 500ms) nach dem
 	 * Zeitstempel <code>jetzt</code> (angenommenr Jetzt-Zeitpunkt) befindet
 	 * und der zur uebergebenen Erfassungsintervalllange passt.
 	 * 

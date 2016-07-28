@@ -18,6 +18,18 @@ zu machen.
 
 ## Versionsgeschichte
 
+### 2.0.2
+
+Release-Datum: 28.07.2016
+
+de.bsvrz.dua.fehlertls.tls.DeErfassungsZustand.Zustand
+de.bsvrz.dua.fehlertls.tests.DeStatus
+- equals wurde um entsprechende hashCode-Funktion ergänzt
+
+- Javadoc für Java8-Kompatibilität korrigiert
+- Obsolete SVN-Tags aus Kommentaren entfernt
+- Obsolete inheritDoc-Kommentare entfernt
+
 ### 2.0.1
 
 Release-Datum: 22.07.2016
