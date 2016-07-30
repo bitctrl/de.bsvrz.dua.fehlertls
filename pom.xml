@@ -134,6 +134,9 @@
 					<url>http://dl.bintray.com/datenverteiler/maven</url>
 				</pluginRepository>
 			</pluginRepositories>
+		</profile>
+		<profile>
+			<id>bintray-deploy</id>
 			<distributionManagement>
 				<repository>
 					<id>bintray-bitctrl-maven</id>
@@ -141,8 +144,7 @@
 					<url>https://api.bintray.com/maven/bitctrl/maven/${project.artifactId}/;publish=1</url>
 				</repository>
 			</distributionManagement>
-		</profile>
-	</profiles>
+		</profile>	</profiles>
 
 	<dependencies>
 		<dependency>
